@@ -1,17 +1,10 @@
----
-See https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository
-for how to mirror this into a new workshop repo
-
----
-UM Bioinformatics Core: WORKSHOP TEMPLATE
+UM Bioinformatics Core: Intro to Functional Analysis 
 
 * Versioned web content:
   
-  - [Main](https://umich-brcf-bioinf.github.io/workshop-TEMPLATE/main/html/)
-  - [4/2/2025](https://umich-brcf-bioinf.github.io/workshop-TEMPLATE/2025-04-02/html/)
+  - [Main](https://umich-brcf-bioinf.github.io/workshop-intro-functional-analysis/main/html/)
+  - [4/2/2025](https://umich-brcf-bioinf.github.io/workshop-intro-functional-analysis/2025-04-02/html/)
 
-* Inspired by [UM Carpentries](https://github.com/UMCarpentries/intro-curriculum-r) 
-  and [Data Carpentry](https://datacarpentry.org/lessons/#genomics-workshop/).
 * This workshop content is licensed under a 
   [Creative Commons Attribution 4 License](https://creativecommons.org/licenses/by/4.0/).
 * The workshop Code of Conduct has been adapted the NumFocus Code of Conduct 
