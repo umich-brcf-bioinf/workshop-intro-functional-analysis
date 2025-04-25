@@ -1,0 +1,20 @@
+name: "WORKSHOP_TITLE"
+output_dir: ../html
+navbar:
+  title: "WORKSHOP_TITLE"
+  type: inverse
+  left:
+    - text: "Intro"
+      href: workshop-intro.html
+    - text: "Day 1"
+      menu:
+        - text: "intro"
+          href: introduction.html
+        - text: "more stuff"
+          href: more-stuff.html
+    - text: "Day 2"
+      menu:
+        - text: "Fancy Stuff"
+          href: fancy-stuff.html
+    - text: "Wrap up"
+      href: workshop-wrap-up.html

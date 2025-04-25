@@ -1,0 +1,30 @@
+name: Copy html folder of updated branch to gh-branch
+
+on:
+  push:
+    branches:
+      - main
+      - 2025-04-02
+
+jobs:
+  copy:
+    name: Copy html to gh-branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: copy
+        env:
+          SRC_FOLDER_PATH: 'html'
+          TARGET_BRANCH: 'gh-pages'
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git fetch
+          git checkout $TARGET_BRANCH
+          git checkout ${GITHUB_REF##*/} -- $SRC_FOLDER_PATH
+          mkdir -p ${GITHUB_REF##*/}
+          rm -rf ${GITHUB_REF##*/}/$SRC_FOLDER_PATH
+          mv $SRC_FOLDER_PATH ${GITHUB_REF##*/} 
+          git add -A .
+          git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
+          git push
