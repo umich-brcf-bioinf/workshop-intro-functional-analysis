@@ -1,0 +1,142 @@
+---
+title: "Introduction to WebGestalt and ORA"
+output:
+        html_document:
+            includes:
+                in_header: header.html
+            theme: paper
+            toc: true
+            toc_depth: 4
+            toc_float: true
+            number_sections: false
+            fig_caption: false
+            markdown: GFM
+            code_download: false
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 16px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+
+</style>
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
+```
+
+```{r, 'chunk_options', include=FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("02-")
+```
+
+```{r, include = FALSE}
+source("../bin/set_values.R")
+```
+
+# Objectives
+
+- 1
+- 2
+- 3
+
+...
+
+# WebGestalt Overview
+
+We've discussed some of the motivations for performing functional enrichment analysis, but what tools can we use to perform these kinds of analyses?
+
+One option is [WebGestalt](http://www.webgestalt.org/) (WEB-based GEne SeT AnaLysis Toolkit) which has a web-based interface for running functional enrichment analysis. It supports a wide range of organisms and offers several methods for enrichment analysis.
+
+To start, let's look at the [WebGestalt website](http://www.webgestalt.org/) and familiarize ourselves with the interface and documentation. 
+
+## WebGestalt interface
+
+If we look at the [WebGestalt homepage](http://www.webgestalt.org/), we can see that it has several sections:
+
+- At the top, we have the main navigation menu, which includes links including to the Manual, Citation, a User Forum, and a link to the 2019 version of the tool.
+- Then, the main section is the "Basic parameters" box, which allows us to select the organism, analysis type, and database.
+
+<!-- Add screenshot of the top of the WebGestalt homepage -->
+
+- Within the basic parameters box, there is a smaller box that looks like its for specifying the input data, which we'll circle back to shortly.
+
+- Below that, we have the "Advanced parameters" box, which we'll skip for now, but that includes options for adjusting the analysis parameters, such as the statistical method and multiple testing correction.
+
+<!-- Add screenshot of the bottom of the WebGestalt homepage -->
+
+
+## WebGestalt documentation
+
+A good practice when using a new tool is to read the documentation provided by the developers. 
+
+## WebGestalt analysis demonstration
+
+<!-- demo data -->
+
+
+
+
+
+
+# Input data
+
+Bulk RNA-seq results from our [RNA-seq demystified workshop](https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/) - statistics from comparision between deficient vs control mice using DESeq2 (file = `DE_results_deficient_vs_control_annotated.csv`)
+
+## Hands-on: Review input data and prepare for analysis
+<!-- Consider moving this until after the WebGestalt introduction, so that the learners can see that the tool requires a list of DE vs non-DE for best results -->
+
+To start, we'll load the input data and review it. The data is in CSV format, so we can use `read_csv()` from the `tidyverse` library to load it into R.
+
+```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
+# Load necessary libraries
+library(tidyverse)
+
+# Load the bulk RNA-seq results
+def_v_cont_bulkDE <- read_csv("DE_results_deficient_vs_control_annotated.csv")
+
+# Check the first few rows of the data
+head(def_v_cont_bulkDE)
+```
+
+In the table above, we have the following columns:
+
+- `gene`: The gene identifier.
+- `baseMean`: The average expression of the gene across all samples.
+- `log2FoldChange`: The log2 fold change in expression between the deficient and control
+samples.
+- `lfcSE`: The standard error of the log2 fold change.
+- `stat`: The test statistic for the differential expression test.
+- `pvalue`: The p-value for the differential expression test.
+
+A key attribute of this table is that includes statistics for all genes included in the comparison, not just those that are differentially expressed. This allows us to use functional enrichment tools that use both a "positive" set of DE genes and a "background" set of all genes measured in the experiment, like ORA.
+
+Next, we'll prepare the data for analysis by creating a list of DE genes and a background set of all genes. We'll use the `log2FoldChange` and `pvalue` columns to identify DE genes, and we'll use the `gene` column as our gene identifiers.
+ 
+ <!-- include note about reproducibility and knowing thresholds -->
+
+```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
+
+
+```
+
+
+# Summary
+
+- 1
+- 2
+- 3
+
+
+<br/>
+<br/>
+<hr/>
+| [Previous lesson](workshop-intro.html) | [Top of this lesson](#top) | [Next lesson](more-stuff.html) |
+| :--- | :----: | ---: |
