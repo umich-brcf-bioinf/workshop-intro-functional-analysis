@@ -79,9 +79,9 @@ A good practice when using a new tool is to read the documentation provided by t
 
 ## WebGestalt analysis demonstration
 
-<!-- demo data -->
+<!-- load & run demo data -->
 
-
+<!-- Note input gene list options - symbol, entrez, ensembl, etc. which will -->
 
 
 
