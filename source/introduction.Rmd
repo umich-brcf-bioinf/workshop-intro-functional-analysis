@@ -34,7 +34,7 @@ klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
 
 ```{r, 'chunk_options', include=FALSE}
 source("../bin/chunk-options.R")
-knitr_fig_path("01-")
+knitr_fig_path("00-")
 ```
 
 ```{r, include = FALSE}
