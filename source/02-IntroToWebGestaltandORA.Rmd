@@ -79,7 +79,7 @@ A good practice when using a new tool is to read the documentation provided by t
 
 ## WebGestalt analysis demonstration
 
-<!-- load & run demo data -->
+<!-- load & runcd - demo data -->
 
 <!-- Note input gene list options - symbol, entrez, ensembl, etc. which will -->
 
