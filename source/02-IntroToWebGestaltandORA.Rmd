@@ -62,6 +62,11 @@ To start, let's look at the [WebGestalt website](http://www.webgestalt.org/) and
 
 If we look at the [WebGestalt homepage](http://www.webgestalt.org/), we can see that it has several sections:
 
+<!-- map abstract schematics/inputs to WebGestalt 
+1) approach
+2) database
+3) query genes / background -->
+
 - At the top, we have the main navigation menu, which includes links including to the Manual, Citation, a User Forum, and a link to the 2019 version of the tool.
 - Then, the main section is the "Basic parameters" box, which allows us to select the organism, analysis type, and database.
 
@@ -80,19 +85,24 @@ If we look at the [WebGestalt homepage](http://www.webgestalt.org/), we can see 
 
 A good practice when using a new tool is to read the documentation provided by the developers, which we can find by selecting Manual from the top of WebGestalt site.
 
-![WebGestalt homepage screenshot]("images/content/02-webgestalt_TopOfManual.png")  
+![WebGestalt homepage manual top]("images/content/02-webgestalt_TopOfManual.png")  
 
 At the top of the manual page, we can see an overview of some of the related publications as well as a comparison between an older 2019 version and the current 2024 version.
 
-![]("images/content/02-webgestalt_Manual2ndPage.png")
+![WebGestalt homepage manual page 2]("images/content/02-webgestalt_Manual2ndPage.png")
 
-If we scroll down, then we can see a bit of an introduction to the tool. However, the manual seems to already have some terminology and assumptions about a user's familiarity with 
+If we scroll down, then we can see a bit of an introduction to the tool. However, the manual seems to already have some terminology and assumptions about a user's familiarity with functional enrichment so let's go back to the tool site and focus on a more limited set of options for our first pass. 
 
+
+<!-- try to start with results downloaded for RSD DE data -->
 
 ## WebGestalt analysis demonstration
 
-For basic parameters, we'll start 
-<!-- load & run demo data -->
+Let's start with some of the basic parameters and delve into the options we want to start with. 
+
+<!-- Click through methods to show ORA vs other options & have demo data -->
+
+<!-- Load demo data to show what inputs are needed-->
 
 <!-- Note input gene list options - symbol, entrez, ensembl, etc. which will -->
 
