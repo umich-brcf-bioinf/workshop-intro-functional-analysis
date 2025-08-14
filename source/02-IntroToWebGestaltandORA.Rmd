@@ -30,6 +30,7 @@ pre {
 
 ```{r klippy, echo=FALSE, include=TRUE}
 klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
+getwd()
 ```
 
 ```{r, 'chunk_options', include=FALSE}
@@ -64,22 +65,34 @@ If we look at the [WebGestalt homepage](http://www.webgestalt.org/), we can see 
 - At the top, we have the main navigation menu, which includes links including to the Manual, Citation, a User Forum, and a link to the 2019 version of the tool.
 - Then, the main section is the "Basic parameters" box, which allows us to select the organism, analysis type, and database.
 
-![WebGestalt homepage screenshot]("images/content/02-WebGestalt_topOfPage.png")  
+![WebGestalt homepage top]("images/content/02-WebGestalt_topOfPage.png")
 
 - Within the basic parameters box, there is a smaller box that looks like its for specifying the input data, which we'll circle back to shortly.
 
 - Below that, we have the "Advanced parameters" box, which we'll skip for now, but that includes options for adjusting the analysis parameters, such as the statistical method and multiple testing correction.
 
-![WebGestalt homepage screenshot]("images/content/02-WebGestalt_topOfPage.png")  
+![WebGestalt homepage inputs]("images/content/02-WebGestalt_topOfPage.png")  
 
 
 ## WebGestalt documentation
 
-A good practice when using a new tool is to read the documentation provided by the developers. 
+![WebGestalt homepage find manual]("images/content/02-webgestalt_ClickManual.png")  
+
+A good practice when using a new tool is to read the documentation provided by the developers, which we can find by selecting Manual from the top of WebGestalt site.
+
+![WebGestalt homepage screenshot]("images/content/02-webgestalt_TopOfManual.png")  
+
+At the top of the manual page, we can see an overview of some of the related publications as well as a comparison between an older 2019 version and the current 2024 version.
+
+![]("images/content/02-webgestalt_Manual2ndPage.png")
+
+If we scroll down, then we can see a bit of an introduction to the tool. However, the manual seems to already have some terminology and assumptions about a user's familiarity with 
+
 
 ## WebGestalt analysis demonstration
 
-<!-- load & runcd - demo data -->
+For basic parameters, we'll start 
+<!-- load & run demo data -->
 
 <!-- Note input gene list options - symbol, entrez, ensembl, etc. which will -->
 
@@ -99,8 +112,11 @@ To start, we'll load the input data and review it. The data is in CSV format, so
 # Load necessary libraries
 library(tidyverse)
 
+# Check working directory
+getwd()
+
 # Load the bulk RNA-seq results
-def_v_cont_bulkDE <- read_csv("DE_results_deficient_vs_control_annotated.csv")
+def_v_cont_bulkDE <- read_csv("../data/de_deficient_vs_control_annotated.csv") #TO REVISE - path will need to be adjusted
 
 # Check the first few rows of the data
 head(def_v_cont_bulkDE)
@@ -108,7 +124,8 @@ head(def_v_cont_bulkDE)
 
 In the table above, we have the following columns:
 
-- `gene`: The gene identifier.
+- `id`: The ENSEMBL gene identifier.
+- `symbol`: The gene symbol.
 - `baseMean`: The average expression of the gene across all samples.
 - `log2FoldChange`: The log2 fold change in expression between the deficient and control
 samples.
