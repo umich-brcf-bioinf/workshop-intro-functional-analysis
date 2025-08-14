@@ -64,13 +64,13 @@ If we look at the [WebGestalt homepage](http://www.webgestalt.org/), we can see 
 - At the top, we have the main navigation menu, which includes links including to the Manual, Citation, a User Forum, and a link to the 2019 version of the tool.
 - Then, the main section is the "Basic parameters" box, which allows us to select the organism, analysis type, and database.
 
-<!-- Add screenshot of the top of the WebGestalt homepage -->
+![WebGestalt homepage screenshot]("images/content/02-WebGestalt_topOfPage.png")  
 
 - Within the basic parameters box, there is a smaller box that looks like its for specifying the input data, which we'll circle back to shortly.
 
 - Below that, we have the "Advanced parameters" box, which we'll skip for now, but that includes options for adjusting the analysis parameters, such as the statistical method and multiple testing correction.
 
-<!-- Add screenshot of the bottom of the WebGestalt homepage -->
+![WebGestalt homepage screenshot]("images/content/02-WebGestalt_topOfPage.png")  
 
 
 ## WebGestalt documentation
