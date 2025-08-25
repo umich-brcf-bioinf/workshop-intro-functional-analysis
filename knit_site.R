@@ -9,7 +9,6 @@ library(rmarkdown)
 library(klippy)
 
 # The html from the files below don't have the nav bar
-
 render('source/workshop_setup/preworkshop_checklist.md', output_dir='html/workshop_setup/')
 render('source/workshop_setup/setup_instructions.Rmd', output_dir='html/workshop_setup/')
 render('source/workshop_setup/setup_instructions_advanced.md', output_dir='html/workshop_setup/')
@@ -22,6 +21,8 @@ render('source/workshop_setup/setup_instructions_advanced.md', output_dir='html/
 render_site('source/analysis-scripts.Rmd')
 render_site('source/index.md')
 render_site('source/workshop-intro.Rmd')
+
+render_site('source/02-IntroToWebGestaltandORA.Rmd')
 
 render_site('source/introduction.Rmd')
 render_site('source/more-stuff.Rmd')

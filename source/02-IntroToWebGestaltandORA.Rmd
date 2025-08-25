@@ -177,6 +177,7 @@ write(deficient_background_GeneList, file ="../data/deficient_background_GeneLis
 
 <!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
 
+![WebGestalt submit data for ORA]("images/content/WebGestalt_bulkRNA_screenshots/02-bulkRNA_a_submission_error.png")  
 
 # Summary
 
