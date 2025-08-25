@@ -175,7 +175,7 @@ write(deficient_background_GeneList, file ="../data/deficient_background_GeneLis
 
 ## Overview of results 
 
-<!-- planning to move this section to the start to give an overview of the results before using the tool -->
+<!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
 
 
 # Summary
