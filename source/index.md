@@ -1,6 +1,6 @@
 
 ---
-title: "WORKSHOP_TITLE"
+title: "Intro to Functional Analysis"
 output:
         html_document:
             includes:
