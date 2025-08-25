@@ -5,6 +5,8 @@ remotes::install_github("umich-brcf-bioinf/workshop-klippy");
 # install.packages("kable")
 devtools::install_github("haozhu233/kableExtra")
 
+setwd("~/workshop-intro-functional-analysis/")
+
 library(rmarkdown)
 library(klippy)
 
