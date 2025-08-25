@@ -19,3 +19,4 @@ html/inputs/*
 html/scripts/*
 html/results/*
 ._*
+.Rproj.user
