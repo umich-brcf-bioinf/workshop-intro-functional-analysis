@@ -70,26 +70,26 @@ If we look at the [WebGestalt homepage](http://www.webgestalt.org/), we can see 
 - At the top, we have the main navigation menu, which includes links including to the Manual, Citation, a User Forum, and a link to the 2019 version of the tool.
 - Then, the main section is the "Basic parameters" box, which allows us to select the organism, analysis type, and database.
 
-![WebGestalt homepage top]("source/images/content/02-WebGestalt_topOfPage.png")
+![WebGestalt homepage top](images/content/02-WebGestalt_topOfPage.png)
 
 - Within the basic parameters box, there is a smaller box that looks like its for specifying the input data, which we'll circle back to shortly.
 
 - Below that, we have the "Advanced parameters" box, which we'll skip for now, but that includes options for adjusting the analysis parameters, such as the statistical method and multiple testing correction.
 
-![WebGestalt homepage inputs]("source/images/content/02-WebGestalt_topOfPage.png")  
+![WebGestalt homepage inputs](images/content/02-WebGestalt_topOfPage.png)  
 
 
 ## WebGestalt documentation
 
-![WebGestalt homepage find manual]("source/images/content/02-webgestalt_ClickManual.png")  
+![WebGestalt homepage find manual](images/content/02-webgestalt_ClickManual.png)  
 
 A good practice when using a new tool is to read the documentation provided by the developers, which we can find by selecting Manual from the top of WebGestalt site.
 
-![WebGestalt homepage manual top]("source/images/content/02-webgestalt_TopOfManual.png")  
+![WebGestalt homepage manual top](images/content/02-webgestalt_TopOfManual.png)  
 
 At the top of the manual page, we can see an overview of some of the related publications as well as a comparison between an older 2019 version and the current 2024 version.
 
-![WebGestalt homepage manual page 2]("source/images/content/02-webgestalt_Manual2ndPage.png")
+![WebGestalt homepage manual page 2](images/content/02-webgestalt_Manual2ndPage.png)
 
 If we scroll down, then we can see a bit of an introduction to the tool. However, the manual seems to already have some terminology and assumptions about a user's familiarity with functional enrichment so let's go back to the tool site and focus on a more limited set of options for our first pass. 
 
@@ -177,7 +177,7 @@ write(deficient_background_GeneList, file ="../data/deficient_background_GeneLis
 
 <!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
 
-![WebGestalt submit data for ORA]("source/images/content/WebGestalt_bulkRNA_screenshots/02-bulkRNA_a_submission_error.png")  
+![WebGestalt submit data for ORA](images/content/WebGestalt_bulkRNA_screenshots/02-bulkRNA_a_submission_error.png)  
 
 # Summary
 
