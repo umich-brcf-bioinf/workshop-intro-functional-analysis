@@ -1,5 +1,5 @@
 ---
-title: "WORKSHOP_TITLE"
+title: "Intro to Functional Analysis"
 author: "UM Bioinformatics Core Workshop Team"
 lang: "en"
 output:

@@ -1,7 +1,7 @@
-name: "WORKSHOP_TITLE"
+name: "Intro to Functional Analysis"
 output_dir: ../html
 navbar:
-  title: "WORKSHOP_TITLE"
+  title: "Intro to Functional Analysis"
   type: inverse
   left:
     - text: "Intro"

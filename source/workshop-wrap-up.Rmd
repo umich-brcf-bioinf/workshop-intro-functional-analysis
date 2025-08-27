@@ -59,7 +59,7 @@ that will enable more efficient, reproducible, and impactful computational resea
   (You will need to substitute your actual workshop username and type workshop password when prompted.)
   ```
   mkdir workshop-intro-r-rstudio
-  scp -r YOUR_USERNAME@`r ssh_download_dns`:"IRR*" workshop-intro-r-rstudio
+  scp -r YOUR_USERNAME@`r workshop_vars$ssh_download_dns`:"IRR*" workshop-intro-r-rstudio
   ```
 ### How could I install this software on my workstation/laptop?
   - See [Advanced setup instructions](workshop_setup/setup_instructions_advanced.html){target="_blank"}

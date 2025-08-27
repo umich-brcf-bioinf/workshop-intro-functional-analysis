@@ -1,6 +1,6 @@
 
 ---
-title: "WORKSHOP_TITLE"
+title: "Intro to Functional Analysis"
 output:
         html_document:
             includes:
@@ -31,14 +31,14 @@ body, td {
 ---
 
 
-### Day 1 (Chris/Marci & Raymond)
+### Day 1 (Chris/Marci & Dana)
 | Time | Topic |
 | :---  | :----------------------------------------------------------- |
 |  9:00 | [Workshop Intro and Startup](workshop-intro.html) |
 |  9:30 | [Introduction to X](introduction.html)
 |       | **Break** |
 |       | [More stuff](more-stuff.html) |
-|  12:00 | Day 1 concludes |
+|  1:00 | Day 1 concludes |
 
 ### Day 2 (Dana)
 | Time | Topic |
@@ -46,5 +46,5 @@ body, td {
 |  9:00 | Review |
 |  9:10 | [Fancy Stuff](fancy-stuff.html) |
 |       | **Break** |
-| 11:45 | [Wrap-up](workshop-wrap-up.html) |
-| 12:00 | Day 2 concludes |
+| 12:45 | [Wrap-up](workshop-wrap-up.html) |
+|  1:00 | Day 2 concludes |
