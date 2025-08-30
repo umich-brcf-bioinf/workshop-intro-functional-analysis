@@ -1,6 +1,6 @@
 workshop_vars = list(
   ## Common
-  rstudio_server_url = "http://bfx-workshop02.med.umich.edu",
+  rstudio_server_url = "https://bfx-workshop02.med.umich.edu",
   ## Code of Conduct
   coc_contact = "University of Michigan Equity, Civil Rights, and Title IX Office",
   coc_contact_email = "ecrtoffice@umich.edu",
