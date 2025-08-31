@@ -1730,7 +1730,7 @@ launch a new RStudio window. The RStudio window is divided into several
 panes. The lower left pane shows the <strong>Console</strong> tab and
 will show some text followed by a command prompt (&gt;):</p>
 <pre><code>R version ...
-Copyright (C) 2024 The R Foundation for Statistical Computing
+Copyright (C) 20XX The R Foundation for Statistical Computing
 Platform: ...
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -1845,12 +1845,14 @@ downstream impact).</li>
   &quot;ggrepel&quot;, 
   &quot;RColorBrewer&quot;)
 
+missing_packages &lt;- setdiff(required_packages, rownames(installed.packages()))
+
 if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)) {
   install.packages(&quot;BiocManager&quot;)
   requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)
 }
 
-BiocManager::install(bioconductor_packages, update=FALSE, ask=FALSE)
+BiocManager::install(missing_packages, update=FALSE, ask=FALSE)
 
 missing &lt;- setdiff(required_packages, rownames(installed.packages()))
 

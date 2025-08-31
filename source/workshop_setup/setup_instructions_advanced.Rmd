@@ -215,12 +215,14 @@ required_packages = c(
   "ggrepel", 
   "RColorBrewer")
 
+missing_packages <- setdiff(required_packages, rownames(installed.packages()))
+
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
   requireNamespace("BiocManager", quietly = TRUE)
 }
 
-BiocManager::install(bioconductor_packages, update=FALSE, ask=FALSE)
+BiocManager::install(missing_packages, update=FALSE, ask=FALSE)
 
 missing <- setdiff(required_packages, rownames(installed.packages()))
 
