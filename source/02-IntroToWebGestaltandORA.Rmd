@@ -56,9 +56,65 @@ We've discussed some of the motivations for performing functional enrichment ana
 
 One option is [WebGestalt](http://www.webgestalt.org/) (WEB-based GEne SeT AnaLysis Toolkit) which has a web-based interface for running functional enrichment analysis. It supports a wide range of organisms and offers several methods for enrichment analysis.
 
-To start, let's look at the [WebGestalt website](http://www.webgestalt.org/) and familiarize ourselves with the interface and documentation. 
+## Overrepresentation results for bulk RNA-seq data using WebGestalt
 
-## WebGestalt interface
+<!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
+
+Let's look through an example of ORA (Over Representation Analysis) report from WebGestalt, similar to what might be shared by a collaborator. These results were generated for our bulk RNA-seq data, which compared gene expression between <!-- what was in the input tissue??--> wild-type mice fed a iron deficient vs control diet. 
+
+<!-- TO ADD - figure of experimental design from RSD --> 
+
+We'll go through the steps for how to run ORA using the browser version together shortly but let's first look through what WebGestalt reports and what results we can expect.
+
+<br>
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_d_ORA-jobInfo.png)  
+At the top of the report, WebGestalt summarizes what was submitted. The bulk RNA-seq had 189 DE genes in total but only 180 genes mapped to gene symbols of the tool's reference (`entrezgene`) and then only 125 genes were annotated to the functional categories selected for this analysis, which was `geneontology_Biological_Process_noRedundant`. 
+
+We can also see that the reference list was user provided (`upload/deficient_background_GeneList_XXXXXX.txt`) and that 14992 and 9375 were mapped to entrezgene gene symbols and functional catagories, respectively.
+
+<br>
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-barplot-results.png)  
+Next, we can see the top 10 enriched GO-terms for our submitted DE genes from the non-redundant Biological Process GO-term set. While 10 terms are reported, only 4 are significant after FDR multiple hypothesis correction. <!-- add more detail here?? -->
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-table-results.png)  
+
+Next, we can see the top 10 enriched GO-terms for our submitted DE genes from the non-redundant Biological Process GO-term set. While 10 terms are reported, only 4 are significant after FDR multiple hypothesis correction.
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-DAG-results.png)  
+
+If we look at the DAG map of GO terms included in the report, we can see that some of the significant terms are related, like `intrinsic apoptotic signaling pathway` and `neuron apoptotic process`. This can be useful for interpreting why a GO term that's unlikely to be applicable to the experiment (e.g. neuronal process from non-brain tissue) might be coming up as enriched. 
+
+<!-- change to dropdown? -->
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-volcano-results.png)  
+
+### Individual GO-term examples
+
+Next let's look at some of the significantly enriched terms.
+
+![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/02-bulkRNA_g_ORA-Glut-enrichment.png) 
+
+Starting with glutathione metabolic process we see ... <!-- add more context -->
+
+Based on the experimental design, is finding a enrichment for a metabolic process surprising? Is it surprising to find that this specific process is enriched? <!--- add call out box or quote to highlight question ---> 
+
+Let's look at some of our other enriched results. 
+
+![WebGestalt ORA intrinsic apoptotic signaling pathway](images/content/02-WebGestalt_browser/02-bulkRNA_gg_ORA-Apoptosis-enrichment.png) 
+
+For the intristic apoptotic signaling pathway, we see ... <!-- add more context -->
+
+For the neuron apoptotic process, would we expect to see similar or difference genes represented for that GO term annotation>?
+
+<!-- add example of neuronal enrichment to show overlap in genes between terms --> 
+
+
+<!-- transition back to interface and showing how to submit data -->
+
+Next, let's go back to look at the [WebGestalt interface](http://www.webgestalt.org/) and familiarize ourselves with the submission process and documentation. 
+
+# WebGestalt interface
 
 If we look at the [WebGestalt homepage](http://www.webgestalt.org/), we can see that it has several sections:
 
@@ -103,7 +159,7 @@ If we scroll down, then we can see a bit of an introduction to the tool. However
 
 <!-- try to start with results downloaded for RSD DE data -->
 
-## WebGestalt analysis demonstration
+# WebGestalt analysis demonstration
 
 Let's start with some of the basic parameters and delve into the options we want to start with. 
 
@@ -116,7 +172,7 @@ Let's start with some of the basic parameters and delve into the options we want
 
 
 
-# Input data
+## Input data
 
 Bulk RNA-seq results from our [RNA-seq demystified workshop](https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/) - statistics from comparision between deficient vs control mice using DESeq2 (file = `DE_results_deficient_vs_control_annotated.csv`)
 
@@ -170,7 +226,7 @@ head(deficient_DE_GeneList)
 
 ```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
 # Repeat to generate background set (all gene names)
-deficient_background_GeneList <- def_v_cont_bulkDE %>% pull(symbol) %>% na.omit()
+deficient_background_GeneList <- deficient.v.control_bulkDE %>% pull(symbol) %>% na.omit()
 ```
 
 
@@ -187,12 +243,12 @@ These outputs then allow us to submit data via the web browser version of WebGes
 
 <br>
 
-![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_error.png)  
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_withError.png)  
 
 <br>
 
 
-![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_errorMessage.png)  
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA_b_submission_errorMessage.png)  
 
 <br>
 
@@ -206,16 +262,6 @@ If we look at the submission page, the `ID type for uploaded reference list` is 
 
 <br>
 
-
-## Overview of results 
-
-<!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
-
-Let's look through an example of ORA results from WebGestalt for our bulk RNA-seq data. 
-
-<br>
-
-![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA)  
 
 
 ---
