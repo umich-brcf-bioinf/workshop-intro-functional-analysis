@@ -1,0 +1,199 @@
+---
+title: "An Overview of Functional Analysis"
+output:
+        html_document:
+            includes:
+                in_header: header.html
+            theme: paper
+            toc: true
+            toc_depth: 4
+            toc_float: true
+            number_sections: false
+            fig_caption: false
+            markdown: GFM
+            code_download: false
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 16px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+
+</style>
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
+```
+
+```{r, 'chunk_options', include=FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("01-")
+```
+
+```{r, include = FALSE}
+source("../bin/set_values.R")
+```
+
+# Objectives
+
+1. Consider why we do functional analysis.
+2. Walk through an example overrepresentation analysis (ORA).
+3. Introduce the three high-level approaches to functional analysis
+4. Outline the topics for the workshop.
+
+
+# Why Functional analysis 
+
+![DEG analysis flowchart]()
+
+Consider this plot:
+![DEG volcano plot]()
+
+How would you interpret it?
+
+1) Fold change: Magnitude of the effect
+2) p-value: Statistical significance
+2a) FDR/Adjusted p-value: significance adjusted for multiple test correction
+
+What does it show in terms of the biology of the model system? In terms of the
+research question?
+
+Research question may involve specific genes, but is invariably rooted in 
+biological systems. Functional analysis can bridge this gap.
+
+Imagine we constructed ths plot based on the volcano plot above:
+
+!(Curiously simple enrichment plot of five reference gene sets)[]
+
+Which pathways are enriched? Are they statistically significant?
+
+
+
+Let's consider a single reference gene set in a very small universe
+
+
+Visualizing enrichment
+!(Venn diagrams)[]
+((query set) background set) = background proportion
+((query set) reference set) = reference proportion
+
+
+Diagram with gene sets
+query set
+reference set
+
+
+2x2 table
+significant in category proportions = a/(a+b)
+gs in background proportions = (a+c) / N
+fold enrichment =  significant in gs / gs in background = observed / expected
+= 2.667
+The pathway is ~2.67× overrepresented among your significant genes relative to the background.
+
+>1 enrichment, <1 depletion
+fisher's exact test / hypergeometric 
+p = 0.014
+
+FOLD: odds ratio
+OR = odds a (gene is in gs | significant) / odds(gene in gs| not significant)
+OR = 5; sig genes 5 times more likely to be in gs than background genes
+>1 positive assocation (<1 negative association)
+
+
+Let's define gene set.
+
+
+Now expand to many gene sets.
+
+(And now with FDR correction)
+
+
+# ORA: Pros & cons:
+
+## ORA Pros
+
+- Analysis is relatively simple to execute.
+- Interpretation is straightforward.
+- Supports a wide range of biological processes and model systems.
+- Significant results are a robust indicator of biological activity.
+  
+## ORA Cons
+
+  - Requires a background set of genes. Generally straightforward for RNA-Seq
+    (transcriptome) or microarray, more nuanced for proteins.
+  - Requires a subset of diffex genes, usually partitioned with arbitrary cutoff value. 
+  - Treats all genes the same; doesn't care whether the gene is over or under 
+    or by how much. (That's why the inputs are not ranked or ordered - they are 
+    simply sets of genes.)
+  - Too few diffex genes or too many diffex genes will miss true associations.
+
+
+# Common functional analysis approaches
+
+- ORA 
+- FCS / GSEA
+- TP
+
+Similar steps / Similar inputs / Similar outputs
+Our focus / path in this workshop
+An example builk RNA-Seq experiment.
+
+  
+Note that we are focusing on gene expression, but functional analysis can be applied to
+many experiment designs and analytes including non-coding RNA, protein 
+expression, metabolites, and DNA methylation.
+   
+# Summary 
+
+1. Functional analysis is a useful extension of a differential expression (DE) analysis:
+
+  - Adding biological context can connect observed DE patterns with the research 
+    question. 
+  
+  - Adding biological context can reduce complexity: Functional analysis starts 
+    with hundreds to thousands of genes and emits dozens of biological processes 
+    or functional modules. This can greatly simplify interpretation. 
+    
+  - Aggregating the effects of individual genes into processes or functional 
+    modules reveals coordinated changes. 
+    
+  - Functional analysis results are simpler to generalize and compare across 
+    individual DE experiments.
+
+
+2. There are many tools, but three common approaches to functional analysis:
+
+  - Overreprestation Analysis (ORA)
+  - Functional Class Scoring (FCS) / Gene Set Enrichment Analysis (GSEA)
+  - Topology / Pathway analysis (TP)
+  
+3. The details of each of these approaches are distinct, but they share similar 
+   high-level steps and *outputs*:
+
+  - Start with a collection of genes, aka the *query genes*.
+  - Compare the query genes with other gene sets
+  - Determine *enrichment*, *statistical significance*, *adjusted significance*.
+
+
+4. Understanding ORA and FCS provides a solid foundation for running and 
+   interpreting functional analysis so the workshop will focus on these
+   two approaches along with some discussion of key reference databases.
+   We will start with an exploration of ORA on bulk RNA-Seq data from a specific 
+   mouse experiment.
+
+<hr/>
+
+## References
+
+1. https://bioinformatics.ccr.cancer.gov/btep/pathways-and-gene-sets-what-is-functional-enrichment-analysis/
+2. https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375#pcbi-1002375-t001
+
+| [Previous lesson](workshop-intro.html) | [Top of this lesson](#top) | [Next lesson](more-stuff.html) |
+| :--- | :----: | ---: |
