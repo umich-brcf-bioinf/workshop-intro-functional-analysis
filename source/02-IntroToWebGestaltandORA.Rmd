@@ -215,7 +215,7 @@ Let's look through an example of ORA results from WebGestalt for our bulk RNA-se
 
 <br>
 
-
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA)  
 
 
 ---
