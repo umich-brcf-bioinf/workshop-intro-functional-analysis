@@ -51,8 +51,6 @@ source("../bin/set_values.R")
 
 # Why Functional analysis 
 
-![DEG analysis flowchart]()
-
 Consider this plot:
 ![DEG volcano plot]()
 
@@ -67,6 +65,11 @@ research question?
 
 Research question may involve specific genes, but is invariably rooted in 
 biological systems. Functional analysis can bridge this gap.
+
+![DEG analysis flowchart]()
+Functional analysis (aka enrichment analysis, pathway enrichment analysis, ...)
+Functional analysis identified patterns in your results and compares them to 
+known biological patterns.
 
 Imagine we constructed ths plot based on the volcano plot above:
 
