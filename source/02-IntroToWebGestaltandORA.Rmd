@@ -77,7 +77,7 @@ Then, the main section is the left side of the "Basic parameters" box, which inc
 
 - "Method of Interest" - allows selection of which approach to use for functional enrichment.   
 - "Organism of Interest" - selection includes humans, mouse, rat, plus other several other model organisms.  
-- "Functional Database" - allows selection of functional/biological knowledge database that will be used for comparison to the input data.   
+- "Functional Database" - allows selection of functional/biological knowledge database that will be compared to the input data.   
 
 There is also an area on the right where example inputs are provided for the supported analytes/functional database combinations, which can be useful to understanding what format or other attributes for the inputs are required to run the tool. Since we'll be running the tool together, we'll skip the example inputs section for now. 
 
@@ -87,12 +87,17 @@ There is also an area on the right where example inputs are provided for the sup
 ![WebGestalt homepage inputs](images/content/02-WebGestalt_browser/02-WebGestalt_inputInset.png)  
 <br>
 
-If we scroll down slightly then we can see a box for providing inputs to WebGestalt, which includes prompts for:
+If we scroll down slightly then we can see a box for providing inputs to WebGestalt, which includes prompts on the left side of the page for:
 
-- "Analyte Type" - allows selection of what was measured in the experiment; for the workshop we'll only be using data from experiments that fall into the `Gene/Protein` category    
-- "Upload ID List" - option to upload a file of input genes
-- "Input ID List" - 
+- "Analyte Type" - allows selection of what was measured in the experiment; for the workshop we'll only be using data from experiments that fall into the `Gene/Protein` category.   
+- "Upload ID List" - option to upload a file with input genes.    
+- "Input ID List" - option to paste in list of input genes.    
 
+On right side are prompts for:
+
+- "Select Reference Set" - options to select general reference/background gene set options.    
+- "ID type for uploaded reference list" - allows select of ID type for a user provided reference/background gene set.    
+- "Upload User Reference Set Fle" - allows users to upload a file containing a custom reference/background gene set.    
 
 Below that, there is a area labeled "Advanced parameters", that allows some changes to the default options multiple hypothesis correction method and significance cutoff, but we'll also skip that section for now.
 
@@ -102,39 +107,15 @@ Below that, there is a area labeled "Advanced parameters", that allows some chan
 
 # WebGestalt browser demonstration
 
-Let's start with some of the basic parameters and delve into the options we want to start with. 
-
-<!-- Click through methods to show ORA vs other options & have demo data -->
-
-<!-- Load demo data to show what inputs are needed-->
+Together we'll walk through the steps to run an over representation analysis (ORA) for bulk RNA-seq results from our [RNA-seq demystified workshop](https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/). 
 
 <!-- Note input gene list options - symbol, entrez, ensembl, etc. which will -->
 
+<!-- Focus for results is the table (take the most time with that) -->
 
 ## Input data
 
-Bulk RNA-seq results from our [RNA-seq demystified workshop](https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/) - statistics from comparision between deficient vs control mice using DESeq2 (file = `DE_results_deficient_vs_control_annotated.csv`)
-
-## Hands-on: Review input data and prepare for analysis
-<!-- Consider moving this until after the WebGestalt introduction, so that the learners can see that the tool requires a list of DE vs non-DE for best results -->
-
-To start, we'll load the input data and review it. The data is in CSV format, so we can use `read_csv()` from the `tidyverse` library to load it into R.
-
-```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
-# Load necessary libraries
-library(tidyverse)
-
-# Check working directory
-getwd()
-
-# Load the bulk RNA-seq results
-deficient.v.control_bulkDE <- read_csv("../data/de_deficient_vs_control_annotated.csv") #TO REVISE - path may need to be adjusted
-
-# Check the first few rows of the data
-head(deficient.v.control_bulkDE)
-```
-
-In the table above, we have the following columns:
+The comparision between deficient vs control mice using DESeq2 generated statistics for each gene; the table of results (`de_deficient_vs_control_annotated.csv`) had the following columns:
 
 - `id`: The ENSEMBL gene identifier.
 - `symbol`: The gene symbol.
@@ -145,36 +126,14 @@ samples.
 - `stat`: The test statistic for the differential expression test.
 - `pvalue`: The p-value for the differential expression test.
 
-A key attribute of this table is that includes statistics for all genes included in the comparison, not just those that are differentially expressed. This allows us to use functional enrichment tools that use both a "positive" set of DE genes and a "background" set of all genes measured in the experiment, like ORA.
+A key attribute of the output table from the original analysis is that includes statistics for all genes included in the comparison, not just those that are differentially expressed.
 
-Next, we'll prepare the data for analysis by creating a list of DE genes and a background set of all genes. We'll use the `log2FoldChange` and `pvalue` columns to identify DE genes, and we'll use the `gene` column as our gene identifiers.
- 
+<!-- add icon for "cooking show" data --> 
+
+Behind the scenes, we used the same thresholds as the original analysis for the `log2FoldChange` and `pvalue` columns to identify DE gene. The we oua list of the IDs for the DE genes, using the `gene` column . In the next section, we re-create this file together but for simplicity we'll accept this as an input to use for our analysis.
+
  <!-- include note about reproducibility and knowing thresholds -->
 
-```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
-# Generate positive set (DE gene symbols)
-deficient_DE_only <- deficient.v.control_bulkDE %>%
-  filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
-
-deficient_DE_GeneList <- deficient_DE_only %>% pull(symbol) %>% na.omit()
-
-head(deficient_DE_only)
-head(deficient_DE_GeneList)
-```
-
-
-```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
-# Repeat to generate background set (all gene names)
-deficient_background_GeneList <- deficient.v.control_bulkDE %>% pull(symbol) %>% na.omit()
-```
-
-
-```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
-# write out to file (text only?)
-write(deficient_DE_GeneList, file ="../data/deficient_DE_GeneList.txt", ncolumns = 1)
-write(deficient_background_GeneList, file ="../data/deficient_background_GeneList.txt", ncolumns = 1)
-
-```
 
 These outputs then allow us to submit data via the web browser version of WebGestalt.
 
