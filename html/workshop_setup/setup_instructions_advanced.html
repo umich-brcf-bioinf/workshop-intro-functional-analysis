@@ -1730,7 +1730,7 @@ launch a new RStudio window. The RStudio window is divided into several
 panes. The lower left pane shows the <strong>Console</strong> tab and
 will show some text followed by a command prompt (&gt;):</p>
 <pre><code>R version ...
-Copyright (C) 2024 The R Foundation for Statistical Computing
+Copyright (C) 20XX The R Foundation for Statistical Computing
 Platform: ...
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -1747,11 +1747,12 @@ Type &#39;demo()&#39; for some demos, &#39;help()&#39; for on-line help, or
 &#39;help.start()&#39; for an HTML browser interface to help.
 Type &#39;q()&#39; to quit R.
 
-&gt; 
-</code></pre>
+&gt; </code></pre>
 <p>1.8 Following the workshop, you can remove R and RStudio. As an Admin
 user, go Start &gt; Settings &gt; Apps &amp; Features. Click on the
 program to remove and click Uninstall.</p>
+<p>1.9 Proceed to <a href="#installing-required-r-libraries">Installing
+required R libraries</a> below.</p>
 </div>
 </div>
 <div id="macintosh-setup" class="section level2">
@@ -1813,16 +1814,16 @@ Type &#39;demo()&#39; for some demos, &#39;help()&#39; for on-line help, or
 &#39;help.start()&#39; for an HTML browser interface to help.
 Type &#39;q()&#39; to quit R.
 
-&gt; 
-</code></pre>
+&gt; </code></pre>
 <p>1.7 Following the workshop, you can remove R and RStudio. Open your
 Applications directory, and drag the R and RStudio application into the
 Trash.</p>
+<p>1.8 Proceed to <a href="#installing-required-r-libraries">Installing
+required R libraries</a> below.</p>
 </div>
-<div id="installing-required-libraries" class="section level3">
-<h3>Installing required libraries</h3>
-<div id="install-r-packages" class="section level4">
-<h4>Install R packages</h4>
+</div>
+<div id="installing-required-r-libraries" class="section level2">
+<h2>Installing required R libraries</h2>
 <p>2.1 The workshop exercises requires the installation of special R
 packages. To install them into RStudio:</p>
 <ul>
@@ -1845,12 +1846,14 @@ downstream impact).</li>
   &quot;ggrepel&quot;, 
   &quot;RColorBrewer&quot;)
 
+missing_packages &lt;- setdiff(required_packages, rownames(installed.packages()))
+
 if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)) {
   install.packages(&quot;BiocManager&quot;)
   requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)
 }
 
-BiocManager::install(bioconductor_packages, update=FALSE, ask=FALSE)
+BiocManager::install(missing_packages, update=FALSE, ask=FALSE)
 
 missing &lt;- setdiff(required_packages, rownames(installed.packages()))
 
@@ -1863,8 +1866,6 @@ if (!length(missing)) {
 <em>Save workspace image…</em>, click <strong>Don’t Save</strong>.</p>
 <p><em>Your workstation is ready for the workshop. Thank you for your
 patience and fortitude.</em></p>
-</div>
-</div>
 </div>
 
 
