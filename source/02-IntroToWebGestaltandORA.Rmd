@@ -61,16 +61,15 @@ source("../bin/set_values.R")
 
 We've discussed some of the motivations and general types of approaches for performing functional enrichment analysis, but what tools can we use to perform these kinds of analyses?
 
-While there are many options, [WebGestalt](https://pubmed.ncbi.nlm.nih.gov/15980575/) (WEB-based GEne SeT AnaLysis Toolkit) is an approachable option since it includes a web-based interface that doesn't require any programming knowledge. It also offers several methods for enrichment analysis, can run enrichments for data from a range of organisms, and the authors have [recently updated the tool](https://academic.oup.com/nar/article/52/W1/W415/7684598?login=false/) including expanding what analytes are supported.
+While there are many tools available, [WebGestalt](https://pubmed.ncbi.nlm.nih.gov/15980575/) (WEB-based GEne SeT AnaLysis Toolkit) is an approachable option since it includes a web-based interface that doesn't require any programming knowledge. It also offers several methods for enrichment analysis, can run enrichments for data from a range of organisms, and the authors have [recently updated the tool](https://academic.oup.com/nar/article/52/W1/W415/7684598?login=false/) including expanding what analytes are supported.
 
 We'll start by reviewing the [WebGestalt's browser interface](http://www.webgestalt.org/), focusing on RNA as our analyte and familiarizing ourselves with the options available via the browser interface before submitting our own functional enrichment. 
 
 # WebGestalt interface
 
-If we navigate to the [WebGestalt homepage](http://www.webgestalt.org/), we can see that it has several sections. At the top, we have the main navigation menu, which includes links including to the Manual, Citation, a User Forum, and a link to the 2019 version of the tool.
+If we navigate to the [WebGestalt homepage](http://www.webgestalt.org/), we can see that it has several sections. At the top, is the main navigation menu, which includes links including to the Manual, Citation, a User Forum, and a link to the 2019 version of the tool.
 
-<!-- replace with updated figure -->
-![WebGestalt homepage top](images/content/02-WebGestalt_browser/) 
+![WebGestalt homepage overview](images/content/02-WebGestalt_browser/Intro_a_WebGestalt_topOfPage.png)  
 <br>
 
 Then, the main section is the left side of the "Basic parameters" box, which includes prompts for:   
@@ -84,7 +83,7 @@ There is also an area on the right where example inputs are provided for the sup
 <br>
 
 <!-- replace with updated figure -->
-![WebGestalt homepage inputs](images/content/02-WebGestalt_browser/02-WebGestalt_inputInset.png)  
+![WebGestalt homepage overview](images/content/02-WebGestalt_browser/Intro_b_WebGestalt_bottomOfPage.png)  
 <br>
 
 If we scroll down slightly then we can see a box for providing inputs to WebGestalt, which includes prompts on the left side of the page for:
@@ -128,37 +127,73 @@ samples.
 
 A key attribute of the output table from the original analysis is that includes statistics for all genes included in the comparison, not just those that are differentially expressed.
 
-<!-- add icon for "cooking show" data --> 
+<!-- add icon for "cooking show" data ? --> 
 
-Behind the scenes, we used the same thresholds as the original analysis for the `log2FoldChange` and `pvalue` columns to identify DE gene. The we oua list of the IDs for the DE genes, using the `gene` column . In the next section, we re-create this file together but for simplicity we'll accept this as an input to use for our analysis.
+Behind the scenes, we used the same thresholds as the original analysis for the `log2FoldChange` and `pvalue` columns to identify DE gene. Then we created a list of the IDs for the DE genes, using the `gene` column, and output that list to file. We'll re-create this file together in the next section, but for simplicity we'll accept this pre-made file of DE genes as an input to use for the web browser version of WebGestalt.
 
- <!-- include note about reproducibility and knowing thresholds -->
+<!-- include note about reproducibility and knowing thresholds -->
 
+<!-- Add step to download ? -->
 
-These outputs then allow us to submit data via the web browser version of WebGestalt.
 
 ### Running WebGestalt with our bulk RNA-seq results
 
 <br>
 
-![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_withError.png)  
+![WebGestalt basic parameters](images/content/02-WebGestalt_browser/Submission_a_basicParams.png)  
+First, we'll navigate back to the top section of the `Basic parameters` section of the WebGestalt browser interface. The default `Method of Interest` is "Over-Representation Analysis" which also happens to be the type of functional enrichment we want to run right now, so we'll keep that default option. 
 
 <br>
 
 
-![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA_b_submission_errorMessage.png)  
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_b_selectOrganism.png)  
+<br>
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_c_main_databaseOptions.png)  
+<br>
+
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_d_main_databaseGO-selected.png)  
+<br>
+
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_e_subtype_processOptions.png)  
+<br>
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_f_subtype_bioNonRedund-selected.png)  
+<br>
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_g_upload_listOptions.png)  
+<br>
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_h_upload_showFolderPrompt.png)  
+<br>
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_i_upload_DE_fileUploaded.png)  
+<br>
+
 
 <br>
 
-We ran into an error - why? Let's go back to the submission page and see if we can find the issue. 
-
-
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_j_reference_listOptions.png)  
 <br>
 
-![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_withErrorHighlighted.png)  
-If we look at the submission page, the `ID type for uploaded reference list` is "Gene name", which doesn't match the ID type we used for our gene list, which was "Gene symbol". Let's change the `ID type for uploaded reference list` to "Gene symbol" and re-submit. 
 
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_j_reference_listOptions_detailed.png)  
 <br>
+
+
+![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_k_reference_genomeProtein-selected.png)  
+<br>
+
+![WebGestalt final selections](images/content/02-WebGestalt_browser/Submission_l_final-selections_fullScreen.png)  
+<br>
+
+Once we've double-checked our options, then we can submit the ORA job using the `Submit` button.
+
+![WebGestalt final selections](images/content/02-WebGestalt_browser/Submission_m_submission_button.png)
+
+
 
 ---
 
