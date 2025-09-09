@@ -211,10 +211,11 @@ packages. To install them into RStudio:
 # =========================================================================
 
 required_packages = c(
+  "sessioninfo",
+  "here",
   "tidyverse",
   "ggrepel", 
   "RColorBrewer",
-  "here",
   "WebGestaltR",
   "org.Mm.eg.db",
   "fgsea",
