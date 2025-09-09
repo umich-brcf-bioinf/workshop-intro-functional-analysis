@@ -39,29 +39,36 @@ source("../bin/set_values.R")
 
 # Workshop goals and topics
 
- - We want to make the computers work harder so we can do more meaningful work. This workshop introduces foundational tools and techniques that make computational projects simpler, more powerful, and more reproducible.
+**Functional Enrichment Analysis** places a list of differentially expressed 
+genes into a biological context. It presents a systems-level perspective that 
+can reveal expression patterns, elucidate molecular mechanisms, and guide 
+follow-up experiments.
 
- - By the end of the workshop, attendees will be able to
-   - Use RStudio to build R scripts, examine R data structures, navigate directories and files
-   - Understand basics of importing data into R and ways to clean/manipulate data
-   - Visualize data as plots
+This workshop is targeted toward researchers comfortable with R/RStudio who 
+would like to better understand and apply functional enrichment approaches for 
+bulk and/or single-cell RNA-seq datasets.
 
- - Our purpose is not to be exhaustive, there is a lot that we cannot cover in
-   the allotted time, and we don't expect anyone to be an expert at the end of
-   the workshop. 
+By the end of this workshop, participants will be able to:
 
-- We hope that this introduction helps you over the steepest parts of the learning curve and gives a sense of what’s possible so you can 
-recognize these techniques when you see them and, with some independent study, apply them in your own work.
+- Describe common approaches, tools, and reference databases.
+- Run analyses on single-cell and bulk RNA-Seq inputs using web tools and R.
+- Understand and use different functional analysis approaches, including 
+  over-representation analysis and GSEA analysis.
+- Build meta-analyses across multiple comparisons.
+- Visualize gene-level activity within gene sets and create publication-ready figures.
 
+- We hope that this introduction provides a foundation to help interpret and run 
+functional analyses on your own. 
+
+- Our purpose is not to be exhaustive, there is a lot that we cannot cover in
+the allotted time, and we don't expect anyone to be an expert at the end of
+the workshop. 
+   
  - Please let us know if there is anything we can do to improve the workshop experience.
 
-| ![](images/headshots/headshot_cgates.jpg) | ![](images/headshots/headshot_mbradenb.jpg) | ![](images/headshots/headshot_trsaari.jpg) |  ![](images/headshots/headshot_wld.jpg) |
-|:-:|:-:|:-:|:-:|
-| **Chris** | **Marci** | **Travis** | **Bill** |
-| ![](images/headshots/headshot_damki.jpg) | ![](images/headshots/headshot_clairis.jpg) | ![](images/headshots/headshot_rcavalca.jpg) |
-| **Dana** | **Clair** | **Raymond** | 
-
-<br/>
+## About the workshop team
+```{r, child='helper-gallery.Rmd'}
+```
 
 
 # Code of Conduct
@@ -187,7 +194,7 @@ It is important that you can see:
  - Slack
  - Lesson plan web page
 
-![arranged screens](images/workshop-intro/arranged_screens.png?)
+![arranged screens](images/workshop-intro/arranged_screens.png)
 <br/>
 <br/>
 
@@ -239,4 +246,3 @@ It is important that you can see:
 
 * The workshop Code of Conduct has been adapted the [NumFocus Code of Conduct](https://numfocus.org/code-of-conduct){target="_blank"} which itself draws from from numerous sources, including the Geek Feminism wiki, created by the Ada Initiative and other volunteers, which is under a Creative Commons Zero license, the Contributor Covenant version 1.2.0, the Bokeh Code of Conduct, the SciPy Code of Conduct, the Carpentries Code of Conduct, and the NeurIPS Code of Conduct.
 
-* The dplyr icons were copied from the dplyr cheatsheet from posit.co (https://www.rstudio.org/links/data_transformation_cheat_sheet) and they are licensed as CC BY SA.

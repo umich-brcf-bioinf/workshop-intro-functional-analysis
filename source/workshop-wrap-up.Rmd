@@ -47,27 +47,24 @@ that will enable more efficient, reproducible, and impactful computational resea
 
 - This workshop website (aka "show notes") will be available.
 
-- The [UM Bioinformatics Core Workshop Slack channel](https://umbioinfcoreworkshops.slack.com){target="_blank"} 
+- The content in the [UM Bioinformatics Core Workshop Slack channel](https://umbioinfcoreworkshops.slack.com){target="_blank"} 
   will be available for 90 days.
 
 ---
 
 ### Can I continue to use the RStudio environments we used in the workshop?
-- The RStudio workshop compute environment will be available through 4/11/2025.
+- The RStudio workshop compute environment will be available through `r workshop_vars$rstudio_server_enddate`.
   - _Please save all your R scripts now_ so that we can "right-size" the compute environment immediately following today's workshop session.
 - You can download files from the workshop environment from your terminal/command line window as below.
   (You will need to substitute your actual workshop username and type workshop password when prompted.)
   ```
-  mkdir workshop-intro-r-rstudio
-  scp -r YOUR_USERNAME@`r workshop_vars$ssh_download_dns`:"IRR*" workshop-intro-r-rstudio
+  mkdir workshop-intro-functional-analysis
+  scp -r YOUR_USERNAME@`r workshop_vars$ssh_download_dns`:"IFUN*" workshop-intro-functional-analysis
   ```
-### How could I install this software on my workstation/laptop?
+### Where else could I use this software?
   - See [Advanced setup instructions](workshop_setup/setup_instructions_advanced.html){target="_blank"}
-    for details on how to install programs on your own computer.
-
-### Other resources
-
-...
+    for details on how to install RStudio and required packages on your own computer.
+  - UMich users can run RStudio/WebGestaltR on the [UM Great Lakes HPC](webgestaltr-on-great-lakes.html){target="_blank"}.
 
 
 ---
@@ -78,13 +75,8 @@ that will enable more efficient, reproducible, and impactful computational resea
 
 ## Thanks to/from the workshop team
 
-| ![](images/headshots/headshot_cgates.jpg) | ![](images/headshots/headshot_mbradenb.jpg) | ![](images/headshots/headshot_trsaari.jpg) |  ![](images/headshots/headshot_wld.jpg) |
-|:-:|:-:|:-:|:-:|
-| **Chris** | **Marci** | **Travis** | **Bill** |
-| ![](images/headshots/headshot_damki.jpg) | ![](images/headshots/headshot_clairis.jpg) | ![](images/headshots/headshot_rcavalca.jpg) |
-| **Dana** | **Clair** | **Raymond** | 
-
-<br/>
+```{r, child='helper-gallery.Rmd'}
+```
 
 Thank you for participating in our workshop. We welcome your questions and
 feedback now and in the future.
