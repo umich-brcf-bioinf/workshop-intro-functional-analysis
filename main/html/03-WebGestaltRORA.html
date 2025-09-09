@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>ORA with R</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from built via
+https://favicon.io/emoji-favicons/computer/
+-->
+<meta name="google-site-verification" content="t-Wgs-RXt8xi94RSoFamxoD2P2h-Hh7M_t_iOuxFZUo" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="workshop-intro.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
+    </li>
+    <li>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="07-advanced-visualizations.html">Advanced visualizations</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="workshop-wrap-up.html">Wrap up</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">ORA with R</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 16px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+
+</style>
+<script>
+  addClassKlippyTo("pre.r, pre.markdown, pre.bash");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<pre><code>## [1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
+<div id="objectives" class="section level1">
+<h1>Objectives</h1>
+<ul>
+<li>Form the inputs for over-representation analysis (ORA) in
+WebGestaltR from a differential expression analysis.</li>
+<li>Use WebGestaltR to do an ORA analysis.</li>
+<li>Understand how to interpret the results of ORA analysis.</li>
+</ul>
+</div>
+<div id="getting-started" class="section level1">
+<h1>Getting started</h1>
+<p>As we have seen with the web interface for WebGestalt, an
+over-representation analysis on differential expression results
+requires:</p>
+<ul>
+<li>A list of differentially expressed genes (subject to some cutoff for
+significance),</li>
+<li>A background list of genes measured by the experiment, and</li>
+<li>The set of genesets / pathways on which to test for
+over-representation.</li>
+</ul>
+<p>Let’s look at the documentation for the main function in WebGestaltR
+to understand how to input these required objects into the function.
+Think of it as reading the recipe before you start cooking.</p>
+<pre class="r"><code># =========================================================================
+# ORA with WebGestlatR
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load the libraries
+library(WebGestaltR)
+library(tidyverse)</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Look at the manual for the main function
+?WebGestaltR</code></pre>
+<p>There are a lot of arguments that go into this function, but, like
+many other R functions, we won’t need or use all of them. Let’s focus on
+the arguments we’ll be using, while noting some of the defaults.</p>
+<ul>
+<li><code>enrichMethod</code> is the statistical method used for the
+functional enrichment. We will use <code>'ORA'</code> or
+<code>'GSEA'</code> for this workshop.</li>
+<li><code>organism</code> is the organism used for the experiment. The
+selection helps WebGestaltR extract the correct genes for the correct
+gene sets. Use the <code>listOrganism()</code> function to see all
+available organisms in the package, and, importantly, how they’re
+referred to.</li>
+</ul>
+<pre class="r"><code># -------------------------------------------------------------------------
+# List available organisms
+listOrganism()</code></pre>
+<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;       &quot;dmelanogaster&quot; &quot;ggallus&quot;       &quot;hsapiens&quot;     
+[10] &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
+<ul>
+<li><code>enrichDatabase</code> are the genesets and pathways we want to
+perform the enrichment analysis over. Use the <code>listGeneSet()</code>
+function to see the available genesets for specific organisms. For
+this</li>
+</ul>
+<pre class="r"><code># -------------------------------------------------------------------------
+# List available genesets for mmusculus
+listGeneSet(organism = &#39;mmusculus&#39;)</code></pre>
+<pre><code>                                              name
+1                  geneontology_Biological_Process
+2      geneontology_Biological_Process_noRedundant
+3                  geneontology_Cellular_Component
+4      geneontology_Cellular_Component_noRedundant
+5                  geneontology_Molecular_Function
+6      geneontology_Molecular_Function_noRedundant
+7                                     pathway_KEGG
+8                                  pathway_Panther
+9                                 pathway_Reactome
+10                             pathway_Wikipathway
+11                                   network_CORUM
+12                                  network_CORUMA
+13                      network_Kinase_phosphosite
+14                           network_Kinase_target
+15                             network_PPI_BIOGRID
+16                                network_PTMsigDB
+17             network_Transcription_Factor_target
+18                            network_miRNA_target
+19          phenotype_Mammalian_Phenotype_Ontology
+20             chromosomalLocation_CytogeneticBand
+21         community-contributed_5htGeneSets_Conte
+22 community-contributed_MuscleGeneSets_Duddy_2017
+                                                                                                                                                                                                                                                                                                                         description
+1                                                                                                                                                                                                                                    The gene ontology biological process database was downloaded from http://www.geneontology.org/.
+2                          The gene ontology biological process database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
+3                                                                                                                                                                                                                                    The gene ontology cellular component database was downloaded from http://www.geneontology.org/.
+4                          The gene ontology cellular component database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
+5                                                                                                                                                                                                                                    The gene ontology molecular function database was downloaded from http://www.geneontology.org/.
+6                          The gene ontology molecular function database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
+7                                                                                                                                                                                                                                                                 The KEGG pathway database was downloaded from http://www.kegg.jp/.
+8                                                                                                                                                                                                                                                The PANTHER pathway database was downloaded from http://www.pantherdb.org/pathway/.
+9                                                                                                                                                                                                                                                        The Reactome pathway database was downloaded from http://www.reactome.org/.
+10                                                                                                                                                                                                                                                         The Wikipathway database was downloaded from http://www.wikipathway.org/.
+11                                                                                                                                                                                                                       The core complex subunits were downloaded from CORUM database (https://mips.helmholtz-muenchen.de/corum/#).
+12                                                                                                                                                                                                                                                                                                                                  
+13 The relationship between Kinase and the corresponding protein phosposite position was from RegPhos (http://140.138.144.141/~RegPhos/). Then, we got the 15-mer sequence window around the phosphorylated site of the peptide (up and down 7 amino acid) from the Uniprot website (http://www.uniprot.org/) as the identifier tag.
+14                                                                                                                                          The relationship between Kinase and its targets was from PhosphositePlus (http://www.phosphosite.org/) and the phosphorylation relationships from a in-house combined signaling network.
+15                                                                      The protein-protein interaction (PPI) network was downloaded from BIOGRID (https://thebiogrid.org/). Then, we used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
+16                                                                                                                                                                                                                                                                                                                                  
+17                                                                                                                                                                                        The relationship between transcription factor and its targets was downloaded from MsigDB (http://software.broadinstitute.org/gsea/msigdb).
+18                                                                                                                                                                                                       The relationship between miRNA and its targets was downloaded from MsigDB (http://software.broadinstitute.org/gsea/msigdb).
+19                                                                                                                                                                                                                                 The phenotype ontology information for mouse was downloaded from http://www.informatics.jax.org/.
+20                                                                                                                                                                                                                                                                                                                                  
+21                                                                                                                                                                                                                                                                                                                                  
+22                                                                                                                                                                                                                                                                                                  Muscle Gene Sets (v3) Duddy 2017
+           idType
+1      entrezgene
+2      entrezgene
+3      entrezgene
+4      entrezgene
+5      entrezgene
+6      entrezgene
+7      entrezgene
+8      entrezgene
+9      entrezgene
+10     entrezgene
+11     entrezgene
+12     entrezgene
+13 phosphositeSeq
+14 phosphositeSeq
+15     entrezgene
+16 phosphositeSeq
+17     entrezgene
+18     entrezgene
+19     entrezgene
+20     entrezgene
+21     entrezgene
+22     entrezgene</code></pre>
+<ul>
+<li><code>interestGene</code> should be a vector of gene identifiers
+which are differentially expressed. When it comes time to use the GSEA
+method, we’ll highlight the different form this particular input
+takes.</li>
+<li><code>interestGeneType</code> is the type of identifier used to
+describe the genes. Use the <code>listIdType()</code> function to see
+which identifiers are available for which organisms. We will be using
+the <code>'genesymbol'</code> type, but note the presence of
+<code>'ensemble_gene_id'</code> and <code>'entrezgene'</code>, among
+other common (and not-so-common) identifiers.</li>
+</ul>
+<pre class="r"><code># -------------------------------------------------------------------------
+# List gene identifier types for mmusculus
+listIdType(organism = &#39;mmusculus&#39;)</code></pre>
+<pre><code> [1] &quot;ABI_550XL_Wildfire&quot;                  &quot;ABI_SOLiD&quot;                           &quot;ABI_SOLiD_Exon&quot;                      &quot;ABI_SOLiD_Klaus&quot;                    
+ [5] &quot;IonTorrent_RNASeqMature&quot;             &quot;MGI&quot;                                 &quot;Protein_GeneChip34&quot;                  &quot;Protein_GeneChip41&quot;                 
+ [9] &quot;Protein_GeneChip51&quot;                  &quot;affy_ClariomD-MTA-1_0&quot;               &quot;affy_HTMG-430PM_GPL11180&quot;            &quot;affy_mg_u74a&quot;                       
+[13] &quot;affy_mg_u74av2&quot;                      &quot;affy_mg_u74b&quot;                        &quot;affy_mg_u74bv2&quot;                      &quot;affy_mg_u74c&quot;                       
+[17] &quot;affy_mg_u74cv2&quot;                      &quot;affy_microRNA4&quot;                      &quot;affy_moe430a&quot;                        &quot;affy_moe430b&quot;                       
+[21] &quot;affy_moex_1_0_st_v1&quot;                 &quot;affy_mogene_1_0_st_v1&quot;               &quot;affy_mogene_2_1_st_v1&quot;               &quot;affy_mouse430_2&quot;                    
+[25] &quot;affy_mouse430a_2&quot;                    &quot;affy_mu11ksuba&quot;                      &quot;affy_mu11ksubb&quot;                      &quot;agilent_Custom_GPL2510&quot;             
+[29] &quot;agilent_ToxicogenomicsG4121A_GPL891&quot; &quot;agilent_sureprint_g3_ge_8x60k&quot;       &quot;agilent_wholegenome&quot;                 &quot;agilent_wholegenome_4x44k_v1&quot;       
+[33] &quot;agilent_wholegenome_4x44k_v2&quot;        &quot;codelink_codelink&quot;                   &quot;dbSNP&quot;                               &quot;embl&quot;                               
+[37] &quot;ensembl_gene_id&quot;                     &quot;ensembl_peptide_id&quot;                  &quot;entrezgene&quot;                          &quot;entrezgene_protein-coding&quot;          
+[41] &quot;genename&quot;                            &quot;genesymbol&quot;                          &quot;illumina_ScriptSeq_RNASeqV2&quot;         &quot;illumina_WG6_Customarray&quot;           
+[45] &quot;illumina_mouseref_8&quot;                 &quot;illumina_mouseref_8_v2&quot;              &quot;illumina_mousewg_6_v1&quot;               &quot;illumina_mousewg_6_v2&quot;              
+[49] &quot;interpro&quot;                            &quot;phalanx_onearray&quot;                    &quot;phosphositeEnsembl&quot;                  &quot;phosphositeRefseq&quot;                  
+[53] &quot;phosphositeSeq&quot;                      &quot;phosphositeUniprot&quot;                  &quot;protein_id&quot;                          &quot;refseq_mrna&quot;                        
+[57] &quot;refseq_peptide&quot;                      &quot;unigene&quot;                             &quot;uniprotswissprot&quot;                   </code></pre>
+<ul>
+<li><code>referenceGene</code> is also a vector of gene identifiers, but
+this is the background set of genes. In our case, it will be all the
+genes tested for differential expression, noting that this itself
+implies some filtering prior to the test for differential
+expression.</li>
+<li><code>referenceGeneType</code> is again the type of identifier used,
+but to describe the reference set.</li>
+<li><code>fdrThr</code> refers to the significance threshold for the
+<code>fdr</code> method (by default the Benjamini-Hochberg FDR
+correction). The default is <code>fdrThre = 0.05</code>, but you may
+want to relax this threshold to see what genesets are “close” to
+significance.</li>
+<li><code>outputDirectory</code> and <code>projectName</code> are used
+to specify where to put results and what to call them. By default,
+<code>WebGestaltR()</code> has rich output in the form of supporting
+files, but also an HTML report (just like the web-version) that
+summarizes the results and provides helpful visualizations.</li>
+</ul>
+<p>We can think of the above arguments as the minimum necessary for an
+over-representation analysis. Now let’s read in the differential
+expression results, and create the right inputs for the ORA.</p>
+<div id="read-in-diffex-results" class="section level2">
+<h2>Read in diffex results</h2>
+<p>For our first ORA, we will use the differential expression results
+from the same bulk RNA-seq data we use in the RNA-seq Demystified
+workshop <a
+href="https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/Module07_DESeq2Init.html#Sample_Information">(link)</a>.
+Briefly, we have three replicates for each group of mice with an
+iron-deficient diet and a normal diet. We ran DESeq2 to test for
+differential expression between these two groups.</p>
+<p>We have provided these differential results as a CSV file, which we
+can read in with the <code>read_csv()</code> function:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Read diffex results
+rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
+<pre><code>Rows: 16249 Columns: 9
+── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (3): id, symbol, call
+dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>As always, it’s helpful to look at the result of what we read in to
+get a sense for how to work with it:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+head(rsd_diffex)</code></pre>
+<pre><code># A tibble: 6 × 9
+  id                 symbol baseMean log2FoldChange lfcSE   stat pvalue   padj call 
+  &lt;chr&gt;              &lt;chr&gt;     &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
+1 ENSMUSG00000000001 Gnai3   1490.            0.278 0.148  1.88  0.0605  0.325 NS   
+2 ENSMUSG00000000028 Cdc45   1749.            0.222 0.129  1.72  0.0853  0.386 NS   
+3 ENSMUSG00000000031 H19     2152.            0.136 0.284  0.478 0.633   0.867 NS   
+4 ENSMUSG00000000037 Scml2     24.9           0.600 0.562  1.07  0.286  NA     NS   
+5 ENSMUSG00000000049 Apoh       7.78         -1.23  1.15  -1.07  0.285  NA     NS   
+6 ENSMUSG00000000056 Narf   19654.           -0.201 0.167 -1.20  0.229   0.596 NS   </code></pre>
+</div>
+<div id="extracting-genes-for-ora" class="section level2">
+<h2>Extracting genes for ORA</h2>
+<p>We can see some of the typical output from DESeq2, including a gene
+identifier (or two), overall expression, log fold-change, p-value, and
+adjusted p-value (FDR). As we saw in the documentation for
+<code>WebGestaltR()</code>, we’ll need two lists of gene
+identifiers:</p>
+<ol style="list-style-type: decimal">
+<li><code>interestGene</code>: The gene identifiers representing all
+genes tested, and</li>
+<li><code>referenceGene</code>: The gene identifiers representing the
+differentially expressed genes.</li>
+</ol>
+<p>For simplicity, and slightly easier interpretability, let’s use the
+gene symbol column. It’s always a good idea to see how many identifiers
+are NA, and remove them because they can’t be used in the analysis
+anyhow.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# How many symbols are NA?
+table(is.na(rsd_diffex$symbol))</code></pre>
+<pre><code>
+FALSE  TRUE 
+16114   135 </code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Filter out the NAs
+rsd_diffex = rsd_diffex %&gt;% dplyr::filter(!is.na(symbol))
+
+# Verify we have fewer by noting dimension of resulting table
+rsd_diffex</code></pre>
+<pre><code># A tibble: 16,114 × 9
+   id                 symbol baseMean log2FoldChange lfcSE   stat pvalue   padj call 
+   &lt;chr&gt;              &lt;chr&gt;     &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
+ 1 ENSMUSG00000000001 Gnai3   1490.            0.278 0.148  1.88  0.0605  0.325 NS   
+ 2 ENSMUSG00000000028 Cdc45   1749.            0.222 0.129  1.72  0.0853  0.386 NS   
+ 3 ENSMUSG00000000031 H19     2152.            0.136 0.284  0.478 0.633   0.867 NS   
+ 4 ENSMUSG00000000037 Scml2     24.9           0.600 0.562  1.07  0.286  NA     NS   
+ 5 ENSMUSG00000000049 Apoh       7.78         -1.23  1.15  -1.07  0.285  NA     NS   
+ 6 ENSMUSG00000000056 Narf   19654.           -0.201 0.167 -1.20  0.229   0.596 NS   
+ 7 ENSMUSG00000000078 Klf6     951.           -0.131 0.166 -0.788 0.430   0.752 NS   
+ 8 ENSMUSG00000000085 Scmh1    727.            0.232 0.186  1.25  0.212   0.577 NS   
+ 9 ENSMUSG00000000088 Cox5a   1427.           -0.264 0.205 -1.29  0.198   0.556 NS   
+10 ENSMUSG00000000093 Tbx2      15.2           0.548 0.663  0.826 0.409  NA     NS   
+# ℹ 16,104 more rows</code></pre>
+<p>Let’s start with the reference set because it doesn’t require any
+filtering:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Pull all genes tested
+rsd_ref_ora = rsd_diffex %&gt;% pull(symbol)
+
+# -------------------------------------------------------------------------
+# Preview the vector
+head(rsd_ref_ora)</code></pre>
+<pre><code>[1] &quot;Gnai3&quot; &quot;Cdc45&quot; &quot;H19&quot;   &quot;Scml2&quot; &quot;Apoh&quot;  &quot;Narf&quot; </code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# How big is the background?
+length(rsd_ref_ora)</code></pre>
+<pre><code>[1] 16114</code></pre>
+<p>Next, let’s extract the significantly differentially expressed genes.
+Let’s use a “typical” significance threshold of FDR &lt; 0.05 and
+|logFC| &gt; 0.585 (|linearFC| &gt; 1.5).</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Pull diffex genes
+rsd_sig_ora = rsd_diffex %&gt;%
+    dplyr::filter(padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; 0.585) %&gt;%
+    pull(symbol)
+
+# -------------------------------------------------------------------------
+# Preview the vector
+head(rsd_sig_ora)</code></pre>
+<pre><code>[1] &quot;Trim25&quot; &quot;Bcl11a&quot; &quot;Itgb7&quot;  &quot;Ddb2&quot;   &quot;Apoe&quot;   &quot;Gys1&quot;  </code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# How many significant genes are there?
+length(rsd_sig_ora)</code></pre>
+<pre><code>[1] 189</code></pre>
+</div>
+</div>
+<div id="running-ora" class="section level1">
+<h1>Running ORA</h1>
+<p>We now have an understanding of the important parameters and vectors
+of genes prepared to follow through with the over-representation
+analysis. For demonstrative purposes we will do this on the KEGG
+pathways and a non-redundant version of the Gene Ontology Biological
+Process genesets.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# ORA on bulk RNA-seq DESeq2 results
+rsd_ora_result = WebGestaltR(
+    enrichMethod = &#39;ORA&#39;,
+    organism = &#39;mmusculus&#39;,
+    enrichDatabase = c(&#39;pathway_KEGG&#39;, &#39;geneontology_Biological_Process_noRedundant&#39;),
+    interestGene = rsd_sig_ora,
+    referenceGene = rsd_ref_ora,
+    interestGeneType = &#39;genesymbol&#39;,
+    referenceGeneType = &#39;genesymbol&#39;,
+    fdrThr = 0.1,
+    outputDirectory = &#39;./results&#39;,
+    projectName = &#39;deficient_vs_control_ORA&#39;)</code></pre>
+<pre><code>Loading the functional categories...
+Loading the ID list...
+Loading the reference list...</code></pre>
+<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA&#39; already exists</code></pre>
+<pre><code>Summarizing the input ID list by GO Slim data...</code></pre>
+<pre><code>Performing the enrichment analysis...
+Begin affinity propagation...
+End affinity propagation...
+Begin weighted set cover...
+Remain is 0, ending weighted set cover
+Generate the final report...
+Results can be found in the ./results/Project_deficient_vs_control_ORA!</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# View the first few results
+head(rsd_ora_result)</code></pre>
+<pre><code>     geneSet                                    description
+1 GO:0070997                                   neuron death
+2 GO:0098754                                 detoxification
+3 GO:0062012 regulation of small molecule metabolic process
+4   mmu01230                    Biosynthesis of amino acids
+5 GO:0006575 cellular modified amino acid metabolic process
+6   mmu05202        Transcriptional misregulation in cancer
+                                                                                                link size overlap    expect enrichmentRatio       pValue
+1                                                http://amigo.geneontology.org/amigo/term/GO:0070997  263      14 3.7246486        3.758744 1.999371e-05
+2                                                http://amigo.geneontology.org/amigo/term/GO:0098754   77       7 1.0904865        6.419153 1.026811e-04
+3                                                http://amigo.geneontology.org/amigo/term/GO:0062012  235      12 3.3281081        3.605652 1.198921e-04
+4           http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60       6 0.8497297        7.061069 1.924572e-04
+5                                                http://amigo.geneontology.org/amigo/term/GO:0006575  120       8 1.6994595        4.707379 2.906659e-04
+6 http://www.kegg.jp/kegg-bin/show_pathway?mmu05202+107986+12048+12395+12575+12608+13198+16421+56312  124       8 1.7561081        4.555528 3.632686e-04
+         FDR                                                                            overlapId                                    database
+1 0.02185312 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405 geneontology_Biological_Process_noRedundant
+2 0.04368069                                       11816;14782;17748;17750;76650;230784;100503605 geneontology_Biological_Process_noRedundant
+3 0.04368069          11816;12048;12724;14783;26570;59090;67300;77781;227358;228775;230784;266645 geneontology_Biological_Process_noRedundant
+4 0.05258893                                               100678;107869;209027;27053;56421;56454                                pathway_KEGG
+5 0.05694797                                    14381;14782;17768;18451;26570;69065;107869;112405 geneontology_Biological_Process_noRedundant
+6 0.05694797                                     107986;12048;12395;12575;12608;13198;16421;56312                                pathway_KEGG
+                                                                              userId
+1 Apoe;Bcl2l1;Vegfa;Ddit3;Slc7a11;Trim2;Coro1a;G6pdx;Mt1;Egln1;Jun;Cebpb;Hipk2;Bnip3
+2                                                Apoe;Sesn2;Gsr;Mt2;Mt1;Srxn1;Hbb-bs
+3          Apoe;Bcl2l1;Grb10;Clcn2;Acmsd;Slc7a11;Sesn2;Trib3;Midn;Epm2aip1;Cltc;Erfe
+4                                                  Pfkp;Aldh18a1;Pycr1;Cth;Psph;Asns
+5                                     Mthfd2;P4ha1;Chac1;Slc7a11;Cth;G6pdx;Gsr;Egln1
+6                                 Itgb7;Ddb2;Runx1t1;Bcl2l1;Cdkn1a;Ddit3;Nupr1;Cebpb</code></pre>
+<p>The columns of the table are:</p>
+<ul>
+<li><code>geneSet</code>: The database-specific identifier for the
+geneset/pathway.</li>
+<li><code>description</code>: A readable description of the
+geneset/pathway.</li>
+<li><code>link</code>: A link to the corresponding database giving more
+detail about the geneset/pathway.</li>
+<li><code>size</code>: The number of genes in the geneset.</li>
+<li><code>overlap</code>: The number of significantly differentially
+expressed genes from your dataset overlapping the geneset.</li>
+<li><code>expect</code>: The expected number of input genes annotated to
+the geneset.</li>
+<li><code>enrichmentRatio</code>: The actual / expected overlap.</li>
+<li><code>pValue</code>: the p-value from the hypergeometric test.</li>
+<li><code>FDR</code>: The corrected p-value using the Benjamini-Hochberg
+method.</li>
+<li><code>overlapID</code>: The Entrez Gene IDs overlapping the
+geneset.</li>
+<li><code>database</code>: The database of the geneset.</li>
+<li><code>userId</code>: The user-supplied gene ID overlapping the
+geneset.</li>
+</ul>
+<p>TODO: Here is where we’ll actually talk more about the biological
+relevance of the results and pat ourselves on the back for our first ORA
+well done.</p>
+</div>
+<div id="results-of-ora" class="section level1">
+<h1>Results of ORA</h1>
+<p>The R package for WebGestalt outputs a number of useful artifacts to
+an <code>outputDirectory</code> and <code>projectName</code> of our
+choosing. Some of the more important output files are:</p>
+<ul>
+<li><code>enrichment_results_{project name}.txt</code>: A tab-delimited
+text table of the full results which can be read in Excel. It is the
+same as the <code>rsd_ora_result</code> table.</li>
+<li><code>interestingID_mappingTable_{project name}.txt</code>: A table
+of the <code>interestGene</code> vector, with user-supplied identifiers
+and mappings to other identifiers.</li>
+<li><code>interestingID_unmappedList_{project_name}.txt</code>: The
+identifiers which could not be mapped. <strong>This may be helpful to
+know if any key genes were dropped from the analysis.</strong></li>
+<li><code>Report_{project_name}.html</code>: An HTML report, like the
+web application, of the results. This may be more suitable for a first
+glance.</li>
+</ul>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<p>In this section, we performed our first ORA with the WebGestalt R
+package. In so doing, we accomplished the following objectives:</p>
+<ul>
+<li>Form the inputs for over-representation analysis (ORA) in
+WebGestaltR from a differential expression analysis.</li>
+<li>Use WebGestaltR to do an ORA analysis.</li>
+<li>Understand how to interpret the results of ORA analysis.</li>
+</ul>
+</div>
+<div id="questions" class="section level1">
+<h1>Questions</h1>
+<ul>
+<li>Are there any advantages to using a gene identifier other than the
+symbol?</li>
+<li>Are there any advantages to this way of running WebGestaltR?</li>
+</ul>
+<br/> <br/>
+<hr/>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><a href="02-IntroToWebGestaltandORA.html">Previous
+lesson</a></th>
+<th align="center"><a href="#top">Top of this lesson</a></th>
+<th align="right"><a href="04-gene-set-references.html">Next
+lesson</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

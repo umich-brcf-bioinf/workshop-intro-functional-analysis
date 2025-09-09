@@ -1,0 +1,15 @@
+# download Seurat inputs --------------------------------------------------
+mkdir -p intro_functional_analysis_workshop/IFUN_R
+cd intro_functional_analysis_workshop/IFUN_R
+    
+# Use curl to download
+# We'll use evironment variables to avoid extremely long command lines
+source_url="https://umich-brcf-bioinf-workshop.s3.us-east-1.amazonaws.com"
+source_file="IFUN/workshop_ifun_inputs-20250917.tgz"
+curl -o workshop_ifun_inputs.tgz ${source_url}/${source_file}
+
+# tar unpacks the tarball into directories
+tar xzvf workshop_ifun_inputs.tgz
+
+# Since we have unpacked the tarball, we can remove it
+rm workshop_ifun_inputs.tgz
