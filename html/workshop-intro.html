@@ -12,7 +12,7 @@
 <meta name="author" content="UM Bioinformatics Core Workshop Team" />
 
 
-<title>Functional Analysis</title>
+<title>Intro</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -321,7 +321,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Intro to Functional Analysis</a>
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -336,10 +336,16 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="introduction.html">intro</a>
+      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
     </li>
     <li>
-      <a href="more-stuff.html">more stuff</a>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
     </li>
   </ul>
 </li>
@@ -351,7 +357,16 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="fancy-stuff.html">Fancy Stuff</a>
+      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="07-advanced-visualizations.html">Advanced visualizations</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
     </li>
   </ul>
 </li>
@@ -370,7 +385,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Functional Analysis</h1>
+<h1 class="title toc-ignore">Intro</h1>
 <h4 class="author">UM Bioinformatics Core Workshop Team</h4>
 
 </div>
@@ -703,20 +718,13 @@ with top experts in the field. Established in 1986, the BRCF was formed
 to offer centralized access to research services and equipment. <br/>
 <br/></p>
 </div>
-<div id="acknowledgements" class="section level2">
-<h2>Acknowledgements</h2>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1>Acknowledgements</h1>
 <ul>
 <li><p>This workshop content is licensed under a <a
 href="https://creativecommons.org/licenses/by/4.0/"
 target="_blank">Creative Commons Attribution 4 License</a>.</p></li>
-<li><p>Large sections of this workshop content have been adapted and
-extended from materials created by <a
-href="https://software-carpentry.org/lessons/" target="_blank">Software
-Carpentry</a>. These are open access materials distributed under the
-terms of the <a href="http://creativecommons.org/licenses/by/4.0/"
-target="_blank">Creative Commons Attribution license (CC BY 4.0)</a>,
-which permits unrestricted use, distribution, and reproduction in any
-medium, provided the original author and source are credited.</p></li>
 <li><p>The workshop Code of Conduct has been adapted the <a
 href="https://numfocus.org/code-of-conduct" target="_blank">NumFocus
 Code of Conduct</a> which itself draws from from numerous sources,
@@ -725,8 +733,79 @@ other volunteers, which is under a Creative Commons Zero license, the
 Contributor Covenant version 1.2.0, the Bokeh Code of Conduct, the SciPy
 Code of Conduct, the Carpentries Code of Conduct, and the NeurIPS Code
 of Conduct.</p></li>
+<li><p>This workshop relies heavily on these tools / approaches/
+datasets:</p>
+<ul>
+<li><a href="https://www.webgestalt.org/#"
+target="_blank">WebGestalt</a>
+<ul>
+<li>John M Elizarraras, Yuxing Liao, Zhiao Shi, Qian Zhu, Alexander R
+Pico, Bing Zhang, WebGestalt 2024: faster gene set analysis and new
+support for metabolomics and multi-omics,<br />
+<a href="https://doi.org/10.1093/nar/gkae456" target="_blank">Nucleic
+Acids Research, 2024, gkae456</a>.</li>
+<li>Liao, Y., Wang, J., Jaehnig, E., Shi, Z., Zhang, B. WebGestalt 2019:
+gene set analysis toolkit with revamped UIs and APIs, <a
+href="https://doi.org/10.1093/nar/gkz401" target="_blank">Nucleic Acids
+Research, gkz401</a>.</li>
+<li>Wang, J., Vasaikar, S., Shi, Z., Greer, M., &amp; Zhang, B.
+WebGestalt 2017: a more comprehensive, powerful, flexible and
+interactive gene set enrichment analysis toolkit. <a
+href="https://academic.oup.com/nar/article-lookup/doi/10.1093/nar/gkx356"
+target="_blank">Nucleic Acids Research</a>.</li>
+<li>Wang, J., Duncan, D., Shi, Z., Zhang, B. (2013). WEB-based GEne SeT
+AnaLysis Toolkit (WebGestalt): update 2013. <a
+href="http://nar.oxfordjournals.org/content/41/W1/W77.full"
+target="_blank">Nucleic Acids Res, 41 (Web Server issue),
+W77-83</a>.</li>
+<li>Zhang, B., Kirov, S.A., Snoddy, J.R. (2005). WebGestalt: an
+integrated system for exploring gene sets in various biological
+contexts. <a
+href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=retrieve&amp;db=pubmed&amp;list_uids=15980575&amp;dopt=Abstract"
+target="_blank">Nucleic Acids Res, 33(Web Server issue),
+W741-748</a>.</li>
+</ul></li>
+<li><a href="https://www.gsea-msigdb.org/gsea/index.jsp">Broad GSEA</a>
+<ul>
+<li>Subramanian A, Tamayo P, Mootha VK, et al. Gene set enrichment
+analysis: a knowledge-based approach for interpreting genome-wide
+expression profiles. Proc Natl Acad Sci U S A. 2005;102(43):15545-15550.
+<a href="doi:10.1073/pnas.0506580102"
+class="uri">doi:10.1073/pnas.0506580102</a>. <a
+href="https://doi.org/10.1073/pnas.0506580102"
+target="_blank">https://doi.org/10.1073/pnas.0506580102</a></li>
+<li>Mootha VK, Lindgren CM, Eriksson KF, et al. PGC-1alpha-responsive
+genes involved in oxidative phosphorylation are coordinately
+downregulated in human diabetes. Nat Genet. 2003;34(3):267-273. <a
+href="doi:10.1038/ng1180" class="uri">doi:10.1038/ng1180</a>. <a
+href="https://doi.org/10.1038/ng1180"
+target="_blank">https://doi.org/10.1038/ng1180</a></li>
+</ul></li>
+<li>Bulk diffex data were derived from:
+<ul>
+<li>Zhang S, Macias-Garcia A, Ulirsch JC, et al. HRI coordinates
+translation necessary for protein homeostasis and mitochondrial function
+in erythropoiesis. Elife. 2019;8:e46976. Published 2019 Apr 29. <a
+href="doi:10.7554/eLife.46976" class="uri">doi:10.7554/eLife.46976</a>.
+<a href="https://doi.org/10.7554/elife.46976"
+target="_blank">https://doi.org/10.7554/elife.46976</a><br />
+<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119365"
+target="_blank">GEO accession GSE119365</a></li>
+</ul></li>
+<li>Single-cell diffex data were derived from:
+<ul>
+<li>Sorkin M, Huber AK, Hwang C, et al. Regulation of heterotopic
+ossification by monocytes in a mouse model of aberrant wound healing.
+Nat Commun. 2020;11(1):722. Published 2020 Feb 5. <a
+href="doi:10.1038/s41467-019-14172-4"
+class="uri">doi:10.1038/s41467-019-14172-4</a>.<br />
+<a href="https://doi.org/10.1038/s41467-019-14172-4"
+target="_blank">https://doi.org/10.1038/s41467-019-14172-4</a><br />
+<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126060"
+target="_blank">GEO accession GSE126060</a></li>
+</ul></li>
+</ul></li>
 </ul>
-</div>
 </div>
 
 

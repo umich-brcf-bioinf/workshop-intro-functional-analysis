@@ -1,20 +1,31 @@
-name: "Intro to Functional Analysis"
+name: "Intro Functional Analysis Workshop"
 output_dir: ../html
+exclude: ["results", "inputs"]
 navbar:
-  title: "Intro to Functional Analysis"
+  title: "Intro Functional Analysis"
   type: inverse
   left:
     - text: "Intro"
       href: workshop-intro.html
     - text: "Day 1"
       menu:
-        - text: "intro"
-          href: introduction.html
-        - text: "more stuff"
-          href: more-stuff.html
+        - text: "Functional analysis and ORA"
+          href: 01-functional-analysis-overview.html
+        - text: "ORA with WebGestalt"
+          href: 02-IntroToWebGestaltandORA.html
+        - text: "ORA with R"
+          href: 03-WebGestaltRORA.html
+        - text: "GO, KEGG, and friends"
+          href: 04-gene-set-references.html
     - text: "Day 2"
       menu:
-        - text: "Fancy Stuff"
-          href: fancy-stuff.html
+        - text: "Functional Analysis and GSEA"
+          href: 05-fcs-gsea-overview.html
+        - text: "GSEA with R"
+          href: 06-WebGestaltRGSEA.html
+        - text: "Advanced visualizations"
+          href: 07-advanced-visualizations.html
+        - text: "Analysis summary and next steps"
+          href: 08-analysis-summary.html
     - text: "Wrap up"
       href: workshop-wrap-up.html
