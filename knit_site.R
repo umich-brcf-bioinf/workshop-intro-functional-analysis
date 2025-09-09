@@ -22,11 +22,8 @@ render_site('source/analysis-scripts.Rmd')
 render_site('source/index.md')
 render_site('source/workshop-intro.Rmd')
 
+render_site('source/01-functional-analysis-overview.Rmd')
 render_site('source/02-IntroToWebGestaltandORA.Rmd')
-
-render_site('source/introduction.Rmd')
-render_site('source/more-stuff.Rmd')
-render_site('source/fancy-stuff.Rmd')
 
 render_site('source/workshop-wrap-up.Rmd')
 

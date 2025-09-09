@@ -197,7 +197,7 @@ Trash.
 2.1 The workshop exercises requires the installation of special R
 packages. To install them into RStudio:
 
--   one at a time, copy the blocks of code below and paste into the
+-   copy the code block below and paste into the
     RStudio **Console** tab
 -   make sure the block you just pasted is highlighted and press
     **Enter/Return** to execute.
@@ -206,33 +206,53 @@ packages. To install them into RStudio:
     no downstream impact).
 
 ```{r install_packages, eval=FALSE}
+# =========================================================================
+# Intro to Functional Analysis: Install and verify required libraries 
+# =========================================================================
+
 required_packages = c(
+  "tidyverse",
+  "ggrepel", 
+  "RColorBrewer",
+  "here",
   "WebGestaltR",
   "org.Mm.eg.db",
   "fgsea",
   "pheatmap",
   "UpSetR",
-  "ComplexUpset",
-  "tidyverse",
-  "ggrepel", 
-  "RColorBrewer")
+  "ComplexUpset")
 
+# -------------------------------------------------------------------------
+# Install any missing packages
 missing_packages <- setdiff(required_packages, rownames(installed.packages()))
-
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-  install.packages("BiocManager")
-  requireNamespace("BiocManager", quietly = TRUE)
+if (length(missing_packages) > 0) {
+  if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager", quiet=TRUE)
+    requireNamespace("BiocManager", quietly = TRUE)
+  }
+  BiocManager::install(missing_packages, update=FALSE, ask=FALSE)
 }
 
-BiocManager::install(missing_packages, update=FALSE, ask=FALSE)
-
-missing <- setdiff(required_packages, rownames(installed.packages()))
-
-if (!length(missing)) {
-  cat("Ready for workshop!\n")
-} else {
-  cat("PROBLEM: could not install:", missing, "\n")
+# -------------------------------------------------------------------------
+# Check required packages have been installed
+not_installed = setdiff(required_packages, rownames(installed.packages()))
+if (length(not_installed) > 0) {
+  stop("PROBLEM: could not install some packages(s):", paste(not_installed, collapse=", "), "\n")
 }
+
+# -------------------------------------------------------------------------
+# Attempt to actually load all required packages
+# FYI, this may spool a litany of package loading messages.
+cat("Checking installed packages...\n")
+invisible(lapply(required_packages, require, character.only = TRUE, quietly=TRUE))
+not_loaded = setdiff(required_packages, (.packages()))
+if (length(not_loaded) > 0) {
+  stop("PROBLEM: could not load some package(s): ", paste(not_loaded, collapse=", "), "\n")
+}
+
+# -------------------------------------------------------------------------
+# Good to go
+cat("OK: Ready for workshop!\n")
 
 ```
 
