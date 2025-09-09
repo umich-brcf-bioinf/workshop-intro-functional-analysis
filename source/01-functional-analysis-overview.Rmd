@@ -43,10 +43,10 @@ source("../bin/set_values.R")
 
 # Objectives
 
-1. Consider why we do functional analysis.
-2. Walk through an example overrepresentation analysis (ORA).
-3. Introduce the three high-level approaches to functional analysis
-4. Outline the topics for the workshop.
+1. Discuss the three critical questions that functional analysis addresses.
+2. Introduce the three high-level approaches to functional analysis
+3. Introduce the key concepts behind overrepresentation analysis (ORA).
+4. Outline the topics for this workshop.
 
 
 # Why Functional analysis 
@@ -118,26 +118,6 @@ Now expand to many gene sets.
 (And now with FDR correction)
 
 
-# ORA: Pros & cons:
-
-## ORA Pros
-
-- Analysis is relatively simple to execute.
-- Interpretation is straightforward.
-- Supports a wide range of biological processes and model systems.
-- Significant results are a robust indicator of biological activity.
-  
-## ORA Cons
-
-  - Requires a background set of genes. Generally straightforward for RNA-Seq
-    (transcriptome) or microarray, more nuanced for proteins.
-  - Requires a subset of diffex genes, usually partitioned with arbitrary cutoff value. 
-  - Treats all genes the same; doesn't care whether the gene is over or under 
-    or by how much. (That's why the inputs are not ranked or ordered - they are 
-    simply sets of genes.)
-  - Too few diffex genes or too many diffex genes will miss true associations.
-
-
 # Common functional analysis approaches
 
 - ORA 
@@ -146,7 +126,7 @@ Now expand to many gene sets.
 
 Similar steps / Similar inputs / Similar outputs
 Our focus / path in this workshop
-An example builk RNA-Seq experiment.
+An example bulk RNA-Seq experiment.
 
   
 Note that we are focusing on gene expression, but functional analysis can be applied to
@@ -177,15 +157,21 @@ expression, metabolites, and DNA methylation.
   - Functional Class Scoring (FCS) / Gene Set Enrichment Analysis (GSEA)
   - Topology / Pathway analysis (TP)
   
-3. The details of each of these approaches are distinct, but they share similar 
-   high-level steps and *outputs*:
+3. These approaches are distinct, but they get at the same three questions:
+
+  - Is my experimental result related to any biological phenomena?
+  - How strong is the relationship?
+  - How staistically significant is the relationship?
+  
+
+4. The approaches share similar high-level steps and *outputs*:
 
   - Start with a collection of genes, aka the *query genes*.
   - Compare the query genes with other gene sets
   - Determine *enrichment*, *statistical significance*, *adjusted significance*.
 
 
-4. Understanding ORA and FCS provides a solid foundation for running and 
+5. Understanding ORA and FCS provides a solid foundation for running and 
    interpreting functional analysis so the workshop will focus on these
    two approaches along with some discussion of key reference databases.
    We will start with an exploration of ORA on bulk RNA-Seq data from a specific 
