@@ -64,8 +64,9 @@ Let's look at the documentation for the main function in WebGestaltR to understa
 # =========================================================================
 
 # -------------------------------------------------------------------------
-# Load the library
+# Load the libraries
 library(WebGestaltR)
+library(tidyverse)
 ```
 
 ```{r webgestalt_doc, eval = FALSE}
