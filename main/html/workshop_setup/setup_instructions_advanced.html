@@ -1827,41 +1827,61 @@ required R libraries</a> below.</p>
 <p>2.1 The workshop exercises requires the installation of special R
 packages. To install them into RStudio:</p>
 <ul>
-<li>one at a time, copy the blocks of code below and paste into the
-RStudio <strong>Console</strong> tab</li>
+<li>copy the code block below and paste into the RStudio
+<strong>Console</strong> tab</li>
 <li>make sure the block you just pasted is highlighted and press
 <strong>Enter/Return</strong> to execute.</li>
 <li>as the installation progresses, you might see red text flash by and
 that’s ok (typically an informative blurb or minor warning that has no
 downstream impact).</li>
 </ul>
-<pre class="r"><code>required_packages = c(
+<pre class="r"><code># =========================================================================
+# Intro to Functional Analysis: Install and verify required libraries 
+# =========================================================================
+
+required_packages = c(
+  &quot;tidyverse&quot;,
+  &quot;ggrepel&quot;, 
+  &quot;RColorBrewer&quot;,
+  &quot;here&quot;,
   &quot;WebGestaltR&quot;,
   &quot;org.Mm.eg.db&quot;,
   &quot;fgsea&quot;,
   &quot;pheatmap&quot;,
   &quot;UpSetR&quot;,
-  &quot;ComplexUpset&quot;,
-  &quot;tidyverse&quot;,
-  &quot;ggrepel&quot;, 
-  &quot;RColorBrewer&quot;)
+  &quot;ComplexUpset&quot;)
 
+# -------------------------------------------------------------------------
+# Install any missing packages
 missing_packages &lt;- setdiff(required_packages, rownames(installed.packages()))
-
-if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)) {
-  install.packages(&quot;BiocManager&quot;)
-  requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)
+if (length(missing_packages) &gt; 0) {
+  if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)) {
+    install.packages(&quot;BiocManager&quot;, quiet=TRUE)
+    requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)
+  }
+  BiocManager::install(missing_packages, update=FALSE, ask=FALSE)
 }
 
-BiocManager::install(missing_packages, update=FALSE, ask=FALSE)
+# -------------------------------------------------------------------------
+# Check required packages have been installed
+not_installed = setdiff(required_packages, rownames(installed.packages()))
+if (length(not_installed) &gt; 0) {
+  stop(&quot;PROBLEM: could not install some packages(s):&quot;, paste(not_installed, collapse=&quot;, &quot;), &quot;\n&quot;)
+}
 
-missing &lt;- setdiff(required_packages, rownames(installed.packages()))
+# -------------------------------------------------------------------------
+# Attempt to actually load all required packages
+# FYI, this may spool a litany of package loading messages.
+cat(&quot;Checking installed packages...\n&quot;)
+invisible(lapply(required_packages, require, character.only = TRUE, quietly=TRUE))
+not_loaded = setdiff(required_packages, (.packages()))
+if (length(not_loaded) &gt; 0) {
+  stop(&quot;PROBLEM: could not load some package(s): &quot;, paste(not_loaded, collapse=&quot;, &quot;), &quot;\n&quot;)
+}
 
-if (!length(missing)) {
-  cat(&quot;Ready for workshop!\n&quot;)
-} else {
-  cat(&quot;PROBLEM: could not install:&quot;, missing, &quot;\n&quot;)
-}</code></pre>
+# -------------------------------------------------------------------------
+# Good to go
+cat(&quot;OK: Ready for workshop!\n&quot;)</code></pre>
 <p>2.2 Press <strong>Control-Q</strong> close RStudio; when prompted to
 <em>Save workspace image…</em>, click <strong>Don’t Save</strong>.</p>
 <p><em>Your workstation is ready for the workshop. Thank you for your
