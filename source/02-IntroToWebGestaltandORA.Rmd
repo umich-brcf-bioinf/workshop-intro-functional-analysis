@@ -74,9 +74,9 @@ If we navigate to the [WebGestalt homepage](http://www.webgestalt.org/), we can 
 
 Then, the main section is the left side of the "Basic parameters" box, which includes prompts for:   
 
-- "Method of Interest" - allows selection of which approach to use for functional enrichment.   
+- "Method of Interest" - allows selection of which approach to use for functional enrichment, like over-representation Analysis.   
 - "Organism of Interest" - selection includes humans, mouse, rat, plus other several other model organisms.  
-- "Functional Database" - allows selection of functional/biological knowledge database that will be compared to the input data.   
+- "Functional Database" - allows selection of *functional/biological knowledge database* that will be compared to the input data.   
 
 There is also an area on the right where example inputs are provided for the supported analytes/functional database combinations, which can be useful to understanding what format or other attributes for the inputs are required to run the tool. Since we'll be running the tool together, we'll skip the example inputs section for now. 
 
@@ -89,14 +89,14 @@ There is also an area on the right where example inputs are provided for the sup
 If we scroll down slightly then we can see a box for providing inputs to WebGestalt, which includes prompts on the left side of the page for:
 
 - "Analyte Type" - allows selection of what was measured in the experiment; for the workshop we'll only be using data from experiments that fall into the `Gene/Protein` category.   
-- "Upload ID List" - option to upload a file with input genes.    
-- "Input ID List" - option to paste in list of input genes.    
+- "Upload ID List" - option to upload a file with *input genes* that will be queried.    
+- "Input ID List" - option to paste in list of *input genes* that will be queried.    
 
 On right side are prompts for:
 
-- "Select Reference Set" - options to select general reference/background gene set options.    
-- "ID type for uploaded reference list" - allows select of ID type for a user provided reference/background gene set.    
-- "Upload User Reference Set Fle" - allows users to upload a file containing a custom reference/background gene set.    
+- "Select Reference Set" - options to select general *reference/background gene set* options.    
+- "ID type for uploaded reference list" - allows select of ID type for a user provided *reference/background gene* set.    
+- "Upload User Reference Set Fle" - allows users to upload a file containing a custom *reference/background gene* set.    
 
 Below that, there is a area labeled "Advanced parameters", that allows some changes to the default options multiple hypothesis correction method and significance cutoff, but we'll also skip that section for now.
 
@@ -199,58 +199,111 @@ Once we've double-checked our options, then we can submit the ORA job using the 
 
 ## Overrepresentation results for bulk RNA-seq data using WebGestalt
 
-<!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
-
-Let's look through an example of ORA (Over Representation Analysis) report from WebGestalt, similar to what might be shared by a collaborator. These results were generated for our bulk RNA-seq data, which compared gene expression between <!-- what was in the input tissue??--> wild-type mice fed a iron deficient vs control diet. 
-
-<!-- TO ADD - figure of experimental design from RSD --> 
-
-We'll go through the steps for how to run ORA using the browser version together shortly but let's first look through what WebGestalt reports and what results we can expect.
+Let's look through the results of our ORA (Over Representation Analysis) analysis using WebGestalt. We can use the web-interface or a static version of the html report, which one of the files that might be shared by a collaborator. These results were generated from the DE genes for our bulk RNA-seq experiment, which as a reminder compared gene expression between erythroblasts, cells that make red blood cells, isolated from wild-type mice fed an iron deficient vs wild-type mice fed a control diet. 
 
 <br>
 
-![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_d_ORA-jobInfo.png)  
-At the top of the report, WebGestalt summarizes what was submitted. The bulk RNA-seq had 189 DE genes in total but only 180 genes mapped to gene symbols of the tool's reference (`entrezgene`) and then only 125 genes were annotated to the functional categories selected for this analysis, which was `geneontology_Biological_Process_noRedundant`. 
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_a_topOfPage.png)  
 
-We can also see that the reference list was user provided (`upload/deficient_background_GeneList_XXXXXX.txt`) and that 14992 and 9375 were mapped to entrezgene gene symbols and functional catagories, respectively.
+Once the submission has run, we see an html format interactive result displayed. We'll navigate through the sections of the report together, starting with the `Job summary`. <!-- add step to or point out how to download results here? -->
+
+Note - if we can't look at the results live there is a copy of the web results at [ADD LINK HERE].
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_b_jobSummary.png)  
+<br>
+
+Within the `Job summary` drop down menu, WebGestalt summarizes the data that was submitted and the enrichment parameters. The bulk RNA-seq had 189 DE genes in total but only 180 genes mapped to gene symbols of the tool's reference (`entrezgene`) and then only 125 genes were annotated to the functional categories selected for this analysis, which was `geneontology_Biological_Process_noRedundant`.  
+
+<!-- add section about gene symbol vs gene IDs ? or add DE list output file with ENSEMBL ids instead of Gene symbols??-->
+
+We can also see that the reference list we selected from the available options had 14,490 entrezgene IDs of the total gene list mapped to functional categories within the functional categories we selected. From here, we can scroll down to see the `Enrichment Results` section.
 
 <br>
 
-![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-barplot-results.png)  
-Next, we can see the top 10 enriched GO-terms for our submitted DE genes from the non-redundant Biological Process GO-term set. While 10 terms are reported, only 4 are significant after FDR multiple hypothesis correction. <!-- add more detail here?? -->
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_c_barPlot-overview.png)  
+<br>
+The report displays a `Bar chart` first in this section. In the plot we can see along the y-axis the top 10 enriched GO-terms for our submitted DE genes from the non-redundant Biological Process GO-term set, which is the default number of terms to display. 
 
-![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-table-results.png)  
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_cc_barPlot-details.png)  
+<br>
 
-Next, we can see the top 10 enriched GO-terms for our submitted DE genes from the non-redundant Biological Process GO-term set. While 10 terms are reported, only 4 are significant after FDR multiple hypothesis correction.
+While 10 terms are reported, only 6 are significant after FDR correction for multiple hypothesis testing which is indicated by color (dark blue = FDR < threshold, light blue = FDR < threshold). The length of the bars for each GO term is determined by the "Enrichment ratio" which we'll look at more closely by navigating to the `Table` display option, next to the selected `Bar chart` option above the plot key. <!-- add more detail here?? -->
 
-![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-DAG-results.png)  
 
-If we look at the DAG map of GO terms included in the report, we can see that some of the significant terms are related, like `intrinsic apoptotic signaling pathway` and `neuron apoptotic process`. This can be useful for interpreting why a GO term that's unlikely to be applicable to the experiment (e.g. neuronal process from non-brain tissue) might be coming up as enriched. 
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_d_tableStats-overview.png)  
+<br>
 
-<!-- change to dropdown? -->
-![WebGestalt ORA example](images/content/02-WebGestalt_browser/02-bulkRNA_f_ORA-volcano-results.png)  
+If we look at the table option next,
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_dd_tableStats-details.png)  
+<br>
+
+1. `Gene set` - 
+1. `Description` - 
+1. `Size` -
+1. `Expect` -
+1. `Ratio` -
+1. `P Value` - 
+1. `FDR` - 
+
+<br>
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_dd_tableStats-rankedByRatio.png)  
+<br>
+
+When we rank the table by `Ratio`, we see that the top significant term is `glutathione metabolic process` with the `GO:0006749` functional `Gene Set` highlighted as a link. Let's click on the link for `GO:0006749` to see what that does. 
 
 ### Individual GO-term examples
 
-Next let's look at some of the significantly enriched terms.
+![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_f_glutMetabolism-overview.png) 
+<br>
 
-![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/02-bulkRNA_g_ORA-Glut-enrichment.png) 
+When we click the GO term id, the page jumps to a new section that displays more details for the `glutathione metabolic process` enrichment.  
 
-Starting with glutathione metabolic process we see ... <!-- add more context -->
+![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_ff_glutMetabolism-details.png) 
+<br>
 
-Based on the experimental design, is finding a enrichment for a metabolic process surprising? Is it surprising to find that this specific process is enriched? <!--- add call out box or quote to highlight question ---> 
+Within this section we see several familiar fields on the top left, including the `FDR` and Enrichment ratio values for this enrichment.  <!-- add more context, ratio is overlapping genes / expected number (value) -->
+
+
+
+![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_fff_glutMetabolism_GOlinkOut.png) 
+<br>
+
+![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_ff_glutMetabolism-details.png) 
+<br>
+
+Going back to the results, let's also click on the link for G6pdx in the `Entrez Gene ID` column (14381).
+
+![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_ffff_G6pdx_geneExample.png) 
+<br>
+
+After reviewing the
+
+> Based on the experimental design, is finding a enrichment for a metabolic process surprising? Is it surprising to find that this specific process is enriched? 
+
+<!--- add call out box or quote to highlight question ---> 
 
 Let's look at some of our other enriched results. 
 
 ![WebGestalt ORA intrinsic apoptotic signaling pathway](images/content/02-WebGestalt_browser/02-bulkRNA_gg_ORA-Apoptosis-enrichment.png) 
+<br>
 
 For the intrinsic apoptotic signaling pathway, we see ... <!-- add more context -->
 
 For the neuron apoptotic process, would we expect to see similar or difference genes represented for that GO term annotation>?
 
-<!-- add example of neuronal enrichment to show overlap in genes between terms --> 
-
 <!-- if add neuronal, consider setting up how it would be helpful to be able to ask which/how many genes are shared between the two GO terms -->
+
+<!-- add example of neuronal enrichment to show overlap in genes between terms later on in workshop --> 
+
+## DAG maps
+
+![WebGestalt DAG map](images/content/02-WebGestalt_browser/WGResults_j_DAG-overview.png) 
+<br>
+
+When we look at the DAG map, we can see that some of the significant terms are related, like `intrinsic apoptotic signaling pathway` and `neuron apoptotic process`. This can be useful for interpreting why a GO term that's unlikely to be applicable to the experiment (e.g. neuronal process from non-brain tissue) might be coming up as enriched. 
+
 
 ---
 
@@ -272,6 +325,13 @@ If we scroll down, then we can see a bit of an introduction to the tool. However
 
 
 <!-- try to start with results downloaded for RSD DE data -->
+```{r echo=FALSE, eval=FALSE}
+# add section to create output file(s), looking at previous version with file processing
+
+
+
+
+```
 
 ---
 
@@ -279,7 +339,7 @@ If we scroll down, then we can see a bit of an introduction to the tool. However
 
 - 1
 - 2
-- 3
+- Using a point and click interface can lower friction of use but make documenting and sharing how to run the analysis more challenging.   
 
 
 <br/>
