@@ -1,5 +1,5 @@
 ---
-title: "Introduction to WebGestalt and ORA"
+title: "ORA with WebGestalt"
 output:
         html_document:
             includes:
@@ -133,7 +133,7 @@ library(tidyverse)
 getwd()
 
 # Load the bulk RNA-seq results
-deficient.v.control_bulkDE <- read_csv("../data/de_deficient_vs_control_annotated.csv") #TO REVISE - path may need to be adjusted
+deficient.v.control_bulkDE <- read_csv("inputs/bulk_de_results/de_deficient_vs_control_annotated.csv")
 
 # Check the first few rows of the data
 head(deficient.v.control_bulkDE)
@@ -170,14 +170,14 @@ head(deficient_DE_GeneList)
 
 ```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
 # Repeat to generate background set (all gene names)
-deficient_background_GeneList <- def_v_cont_bulkDE %>% pull(symbol) %>% na.omit()
+deficient_background_GeneList <- deficient.v.control_bulkDE %>% pull(symbol) %>% na.omit()
 ```
 
 
 ```{r, echo=TRUE, message=FALSE, evaluate=FALSE}
 # write out to file (text only?)
-write(deficient_DE_GeneList, file ="../data/deficient_DE_GeneList.txt", ncolumns = 1)
-write(deficient_background_GeneList, file ="../data/deficient_background_GeneList.txt", ncolumns = 1)
+write(deficient_DE_GeneList, file ="results/deficient_DE_GeneList.txt", ncolumns = 1)
+write(deficient_background_GeneList, file ="results/deficient_background_GeneList.txt", ncolumns = 1)
 
 ```
 
@@ -230,5 +230,5 @@ Let's look through an example of ORA results from WebGestalt for our bulk RNA-se
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](workshop-intro.html) | [Top of this lesson](#top) | [Next lesson](more-stuff.html) |
+| [Previous lesson](01-functional-analysis-overview.html) | [Top of this lesson](#top) | [Next lesson](03-WebGestaltRORA.html) |
 | :--- | :----: | ---: |

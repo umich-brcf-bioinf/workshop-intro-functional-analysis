@@ -8,6 +8,9 @@ workshop_vars = list(
   slack_channel = "2025-09-functional-analysis",
   ## Wrap-up
   rstudio_server_enddate = "9/24/2025",
-  ssh_download_dns = "bfx-workshop01.med.umich.edu"
+  ssh_download_dns = "bfx-workshop01.med.umich.edu",
+  # AWS Bucket
+  aws_s3_bucket = "https://umich-brcf-bioinf-workshop.s3.us-east-1.amazonaws.com",
+  aws_s3_file = "IFUN/workshop_ifun_inputs-20250917.tgz"
 )
 

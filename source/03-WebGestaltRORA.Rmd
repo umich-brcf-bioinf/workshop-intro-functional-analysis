@@ -1,5 +1,5 @@
 ---
-title: "Introduction to WebGestaltR and ORA"
+title: "ORA with R"
 output:
         html_document:
             includes:
@@ -88,7 +88,7 @@ listOrganism()
 
 - `enrichDatabase` are the genesets and pathways we want to perform the enrichment analysis over. Use the `listGeneSet()` function to see the available genesets for specific organisms. For this 
 
-```{r genesets}
+```{r listGeneSet}
 # -------------------------------------------------------------------------
 # List available genesets for mmusculus
 listGeneSet(organism = 'mmusculus')
@@ -97,7 +97,7 @@ listGeneSet(organism = 'mmusculus')
 - `interestGene` should be a vector of gene identifiers which are differentially expressed. When it comes time to use the GSEA method, we'll highlight the different form this particular input takes.
 - `interestGeneType` is the type of identifier used to describe the genes. Use the `listIdType()` function to see which identifiers are available for which organisms. We will be using the `'genesymbol'` type, but note the presence of `'ensemble_gene_id'` and `'entrezgene'`, among other common (and not-so-common) identifiers.
 
-```{r genesets}
+```{r listIdType}
 # -------------------------------------------------------------------------
 # List gene identifier types for mmusculus
 listIdType(organism = 'mmusculus')
@@ -119,7 +119,7 @@ We have provided these differential results as a CSV file, which we can read in 
 ```{r rsd_read}
 # -------------------------------------------------------------------------
 # Read diffex results
-rsd_diffex = read_csv('inputs/de_deficient_vs_control_annotated.csv')
+rsd_diffex = read_csv('inputs/bulk_de_results/de_deficient_vs_control_annotated.csv')
 ```
 
 As always, it's helpful to look at the result of what we read in to get a sense for how to work with it:
@@ -247,3 +247,9 @@ In this section, we performed our first ORA with the WebGestalt R package. In so
 
 - Are there any advantages to using a gene identifier other than the symbol?
 - Are there any advantages to this way of running WebGestaltR?
+
+<br/>
+<br/>
+<hr/>
+| [Previous lesson](02-IntroToWebGestaltandORA.html) | [Top of this lesson](#top) | [Next lesson](04-gene-set-references.html) |
+| :--- | :----: | ---: |

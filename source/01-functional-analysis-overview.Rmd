@@ -1,5 +1,5 @@
 ---
-title: "An Overview of Functional Analysis"
+title: "Functional analysis and ORA"
 output:
         html_document:
             includes:
@@ -184,5 +184,5 @@ expression, metabolites, and DNA methylation.
 1. https://bioinformatics.ccr.cancer.gov/btep/pathways-and-gene-sets-what-is-functional-enrichment-analysis/
 2. https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375#pcbi-1002375-t001
 
-| [Previous lesson](workshop-intro.html) | [Top of this lesson](#top) | [Next lesson](more-stuff.html) |
+| [Previous lesson](workshop-intro.html) | [Top of this lesson](#top) | [Next lesson](02-IntroToWebGestaltandORA.html) |
 | :--- | :----: | ---: |

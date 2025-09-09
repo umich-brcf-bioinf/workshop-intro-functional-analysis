@@ -11,7 +11,7 @@
 
 
 
-<title>ORA with WebGestalt</title>
+<title>GO, KEGG, and friends</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -388,7 +388,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">ORA with WebGestalt</h1>
+<h1 class="title toc-ignore">GO, KEGG, and friends</h1>
 
 </div>
 
@@ -410,7 +410,6 @@ pre {
   addClassKlippyTo("pre.r, pre.markdown, pre.bash");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<pre><code>## [1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
 <div id="objectives" class="section level1">
 <h1>Objectives</h1>
 <ul>
@@ -419,205 +418,6 @@ pre {
 <li>3</li>
 </ul>
 <p>…</p>
-</div>
-<div id="webgestalt-overview" class="section level1">
-<h1>WebGestalt Overview</h1>
-<p>We’ve discussed some of the motivations for performing functional
-enrichment analysis, but what tools can we use to perform these kinds of
-analyses?</p>
-<p>One option is <a href="http://www.webgestalt.org/">WebGestalt</a>
-(WEB-based GEne SeT AnaLysis Toolkit) which has a web-based interface
-for running functional enrichment analysis. It supports a wide range of
-organisms and offers several methods for enrichment analysis.</p>
-<p>To start, let’s look at the <a
-href="http://www.webgestalt.org/">WebGestalt website</a> and familiarize
-ourselves with the interface and documentation.</p>
-<div id="webgestalt-interface" class="section level2">
-<h2>WebGestalt interface</h2>
-<p>If we look at the <a href="http://www.webgestalt.org/">WebGestalt
-homepage</a>, we can see that it has several sections:</p>
-<!-- map abstract schematics/inputs to WebGestalt 
-1) approach
-2) database
-3) query genes / background -->
-<p><img
-src="images/content/02-WebGestalt_browser/02-WebGestalt_topOfPage.png"
-alt="WebGestalt homepage top" /> <br></p>
-<ul>
-<li>At the top, we have the main navigation menu, which includes links
-including to the Manual, Citation, a User Forum, and a link to the 2019
-version of the tool.</li>
-<li>Then, the main section is the “Basic parameters” box, which allows
-us to select the organism, analysis type, and database.</li>
-</ul>
-<p><br></p>
-<p><img
-src="images/content/02-WebGestalt_browser/02-WebGestalt_inputInset.png"
-alt="WebGestalt homepage inputs" /><br />
-<br></p>
-<ul>
-<li><p>Within the basic parameters box, there is a smaller box that
-looks like its for specifying the input data, which we’ll circle back to
-shortly.</p></li>
-<li><p>Below that, there is a area labeled “Advanced parameters”, which
-we’ll skip for now, but that includes options for adjusting the analysis
-parameters, such as the statistical method and multiple testing
-correction.</p></li>
-</ul>
-<p><br></p>
-</div>
-<div id="webgestalt-documentation" class="section level2">
-<h2>WebGestalt documentation</h2>
-<p><img
-src="images/content/02-WebGestalt_browser/02-webgestalt_ClickManual.png"
-alt="WebGestalt homepage find manual" /></p>
-<p>A good practice when using a new tool is to read the documentation
-provided by the developers, which we can find by selecting Manual from
-the top of WebGestalt site.</p>
-<p><img
-src="images/content/02-WebGestalt_browser/02-webgestalt_TopOfManual.png"
-alt="WebGestalt homepage manual top" /></p>
-<p>At the top of the manual page, we can see an overview of some of the
-related publications as well as a comparison between an older 2019
-version and the current 2024 version.</p>
-<p><img
-src="images/content/02-WebGestalt_browser/02-webgestalt_Manual2ndPage.png"
-alt="WebGestalt homepage manual page 2" /></p>
-<p>If we scroll down, then we can see a bit of an introduction to the
-tool. However, the manual seems to already have some terminology and
-assumptions about a user’s familiarity with functional enrichment so
-let’s go back to the tool site and focus on a more limited set of
-options for our first pass.</p>
-<!-- try to start with results downloaded for RSD DE data -->
-</div>
-<div id="webgestalt-analysis-demonstration" class="section level2">
-<h2>WebGestalt analysis demonstration</h2>
-<p>Let’s start with some of the basic parameters and delve into the
-options we want to start with.</p>
-<!-- Click through methods to show ORA vs other options & have demo data -->
-<!-- Load demo data to show what inputs are needed-->
-<!-- Note input gene list options - symbol, entrez, ensembl, etc. which will -->
-</div>
-</div>
-<div id="input-data" class="section level1">
-<h1>Input data</h1>
-<p>Bulk RNA-seq results from our <a
-href="https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/">RNA-seq
-demystified workshop</a> - statistics from comparision between deficient
-vs control mice using DESeq2 (file =
-<code>DE_results_deficient_vs_control_annotated.csv</code>)</p>
-<div id="hands-on-review-input-data-and-prepare-for-analysis"
-class="section level2">
-<h2>Hands-on: Review input data and prepare for analysis</h2>
-<!-- Consider moving this until after the WebGestalt introduction, so that the learners can see that the tool requires a list of DE vs non-DE for best results -->
-<p>To start, we’ll load the input data and review it. The data is in CSV
-format, so we can use <code>read_csv()</code> from the
-<code>tidyverse</code> library to load it into R.</p>
-<pre class="r"><code># Load necessary libraries
-library(tidyverse)
-
-# Check working directory
-getwd()</code></pre>
-<pre><code>[1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
-<pre class="r"><code># Load the bulk RNA-seq results
-deficient.v.control_bulkDE &lt;- read_csv(&quot;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&quot;)
-
-# Check the first few rows of the data
-head(deficient.v.control_bulkDE)</code></pre>
-<pre><code># A tibble: 6 × 9
-  id                 symbol baseMean log2FoldChange lfcSE   stat pvalue   padj call 
-  &lt;chr&gt;              &lt;chr&gt;     &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
-1 ENSMUSG00000000001 Gnai3   1490.            0.278 0.148  1.88  0.0605  0.325 NS   
-2 ENSMUSG00000000028 Cdc45   1749.            0.222 0.129  1.72  0.0853  0.386 NS   
-3 ENSMUSG00000000031 H19     2152.            0.136 0.284  0.478 0.633   0.867 NS   
-4 ENSMUSG00000000037 Scml2     24.9           0.600 0.562  1.07  0.286  NA     NS   
-5 ENSMUSG00000000049 Apoh       7.78         -1.23  1.15  -1.07  0.285  NA     NS   
-6 ENSMUSG00000000056 Narf   19654.           -0.201 0.167 -1.20  0.229   0.596 NS   </code></pre>
-<p>In the table above, we have the following columns:</p>
-<ul>
-<li><code>id</code>: The ENSEMBL gene identifier.</li>
-<li><code>symbol</code>: The gene symbol.</li>
-<li><code>baseMean</code>: The average expression of the gene across all
-samples.</li>
-<li><code>log2FoldChange</code>: The log2 fold change in expression
-between the deficient and control samples.</li>
-<li><code>lfcSE</code>: The standard error of the log2 fold change.</li>
-<li><code>stat</code>: The test statistic for the differential
-expression test.</li>
-<li><code>pvalue</code>: The p-value for the differential expression
-test.</li>
-</ul>
-<p>A key attribute of this table is that includes statistics for all
-genes included in the comparison, not just those that are differentially
-expressed. This allows us to use functional enrichment tools that use
-both a “positive” set of DE genes and a “background” set of all genes
-measured in the experiment, like ORA.</p>
-<p>Next, we’ll prepare the data for analysis by creating a list of DE
-genes and a background set of all genes. We’ll use the
-<code>log2FoldChange</code> and <code>pvalue</code> columns to identify
-DE genes, and we’ll use the <code>gene</code> column as our gene
-identifiers.</p>
-<p><!-- include note about reproducibility and knowing thresholds --></p>
-<pre class="r"><code># Generate positive set (DE gene symbols)
-deficient_DE_only &lt;- deficient.v.control_bulkDE %&gt;%
-  filter(padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; log2(1.5))
-
-deficient_DE_GeneList &lt;- deficient_DE_only %&gt;% pull(symbol) %&gt;% na.omit()
-
-head(deficient_DE_only)</code></pre>
-<pre><code># A tibble: 6 × 9
-  id                 symbol baseMean log2FoldChange lfcSE  stat     pvalue     padj call 
-  &lt;chr&gt;              &lt;chr&gt;     &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;
-1 ENSMUSG00000000275 Trim25   1662.          -0.674 0.200 -3.38 0.000734   0.0312   Down 
-2 ENSMUSG00000000861 Bcl11a   1679.           0.685 0.210  3.27 0.00109    0.0398   Up   
-3 ENSMUSG00000001281 Itgb7     532.           1.15  0.242  4.75 0.00000203 0.000554 Up   
-4 ENSMUSG00000002109 Ddb2      125.           1.06  0.300  3.54 0.000398   0.0207   Up   
-5 ENSMUSG00000002985 Apoe      157.          -1.16  0.345 -3.35 0.000814   0.0329   Down 
-6 ENSMUSG00000003865 Gys1       89.3          2.26  0.627  3.61 0.000310   0.0180   Up   </code></pre>
-<pre class="r"><code>head(deficient_DE_GeneList)</code></pre>
-<pre><code>[1] &quot;Trim25&quot; &quot;Bcl11a&quot; &quot;Itgb7&quot;  &quot;Ddb2&quot;   &quot;Apoe&quot;   &quot;Gys1&quot;  </code></pre>
-<pre class="r"><code># Repeat to generate background set (all gene names)
-deficient_background_GeneList &lt;- deficient.v.control_bulkDE %&gt;% pull(symbol) %&gt;% na.omit()</code></pre>
-<pre class="r"><code># write out to file (text only?)
-write(deficient_DE_GeneList, file =&quot;results/deficient_DE_GeneList.txt&quot;, ncolumns = 1)
-write(deficient_background_GeneList, file =&quot;results/deficient_background_GeneList.txt&quot;, ncolumns = 1)</code></pre>
-<p>These outputs then allow us to submit data via the web browser
-version of WebGestalt.</p>
-<div id="running-webgestalt-with-our-bulk-rna-seq-results"
-class="section level3">
-<h3>Running WebGestalt with our bulk RNA-seq results</h3>
-<p><br></p>
-<p><img
-src="images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_error.png"
-alt="WebGestalt submit data for ORA" /></p>
-<p><br></p>
-<p><img
-src="images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_errorMessage.png"
-alt="WebGestalt submit data for ORA" /></p>
-<p><br></p>
-<p>We ran into an error - why? Let’s go back to the submission page and
-see if we can find the issue.</p>
-<p><br></p>
-<p><img
-src="images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_withErrorHighlighted.png"
-alt="WebGestalt submit data for ORA" /><br />
-If we look at the submission page, the
-<code>ID type for uploaded reference list</code> is “Gene name”, which
-doesn’t match the ID type we used for our gene list, which was “Gene
-symbol”. Let’s change the
-<code>ID type for uploaded reference list</code> to “Gene symbol” and
-re-submit.</p>
-<p><br></p>
-</div>
-</div>
-<div id="overview-of-results" class="section level2">
-<h2>Overview of results</h2>
-<!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
-<p>Let’s look through an example of ORA results from WebGestalt for our
-bulk RNA-seq data.</p>
-<p><br></p>
-<hr />
-</div>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
@@ -636,10 +436,11 @@ bulk RNA-seq data.</p>
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left"><a href="01-functional-analysis-overview.html">Previous
+<th align="left"><a href="03-WebGestaltRORA.html">Previous
 lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a href="03-WebGestaltRORA.html">Next lesson</a></th>
+<th align="right"><a href="05-fcs-gsea-overview.html">Next
+lesson</a></th>
 </tr>
 </thead>
 <tbody>

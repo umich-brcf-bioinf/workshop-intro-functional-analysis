@@ -16,4 +16,7 @@ UM Bioinformatics Core: Intro to Functional Analysis
 
 
 
+__For site knitting:__
 
+# Contents are ignored, but needs be present
+`mkdir -p source/results`
