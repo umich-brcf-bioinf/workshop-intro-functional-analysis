@@ -7,7 +7,7 @@ workshop_vars = list(
   ## Slack
   slack_channel = "2025-09-functional-analysis",
   ## Wrap-up
-  rstudio_server_enddate = "9/26/2025",
+  rstudio_server_enddate = "9/24/2025",
   ssh_download_dns = "bfx-workshop01.med.umich.edu"
 )
 
