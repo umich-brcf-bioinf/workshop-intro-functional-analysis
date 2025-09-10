@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+
+<html lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core Workshop Team" />
+
+<meta name="date" content="2025-09-09" />
+
+<title>WebGestaltR on UMich Great Lakes HPC</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from built via
+https://favicon.io/emoji-favicons/computer/
+-->
+<meta name="google-site-verification" content="t-Wgs-RXt8xi94RSoFamxoD2P2h-Hh7M_t_iOuxFZUo" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="workshop-intro.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
+    </li>
+    <li>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="07-advanced-visualizations.html">Advanced visualizations</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="workshop-wrap-up.html">Wrap up</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">WebGestaltR on UMich Great Lakes HPC</h1>
+<h4 class="author">UM Bioinformatics Core Workshop Team</h4>
+<h4 class="date">2025-09-09</h4>
+
+</div>
+
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+<script>
+  addClassKlippyTo("pre.r, pre.markdown, pre.bash");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<p><img
+src="images/great-lakes-ood/IFUN/great-lakes-wayfinder.png" /></p>
+<div id="objectives" class="section level2">
+<h2>Objectives</h2>
+<p>You can run RStudio and many bioinformatics R libraries using
+University of Michigan’s <strong>Great Lakes</strong> High Performance
+Cluster (HPC). By the end of this guide you will be able to:</p>
+<ul>
+<li>Use <strong>Great Lakes</strong> and <strong>Open OnDemand</strong>
+to start a RStudio session with pre-installed libraries for functional
+analysis.</li>
+<li>Copy/paste content from your workstation to RStudio and back.</li>
+<li>Open a new browser window within an Open OnDemand session.</li>
+<li>Transfer files between Great Lakes and your workstation</li>
+</ul>
+<hr />
+</div>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>You can run many bioinformatic analyses locally on your workstation.
+However, running these on Great Lakes is a nice approach because:</p>
+<ul>
+<li>Some analyses requires a LOT of memory (RAM). It’s easy to ask for
+more memory on Great Lakes and Great Lakes nodes have more memory
+available than a typical laptop/workstation.</li>
+<li>Often, much of the software is pre-installed. Installing
+bioinformatics software is typically nuanced and often unpleasantly
+complex - so having it ready is a <em>big win</em>. (Thanks to the ARC
+team for getting all this installed!)</li>
+</ul>
+<p>That said, using Great Lakes is different than using your
+laptop/workstation. A few key ideas:</p>
+<ul>
+<li>Great Lakes is provided by <a
+href="https://its.umich.edu/advanced-research-computing"
+target="_blank">UM Advanced Research Computing</a>. It is only available
+to folks affiliated with UM.</li>
+<li>Great Lakes uses <strong>Open OnDemand</strong> to reserve a part of
+the cluster to run your analysis in RStudio.<br />
+</li>
+<li>Great Lakes requires some setup.</li>
+<li>Great Lakes is a recharge service, BUT it is heavily subsidized and
+extremely affordable for most researchers. (Many researchers who are
+doing a low to moderate amount of data analysis may not have to pay
+anything.)</li>
+</ul>
+<hr />
+<div id="how-to-get-help" class="section level3">
+<h3>How to get help</h3>
+<ul>
+<li><p>If you have problems/questions, please don’t hesitate to email us
+at: <a
+href="mailto:bioinformatics-workshops@umich.edu">bioinformatics-workshops@umich.edu</a></p></li>
+<li><p>When emailing it will speed things along if you could
+include:</p>
+<ul>
+<li>Whether you are using Windows or Mac (and optionally which version
+of the OS you are using).</li>
+<li>What browser you are using.</li>
+<li>Whether you are on campus or using the VPN.</li>
+<li>The specific text of any error messages, if applicable.</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="what-you-need" class="section level3">
+<h3>What you need</h3>
+<ol style="list-style-type: decimal">
+<li><p>You need a UM core-imaged workstation and a web browser.</p></li>
+<li><p>You need to be on UM campus or connected to the <a
+href="https://its.umich.edu/enterprise/wifi-networks/vpn/getting-started"
+target="_blank">UM VPN</a> or <a
+href="https://hits.medicine.umich.edu/accounts-access/wifi-networks/vpn-remote-network-access"
+target="_blank">Michigan Medicine VPN</a> using Cisco Secure Client.
+(Setting this up will also require Duo 2-factor
+authentication.)</p></li>
+<li><p>You need a user account on Great Lakes. The first time, you need
+to request this from ARC; it can take 1-2 days to get set up:</p>
+<ul>
+<li>see <a
+href="https://its.umich.edu/advanced-research-computing/high-performance-computing/great-lakes/getting-started"
+target="_blank">Getting Started with the Great Lakes Cluster</a> to get
+setup.</li>
+<li>also, to save money, request the <a
+href="https://its.umich.edu/advanced-research-computing/research-computing-package"
+target="_blank">UM Research Compute Package (UMRCP)</a> to offset costs
+with subsidy from UM.</li>
+</ul></li>
+<li><p>You will need enough storage space. How much depends on the
+experimental design and what analyses you want to do. Functional
+analyses don’t take up much disk space, so <strong>2GB</strong> is
+plenty for the workshop activities.</p></li>
+</ol>
+<p>As a new user, you can execute this tutorial from your home dir. As
+your experiments and analyses grow, you can check your available space
+from the command line (<code>home-quota</code>) and request more storage
+from ARC as necessary.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>You will need data. Below, we’ll show you how to download the input
+data used in the workshop, but you can adapt that to use your own
+data.</li>
+</ol>
+<hr />
+</div>
+</div>
+<div id="using-open-ondemand" class="section level2">
+<h2>Using Open OnDemand</h2>
+<p><img
+src="images/great-lakes-ood/IFUN/great-lakes-wayfinder-ood.png" /></p>
+<p>Once you’ve got everything you need from above, you’re going to use
+<strong>Open OnDemand</strong> (OOD) to launch a RStudio session.</p>
+<ul>
+<li>OOD connects you to the Great Lakes cluster through your web
+browser.</li>
+<li>OOD works with the <strong>SLURM workload manager</strong> to
+reserve and configure a <strong>compute node</strong> that will run
+RStudio.</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><p>If off-campus, connect to the VPN using Cisco Secure
+Client.</p></li>
+<li><p>In your browser, go to Great Lakes Open On Demand:<br />
+<a href="https://greatlakes.arc-ts.umich.edu"
+target="_blank">greatlakes.arc-ts.umich.edu</a> and login with your
+uniqname and password.</p></li>
+<li><p>In the menu at the top of the screen, click <strong>Interactive
+Apps</strong> and select <strong>RStudio</strong>. <img
+src="images/great-lakes-ood/IFUN/ood-interactive-apps.png" /></p></li>
+<li><p>The previous step will display a <em>launch configuration
+page</em> with several fields, e.g. <img
+src="images/great-lakes-ood/IFUN/ood-launch-config.png"
+alt="partial screen shot" /> …</p>
+<p><a id="launch_config_values"></a></p>
+<p>Enter launch configuration values below in the corresponding
+fields:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R Version</td>
+<td><strong>Rtidyverse/4.4.0</strong></td>
+</tr>
+<tr class="even">
+<td>RStudio version</td>
+<td><strong>RStudio/2024.04.1</strong></td>
+</tr>
+<tr class="odd">
+<td>Slurm account</td>
+<td><em>(This is in the email from ARC)</em></td>
+</tr>
+<tr class="even">
+<td>Partition</td>
+<td><strong>standard</strong></td>
+</tr>
+<tr class="odd">
+<td>Number of hours</td>
+<td><strong>4</strong> <br/> <em>(Enough to get started, adjust if you
+need more time)</em></td>
+</tr>
+<tr class="even">
+<td>Number of cores</td>
+<td><strong>4</strong></td>
+</tr>
+<tr class="odd">
+<td>Memory (GB)</td>
+<td><strong>16</strong> <br/> <em>(Enough to get started, ok to boost if
+you ever run out)</em></td>
+</tr>
+<tr class="even">
+<td>Module commands</td>
+<td><strong>load Bioinformatics Rutils-BFX</strong></td>
+</tr>
+</tbody>
+</table></li>
+<li><p>After you’ve entered the values above, at the bottom of this page
+click <strong>Launch</strong>. (Conveniently, the values you entered
+above will now be your default for launching an RStudio session.) The
+screen will update to show Great Lakes is preparing your session. <img
+src="images/great-lakes-ood/IFUN/ood-queue-rstudio.png"
+style="width:50.0%" /></p></li>
+<li><p>When the session is ready (usually a few seconds later), the
+screen will update: <img
+src="images/great-lakes-ood/IFUN/ood-launch-rstudio.png"
+style="width:50.0%" /></p>
+<ul>
+<li>Drag the Compression slider all the way to the right</li>
+<li>Drag Image Quality slider all the way to the right</li>
+<li>Click <strong>Launch RStudio</strong></li>
+</ul></li>
+<li><p>This will open a new browser tab that contains your RStudio
+session: <img
+src="images/great-lakes-ood/IFUN/rstudio-startup.png" /></p></li>
+<li><p>You may see a prompt asking permission to use the clipboard.
+Click <strong>Allow</strong>. <img
+src="images/great-lakes-ood/IFUN/clipboard-permission.png"
+style="width:25.0%" /></p></li>
+</ol>
+<p>If you need to set or reset the clipboard settings, you can click on
+the <em>site information icon</em> left of the browser’s URL:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Edge Browser</th>
+<th align="center">Chrome Browser</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><img
+src="images/great-lakes-ood/IFUN/browser-edge-clipboard-setting.png" /></td>
+<td align="center"><img
+src="images/great-lakes-ood/IFUN/browser-chrome-clipboard-setting.png" /></td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="using-rstudio" class="section level2">
+<h2>Using RStudio</h2>
+<p><img
+src="images/great-lakes-ood/IFUN/great-lakes-wayfinder-worker-node.png" /></p>
+<p>On Great Lakes, you launch a RStudio session on a SLURM
+<strong>compute node</strong>.</p>
+<ul>
+<li>The compute node can run RStudio, a browser, or other
+programs/tools.</li>
+<li>The browser connects to the the compute node through a utility
+called <strong>NoVNC</strong>.</li>
+<li>Accessing the compute node through the browser is a convenient way
+to use a GUI like RStudio, but it means that some functionality
+(e.g. copy-paste) works slightly differently.</li>
+</ul>
+<div id="shortcuts-copy-paste" class="section level3">
+<h3>Shortcuts / copy-paste</h3>
+<ul>
+<li>In the Rstudio window, you can Zoom in and out using <em>control
++</em> and <em>control -</em>.</li>
+<li>Running RStudio in the browser inside the Great Lakes HPC
+complicates copying and pasting from your computer to/from the remote
+session.
+<ul>
+<li>Copy-paste functionality doesn’t always work perfectly. Sometimes
+you may need to copy twice to get the content into the buffer. So check
+your work.</li>
+<li>Within the RStudio window you can right-click to get a copy or paste
+context menu.</li>
+<li>Keyboard shortcuts are <em>control C</em> and <em>control V</em>.
+This is familliar to PC users <em>but will take some getting used to for
+Mac-users</em>.</li>
+<li>Copy and paste <em>mostly</em> work as expected using Chrome or Edge
+browsers. Other browsers (e.g. Safari) require extra steps:
+<ul>
+<li>Open the control panel (left side) <img
+src="images/great-lakes-ood/IFUN/novnc-controls.png"
+style="width:25.0%" /></li>
+<li>Select the clipboard icon. <img
+src="images/great-lakes-ood/IFUN/novnc-controlpanel.png"
+style="width:25.0%" /></li>
+<li>Copy text into the clipboard area; within that area, use the native
+keyboard shortcuts, i.e. control-C on PC or command-C on Mac). Close the
+control panel. <img
+src="images/great-lakes-ood/IFUN/novnc-clipboard.png" /></li>
+<li>Right-click (or <em>control V</em>) to paste the contents into the
+console. <img src="images/great-lakes-ood/IFUN/novnc-paste.png"
+style="width:50.0%" /></li>
+</ul></li>
+</ul></li>
+<li>If the copy-paste pattern is too flaky or clumsy for your tastes,
+you can upgrade your experience by switching from using Open OnDemand in
+the browser to a <a
+href="https://www.realvnc.com/en/connect/download/viewer/"
+target="_blank">VNC viewer</a>. (Macs have a built in VNC viewer, but
+that viewer doesn’t support copy/paste with a Unix system.) Details on
+how to set this up are outside the scope of this guide, but <a
+href="#how-to-get-help">reach out</a> and we can help.</li>
+</ul>
+<hr />
+</div>
+<div id="open-a-browser" class="section level3">
+<h3>Open a browser</h3>
+<ul>
+<li>FYI, you can launch the Firefox browser by clicking on Applications
+(top left) | Web Browser. This will open another application tab (along
+the top). <img src="images/great-lakes-ood/IFUN/ood-browser.png"
+style="width:50.0%" /></li>
+<li>If you want to do any substantial copy/paste, we recommend you use
+this browser window because it’s more reliable to copy/paste within the
+session than from your local computer.</li>
+</ul>
+<hr />
+</div>
+<div id="exiting" class="section level3">
+<h3>Exiting</h3>
+<ul>
+<li>The RStudio session will last for 4 hours (or however long you
+specified in launch config above).</li>
+<li>If you close the browser window, you can click <strong>Launch
+RStudio</strong> again from the <a
+href="https://greatlakes.arc-ts.umich.edu/pun/sys/dashboard/batch_connect/sessions"
+target="_blank">Open OnDemand session page</a></li>
+<li>You can end the session several ways. <em>Make sure your scripts and
+data are saved because these actions do not prompt to save or confirm;
+and once the session is closed it is gone for good.</em> <br/> Any of
+the following actions will end your session:
+<ul>
+<li>In RStudio menu at the top, click File | Quit</li>
+<li>In RStudio, click Session | Quit Session</li>
+<li>In RStudio, close the RStudio window (top right X) <img
+src="images/great-lakes-ood/IFUN/rstudio-close.png"
+style="width:25.0%" /></li>
+<li>In <a
+href="https://greatlakes.arc-ts.umich.edu/pun/sys/dashboard/batch_connect/sessions"
+target="_blank">Open OnDemand session page</a>, click
+<strong>Delete</strong>. <img
+src="images/great-lakes-ood/IFUN/ood-delete.png"
+style="width:50.0%" /></li>
+</ul></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="download-workshop-inputs" class="section level2">
+<h2>Download workshop inputs</h2>
+<ol style="list-style-type: decimal">
+<li><p>The inputs used in the workshop can be downloaded to this
+session. In the RStudio window, click on the <strong>Terminal</strong>
+tab. The tab will be blank with a prompt that looks something like this:
+<code>[YOUR_UNIQNAME@glXXXX ~]$</code></p></li>
+<li><p>Paste the following block into the Terminal prompt: and hit
+<em>Enter/Return</em>. This will take a minute or two to download and
+unpack the inputs.</p>
+<pre class="bash"><code># download Seurat inputs --------------------------------------------------
+mkdir -p intro_functional_analysis_workshop/IFUN_R
+cd intro_functional_analysis_workshop/IFUN_R
+
+# Use curl to download
+# We&#39;ll use evironment variables to avoid extremely long command lines
+source_url=&quot;https://umich-brcf-bioinf-workshop.s3.us-east-1.amazonaws.com&quot;
+source_file=&quot;IFUN/workshop_ifun_inputs-20250917.tgz&quot;
+curl -o workshop_ifun_inputs.tgz ${source_url}/${source_file}
+
+# tar unpacks the tarball into directories
+tar xzvf workshop_ifun_inputs.tgz
+
+# Since we have unpacked the tarball, we can remove it
+rm workshop_ifun_inputs.tgz</code></pre>
+<p>You can use <code>ls</code> or <code>tree</code> to show the contents
+of the inputs dir:</p>
+<pre><code>tree inputs
+inputs
+├── bulk_de_results
+│   └── de_deficient_vs_control_annotated.csv
+└── single_cell_de_results
+    ├── de_pseudo_pericyte_D21_vs_D7.csv
+    ├── de_pseudo_pericyte_D7_vs_D0.csv
+    ├── de_standard_pericyte_D21_vs_D7.csv
+    └── de_standard_pericyte_D7_vs_D0.csv</code></pre></li>
+<li><p>Now you can review the <a href="index.html"
+target="_blank">workshop lessons</a> and execute analyses on these input
+data.</p></li>
+</ol>
+<hr />
+</div>
+<div id="transferring-files" class="section level2">
+<h2>Transferring files</h2>
+<p><img
+src="images/great-lakes-ood/IFUN/great-lakes-file-transfer.png" /></p>
+<p>There are several ways to move files to or from Great Lakes.</p>
+<ol style="list-style-type: decimal">
+<li>For small transfers, you can use <a
+href="#open-ondemand-file-browser">Open OnDemand file browser</a>.</li>
+<li>For large transfers, we recommend <a href="#globus">Globus</a></li>
+<li>You can also use <a href="#command-line-tools">command line
+tools</a></li>
+</ol>
+<ul>
+<li>Note that to transfer a file to/from Great Lakes, you will need to
+be on the campus network or on the VPN.</li>
+</ul>
+<div id="open-ondemand-file-browser" class="section level3">
+<h3>Open OnDemand file browser</h3>
+<p>Open OnDemand (OOD) lets you browse your files and move small files
+(e.g. scripts or plots) between your workstation and Great Lakes using
+your web browser.</p>
+<p>1.1 <em>In your workstation’s browser</em>, open the <a
+href="https://greatlakes.arc-ts.umich.edu/" target="_blank">OOD
+Dashboard</a>. Along the top menu, click on <strong>Files</strong>.
+(Note that if you shrink the screen very small, the menu items will be
+hidden in a “hamburger”.) In the dropdown menu, click <strong>Home
+Directory</strong>.</p>
+<p><img src="images/great-lakes-ood/IFUN/ood-files.png" /> 1.2 OOD will
+display the contents of your home directory. You can click on a
+directory to see its contents. <img
+src="images/great-lakes-ood/IFUN/ood-files-browse.png" /> 1.3 To view a
+plot graphic, you can click on the hamburger and then select
+<strong>View</strong>. This will open the plot in a new browser tab.
+<img src="images/great-lakes-ood/IFUN/ood-files-view.png" /> 1.4 You can
+download one or more files by selecting their checkboxes and clicking
+the <strong>Download</strong> button. (Note: if you select a directory
+and click <strong>Download</strong>, OOD will download the contents as a
+single zipped file.) <img
+src="images/great-lakes-ood/IFUN/ood-files-download.png" /></p>
+</div>
+<div id="globus" class="section level3">
+<h3>Globus</h3>
+<p>To process RNA-Seq FASTQs or run CellRanger or Seurat on your own
+files, we recommend transferring the FASTQ files or cellranger outputs
+to Great Lakes using <strong>Globus</strong>.</p>
+<ul>
+<li><p>Globus is a fast, secure, and fault tolerant way to move files of
+any size.</p></li>
+<li><p>Globus is much better than OOD for transferring larger files like
+FASTQ files, Cell Ranger outputs, or saved Seurat data objects.</p></li>
+<li><p>Details on how to set up and use Globus are outside the scope of
+this guide, but we recommend these links:</p>
+<ul>
+<li><a href="https://documentation.its.umich.edu/node/5019"
+target="_blank">ARC Globus page</a></li>
+<li><a
+href="https://www.mivideo.it.umich.edu/media/t/1_uk9nmxsw/181860561?st=2980"
+target="_blank">ARC Video on using Globus</a></li>
+<li><a
+href="https://umich-brcf-bioinf.github.io/workshop-reproducible-computing/main/html/Module_transferring_data_globus.html"
+target="_blank">Globus tutorial from Reproducible Computing
+workshop</a></li>
+</ul></li>
+</ul>
+</div>
+<div id="command-line-tools" class="section level3">
+<h3>Command line tools</h3>
+<p>For larger files/directories, we strongly recommend you use Globus.
+That said, if you are more comfortable with command line tools, you can
+transfer files using the <strong>secure copy</strong> command <a
+href="https://man7.org/linux/man-pages/man1/scp.1.html"
+target="_blank">scp</a>. <code>scp</code> is a lot like <code>cp</code>
+but it allows you to copy files across a network.</p>
+<p>To transfer from your workstation to Great Lakes:</p>
+<p>3.1 From you workstation terminal or command window, <code>cd</code>
+into the directory that contains your data. 3.2 Adjust the
+<code>scp</code> command below to match the correct source directory and
+uniqname and hit <em>Enter/Return</em> to execute.</p>
+<pre><code># Copy the SOURCE_DIR dir contents from your workstation to Great Lakes home dir
+# -r copies recursively 
+# -p preserves the file modification times
+scp -pr SOURCE_DIR YOUR_UNIQNAME@greatlakes-xfer.arc-ts.umich.edu:</code></pre>
+<p>3.3 The first time you run this command, you may see a prompt like
+the following; type <strong>yes</strong> and hit <em>Enter/Return</em>
+to continue.</p>
+<pre><code>The authenticity of host &#39;...&#39; can&#39;t be established.
+ECDSA key fingerprint is SHA256:....
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</code></pre>
+<p>The command will print a warning (e.g. <em>Warning: Permanently added
+‘SERVER_ADDRESS’ to the list of known hosts</em>). This is fine.</p>
+<p>3.4 When prompted, type your UM password followed by
+Enter/Return.</p>
+<ul>
+<li><strong>Note that the server will not echo any characters when you
+are typing your password;</strong>* this is ok.</li>
+<li>Note that the password is case sensitive.</li>
+</ul>
+<p>3.5 You can also transfer files from Great Lakes to your workstation.
+From your workstation terminal or command window, adjust the
+<code>scp</code> command below to match the correct source file and
+uniqname and hit <em>Enter/Return</em> to execute.</p>
+<pre><code># Copy the SOURCE_FILE from Great Lakes to your current workstation dir
+scp YOUR_UNIQNAME@greatlakes-xfer.arc-ts.umich.edu:PATH/TO/SOURCE_FILE . </code></pre>
+<p>3.6 When prompted, type your UM password followed by
+Enter/Return.</p>
+<ul>
+<li><strong>Note that the server will not echo any characters when you
+are typing your password;</strong>* this is ok.</li>
+<li>Note that the password is case sensitive.</li>
+</ul>
+<hr />
+</div>
+<div id="exiting-1" class="section level3">
+<h3>Exiting</h3>
+<ul>
+<li>The Basic Desktop session will last for 1 hour (or however long you
+specified in launch config above).</li>
+<li>If you close the browser window, you can reconnect by clicking
+<strong>Launch Basic Desktop</strong> again from the <a
+href="https://greatlakes.arc-ts.umich.edu/pun/sys/dashboard/batch_connect/sessions"
+target="_blank">Open OnDemand session page</a></li>
+<li>Any of the following actions will end your session:
+<ul>
+<li>Click on the <strong>Applications</strong> menu (top left) and
+select <strong>Log Out</strong>.</li>
+<li>Click on your name (top right) and select <strong>Log
+Out</strong>.</li>
+<li>In <a
+href="https://greatlakes.arc-ts.umich.edu/pun/sys/dashboard/batch_connect/sessions"
+target="_blank">Open OnDemand session page</a>, click
+<strong>Delete</strong>. <img
+src="images/great-lakes-ood/IFUN/ood-basic-desktop-delete.png"
+style="width:50.0%" /></li>
+</ul></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="launch-templates" class="section level2">
+<h2>Launch templates</h2>
+<p>Many config values have to be specified when launching an interactive
+job from Open OnDemand (OOD). Different jobs require different configs,
+but quite often a <em>type of job</em> (e.g. functional analysis, bulk
+RNA-Seq, scRNA-Seq, Cell Ranger, etc.) will use the same values each
+time. OOD allows you to save <strong>launch templates</strong> to
+simplify starting common jobs.</p>
+<div id="functional-analysis-template" class="section level3">
+<h3>Functional analysis template</h3>
+<ol style="list-style-type: decimal">
+<li><p>If off-campus, connect to the VPN using Cisco Secure
+Client.</p></li>
+<li><p>In your browser, go to Great Lakes Open On Demand:<br />
+<a href="https://greatlakes.arc-ts.umich.edu"
+target="_blank">greatlakes.arc-ts.umich.edu</a> and login with your
+uniqname and password.</p></li>
+<li><p>In the menu at the top of the screen, click <strong>Interactive
+Apps</strong> and select <strong>RStudio</strong>. <img
+src="images/great-lakes-ood/IFUN/ood-interactive-apps.png" /></p></li>
+<li><p>Enter launch configuration values below in the corresponding
+fields:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R Version</td>
+<td><strong>Rtidyverse/4.4.0</strong></td>
+</tr>
+<tr class="even">
+<td>RStudio version</td>
+<td><strong>RStudio/2024.04.1</strong></td>
+</tr>
+<tr class="odd">
+<td>Slurm account</td>
+<td><em>(This is in the email from ARC)</em></td>
+</tr>
+<tr class="even">
+<td>Partition</td>
+<td><strong>standard</strong></td>
+</tr>
+<tr class="odd">
+<td>Number of hours</td>
+<td><strong>4</strong> <br/> <em>(Enough to get started, adjust if you
+need more time)</em></td>
+</tr>
+<tr class="even">
+<td>Number of cores</td>
+<td><strong>4</strong></td>
+</tr>
+<tr class="odd">
+<td>Memory (GB)</td>
+<td><strong>16</strong> <br/> <em>(Enough to get started, ok to boost if
+you ever run out)</em></td>
+</tr>
+<tr class="even">
+<td>Module commands</td>
+<td><strong>load Bioinformatics Rutils-BFX</strong></td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Scroll to the bottom and click the checkbox <strong>Save
+settings</strong>. This will show a dialog that let’s you name this
+template. Enter <strong>RStudio-Functional-Analysis</strong> and click
+<strong>Save</strong>. <img
+src="images/great-lakes-ood/IFUN/ood-template-name.png"
+style="width:50.0%" /></p></li>
+<li><p>Now click <strong>Save settings and close</strong>.<br/> <img
+src="images/great-lakes-ood/IFUN/ood-template-save-settings-and-close.png"
+style="width:50.0%" /></p></li>
+<li><p>Saved templates are listed at the top of <a
+href="https://greatlakes.arc-ts.umich.edu/pun/sys/dashboard/batch_connect/sessions"
+target="_blank">My Interactive Sessions</a> <img
+src="images/great-lakes-ood/IFUN/ood-template-saved-settings.png" /></p></li>
+</ol>
+<ul>
+<li>You can review the launch config values by clicking on the name
+<strong>RStudio-Functional-Analysis</strong> (1).</li>
+<li>You can change the launch config values by clicking
+<strong>edit</strong> (2).</li>
+<li>You can launch a new job with this config by clicking launch
+(3).</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p><img
+src="images/great-lakes-ood/IFUN/great-lakes-wayfinder-summary.png" /></p>
+<ul>
+<li>You can run <strong>RStudio</strong> and related bioinformatics
+tools using University of Michigan’s <strong>Great Lakes</strong> High
+Performance Cluster (HPC).</li>
+<li>Running on Great Lakes is a nice option because the libraries and
+software are pre-installed and you can run RStudio with as much memory
+as you need.<br />
+</li>
+<li><strong>Open OnDemand</strong> (OOD) connects you to the Great Lakes
+cluster through your web browser.</li>
+<li>Using Great Lakes requires some set up.</li>
+<li>Running RStudio on Great Lakes is a bit different than running it on
+your workstation. Depending on your workstation and browser, copy/paste
+on RStudio can require different keyboard shortcuts or different
+steps.</li>
+<li>OOD, Globus, and command line tools are several ways to transfer
+files between Great Lakes and your workstation.</li>
+<li>OOD <strong>Launch templates</strong> can save launch configs and
+simplify how you start common jobs.</li>
+</ul>
+<hr />
+</div>
+<div id="referenceslinks" class="section level2">
+<h2>References/Links</h2>
+<ul>
+<li><a href="https://datascience.isr.umich.edu/events/coderspaces/"
+target="_blank">UM CoderSpaces “office hours”</a> and UM CoderSpaces
+Slack workspace. <em>(See “Useful Resources” section in CoderSpaces page
+for instructions on how to join and access the CoderSpaces Slack
+workspace.)</em></li>
+<li><a href="https://its.umich.edu/advanced-research-computing"
+target="_blank">Advanced Research Computing</a>
+<ul>
+<li><a
+href="https://its.umich.edu/advanced-research-computing/research-computing-package"
+target="_blank">Research Computing Package</a></li>
+<li>Upcoming <a
+href="https://ttc.iss.lsa.umich.edu/ttc/sessions/tag/hpc/"
+target="_blank">UM Advanced Research Computing workshops</a></li>
+</ul></li>
+<li><a
+href="https://its.umich.edu/advanced-research-computing/high-performance-computing/great-lakes/getting-started"
+target="_blank">Great Lakes HPC</a>
+<ul>
+<li><a href="https://documentation.its.umich.edu./node/4975">Great Lakes
+User Guide</a></li>
+<li><a
+href="https://docs.google.com/document/d/1ew_LIFmQnEu95B5mkGsKeMGxKbvbHTbEAMIpRBgJp7c/edit?tab=t.0"
+target="_blank">Great Lakes Concepts</a> and <a
+href="https://docs.google.com/document/d/e/2PACX-1vSGaQfRZswv3kQBGzJZRIimOqtDmUOuQBrCdMwiptIK6g9FOT5OW1t1H40eByiTbEcxZ3udfOMQGvMr/pub"
+target="_blank">SLURM cheatsheet</a></li>
+<li>Videos on <a
+href="https://www.mivideo.it.umich.edu/playlist/dedicated/1_rmm5rnp1/"
+target="_blank">getting started with Great Lakes</a></li>
+<li><a href="https://umich-arc.github.io/arc-software-catalog/"
+target="_blank">HPC Software Catalog</a></li>
+<li><a href="https://docs.support.arc.umich.edu/modules/">Using Software
+Modules</a></li>
+</ul></li>
+<li>Globus
+<ul>
+<li><a href="https://documentation.its.umich.edu/node/5019"
+target="_blank">ARC Globus page</a></li>
+<li><a
+href="https://www.mivideo.it.umich.edu/media/t/1_uk9nmxsw/181860561?st=2980"
+target="_blank">ARC Video on using Globus</a></li>
+<li><a
+href="https://umich-brcf-bioinf.github.io/workshop-reproducible-computing/main/html/Module_transferring_data_globus.html"
+target="_blank">Globus tutorial from Reproducible Computing
+workshop</a></li>
+</ul></li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 ---
-title: "Functional Analysis"
+title: "Intro"
 author: "UM Bioinformatics Core Workshop Team"
 output:
         html_document:
@@ -39,29 +39,36 @@ source("../bin/set_values.R")
 
 # Workshop goals and topics
 
- - We want to make the computers work harder so we can do more meaningful work. This workshop introduces foundational tools and techniques that make computational projects simpler, more powerful, and more reproducible.
+**Functional Enrichment Analysis** places a list of differentially expressed 
+genes into a biological context. It presents a systems-level perspective that 
+can reveal expression patterns, elucidate molecular mechanisms, and guide 
+follow-up experiments.
 
- - By the end of the workshop, attendees will be able to
-   - Use RStudio to build R scripts, examine R data structures, navigate directories and files
-   - Understand basics of importing data into R and ways to clean/manipulate data
-   - Visualize data as plots
+This workshop is targeted toward researchers comfortable with R/RStudio who 
+would like to better understand and apply functional enrichment approaches for 
+bulk and/or single-cell RNA-seq datasets.
 
- - Our purpose is not to be exhaustive, there is a lot that we cannot cover in
-   the allotted time, and we don't expect anyone to be an expert at the end of
-   the workshop. 
+By the end of this workshop, participants will be able to:
 
-- We hope that this introduction helps you over the steepest parts of the learning curve and gives a sense of what’s possible so you can 
-recognize these techniques when you see them and, with some independent study, apply them in your own work.
+- Describe common approaches, tools, and reference databases.
+- Run analyses on single-cell and bulk RNA-Seq inputs using web tools and R.
+- Understand and use different functional analysis approaches, including 
+  over-representation analysis and GSEA analysis.
+- Build meta-analyses across multiple comparisons.
+- Visualize gene-level activity within gene sets and create publication-ready figures.
 
+- We hope that this introduction provides a foundation to help interpret and run 
+functional analyses on your own. 
+
+- Our purpose is not to be exhaustive, there is a lot that we cannot cover in
+the allotted time, and we don't expect anyone to be an expert at the end of
+the workshop. 
+   
  - Please let us know if there is anything we can do to improve the workshop experience.
 
-| ![](images/headshots/headshot_cgates.jpg) | ![](images/headshots/headshot_mbradenb.jpg) | ![](images/headshots/headshot_trsaari.jpg) |  ![](images/headshots/headshot_wld.jpg) |
-|:-:|:-:|:-:|:-:|
-| **Chris** | **Marci** | **Travis** | **Bill** |
-| ![](images/headshots/headshot_damki.jpg) | ![](images/headshots/headshot_clairis.jpg) | ![](images/headshots/headshot_rcavalca.jpg) |
-| **Dana** | **Clair** | **Raymond** | 
-
-<br/>
+## About the workshop team
+```{r, child='helper-gallery.Rmd'}
+```
 
 
 # Code of Conduct
@@ -187,7 +194,7 @@ It is important that you can see:
  - Slack
  - Lesson plan web page
 
-![arranged screens](images/workshop-intro/arranged_screens.png?)
+![arranged screens](images/workshop-intro/arranged_screens.png)
 <br/>
 <br/>
 
@@ -231,12 +238,44 @@ It is important that you can see:
 <br/>
 
 
-## Acknowledgements
+# Acknowledgements
 
 * This workshop content is licensed under a [Creative Commons Attribution 4 License](https://creativecommons.org/licenses/by/4.0/){target="_blank"}.
 
-* Large sections of this workshop content have been adapted and extended from materials created by [Software Carpentry](https://software-carpentry.org/lessons/){target="_blank"}. These are open access materials distributed under the terms of the [Creative Commons Attribution license (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/){target="_blank"}, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.
-
 * The workshop Code of Conduct has been adapted the [NumFocus Code of Conduct](https://numfocus.org/code-of-conduct){target="_blank"} which itself draws from from numerous sources, including the Geek Feminism wiki, created by the Ada Initiative and other volunteers, which is under a Creative Commons Zero license, the Contributor Covenant version 1.2.0, the Bokeh Code of Conduct, the SciPy Code of Conduct, the Carpentries Code of Conduct, and the NeurIPS Code of Conduct.
 
-* The dplyr icons were copied from the dplyr cheatsheet from posit.co (https://www.rstudio.org/links/data_transformation_cheat_sheet) and they are licensed as CC BY SA.
+* This workshop relies heavily on these tools / approaches/ datasets:
+
+  - [WebGestalt](https://www.webgestalt.org/#){target='_blank'}
+    - John M Elizarraras, Yuxing Liao, Zhiao Shi, Qian Zhu, Alexander R Pico, Bing Zhang, WebGestalt 2024: faster gene set analysis and new support for metabolomics and multi-omics,    
+      [Nucleic Acids Research, 2024, gkae456](https://doi.org/10.1093/nar/gkae456){target='_blank'}.
+    - Liao, Y., Wang, J., Jaehnig, E., Shi, Z., Zhang, B. WebGestalt 2019: gene set analysis toolkit with revamped UIs and APIs, 
+      [Nucleic Acids Research, gkz401](https://doi.org/10.1093/nar/gkz401){target='_blank'}.
+    - Wang, J., Vasaikar, S., Shi, Z., Greer, M., & Zhang, B. WebGestalt 2017: a more comprehensive, powerful, flexible and interactive gene set enrichment analysis toolkit. 
+      [Nucleic Acids Research](https://academic.oup.com/nar/article-lookup/doi/10.1093/nar/gkx356){target='_blank'}.
+    - Wang, J., Duncan, D., Shi, Z., Zhang, B. (2013). WEB-based GEne SeT AnaLysis Toolkit (WebGestalt): update 2013. 
+      [Nucleic Acids Res, 41 (Web Server issue), W77-83](http://nar.oxfordjournals.org/content/41/W1/W77.full){target='_blank'}.
+    - Zhang, B., Kirov, S.A., Snoddy, J.R. (2005). WebGestalt: an integrated system for exploring gene sets in various biological contexts. 
+      [Nucleic Acids Res, 33(Web Server issue), W741-748](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=retrieve&db=pubmed&list_uids=15980575&dopt=Abstract){target='_blank'}.
+
+  - [Broad GSEA](https://www.gsea-msigdb.org/gsea/index.jsp)
+    - Subramanian A, Tamayo P, Mootha VK, et al. Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles. 
+      Proc Natl Acad Sci U S A. 2005;102(43):15545-15550. doi:10.1073/pnas.0506580102. 
+      [https://doi.org/10.1073/pnas.0506580102](https://doi.org/10.1073/pnas.0506580102){target='_blank'}
+    - Mootha VK, Lindgren CM, Eriksson KF, et al. PGC-1alpha-responsive genes involved in oxidative phosphorylation are coordinately downregulated in human diabetes. 
+      Nat Genet. 2003;34(3):267-273. doi:10.1038/ng1180. 
+      [https://doi.org/10.1038/ng1180](https://doi.org/10.1038/ng1180){target='_blank'}
+
+  - Bulk diffex data were derived from:
+    - Zhang S, Macias-Garcia A, Ulirsch JC, et al. HRI coordinates translation necessary for protein homeostasis and mitochondrial function in erythropoiesis. 
+      Elife. 2019;8:e46976. Published 2019 Apr 29. doi:10.7554/eLife.46976. 
+      [https://doi.org/10.7554/elife.46976](https://doi.org/10.7554/elife.46976){target='_blank'}  
+      [GEO accession GSE119365](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119365){target='_blank'}
+
+
+  - Single-cell diffex data were derived from:
+    - Sorkin M, Huber AK, Hwang C, et al. Regulation of heterotopic ossification by monocytes in a mouse model of aberrant wound healing. 
+      Nat Commun. 2020;11(1):722. Published 2020 Feb 5. doi:10.1038/s41467-019-14172-4.  
+      [https://doi.org/10.1038/s41467-019-14172-4](https://doi.org/10.1038/s41467-019-14172-4){target='_blank'}  
+      [GEO accession GSE126060](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126060){target='_blank'}
+      

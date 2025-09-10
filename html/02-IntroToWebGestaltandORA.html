@@ -11,7 +11,7 @@
 
 
 
-<title>Introduction to WebGestalt and ORA</title>
+<title>ORA with WebGestalt</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -324,7 +324,11 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+<<<<<<< HEAD
       <a class="navbar-brand" href="index.html">Intro to Functional Analysis</a>
+=======
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
+>>>>>>> main
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -339,10 +343,16 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="introduction.html">intro</a>
+      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
     </li>
     <li>
-      <a href="more-stuff.html">more stuff</a>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
     </li>
   </ul>
 </li>
@@ -354,7 +364,16 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="fancy-stuff.html">Fancy Stuff</a>
+      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="07-advanced-visualizations.html">Advanced visualizations</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
     </li>
   </ul>
 </li>
@@ -373,7 +392,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Introduction to WebGestalt and ORA</h1>
+<h1 class="title toc-ignore">ORA with WebGestalt</h1>
 
 </div>
 
@@ -395,7 +414,7 @@ pre {
   addClassKlippyTo("pre.r, pre.markdown, pre.bash");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<pre><code>## [1] &quot;/home/workshop/damki/workshop-intro-functional-analysis/source&quot;</code></pre>
+<pre><code>## [1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
 <div id="objectives" class="section level1">
 <h1>Objectives</h1>
 <ul>
@@ -534,6 +553,10 @@ parameters, such as the statistical method and multiple testing
 correction.</p></li>
 </ul>
 <p><br></p>
+<<<<<<< HEAD
+=======
+</div>
+>>>>>>> main
 <div id="webgestalt-documentation" class="section level2">
 <h2>WebGestalt documentation</h2>
 <p><img
@@ -586,9 +609,13 @@ library(tidyverse)
 
 # Check working directory
 getwd()</code></pre>
-<pre><code>[1] &quot;/home/workshop/damki/workshop-intro-functional-analysis/source&quot;</code></pre>
+<pre><code>[1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
 <pre class="r"><code># Load the bulk RNA-seq results
+<<<<<<< HEAD
 deficient.v.control_bulkDE &lt;- read_csv(&quot;../data/de_deficient_vs_control_annotated.csv&quot;) #TO REVISE - path may need to be adjusted
+=======
+deficient.v.control_bulkDE &lt;- read_csv(&quot;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&quot;)
+>>>>>>> main
 
 # Check the first few rows of the data
 head(deficient.v.control_bulkDE)</code></pre>
@@ -647,8 +674,13 @@ head(deficient_DE_only)</code></pre>
 <pre class="r"><code># Repeat to generate background set (all gene names)
 deficient_background_GeneList &lt;- deficient.v.control_bulkDE %&gt;% pull(symbol) %&gt;% na.omit()</code></pre>
 <pre class="r"><code># write out to file (text only?)
+<<<<<<< HEAD
 write(deficient_DE_GeneList, file =&quot;../data/deficient_DE_GeneList.txt&quot;, ncolumns = 1)
 write(deficient_background_GeneList, file =&quot;../data/deficient_background_GeneList.txt&quot;, ncolumns = 1)</code></pre>
+=======
+write(deficient_DE_GeneList, file =&quot;results/deficient_DE_GeneList.txt&quot;, ncolumns = 1)
+write(deficient_background_GeneList, file =&quot;results/deficient_background_GeneList.txt&quot;, ncolumns = 1)</code></pre>
+>>>>>>> main
 <p>These outputs then allow us to submit data via the web browser
 version of WebGestalt.</p>
 <div id="running-webgestalt-with-our-bulk-rna-seq-results"
@@ -656,11 +688,19 @@ class="section level3">
 <h3>Running WebGestalt with our bulk RNA-seq results</h3>
 <p><br></p>
 <p><img
+<<<<<<< HEAD
 src="images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_withError.png"
 alt="WebGestalt submit data for ORA" /></p>
 <p><br></p>
 <p><img
 src="images/content/02-WebGestalt_browser/02-bulkRNA_b_submission_errorMessage.png"
+=======
+src="images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_error.png"
+alt="WebGestalt submit data for ORA" /></p>
+<p><br></p>
+<p><img
+src="images/content/02-WebGestalt_browser/02-bulkRNA_a_submission_errorMessage.png"
+>>>>>>> main
 alt="WebGestalt submit data for ORA" /></p>
 <p><br></p>
 <p>We ran into an error - why? Let’s go back to the submission page and
@@ -676,8 +716,20 @@ symbol”. Let’s change the
 <code>ID type for uploaded reference list</code> to “Gene symbol” and
 re-submit.</p>
 <p><br></p>
+<<<<<<< HEAD
 <hr />
 </div>
+=======
+</div>
+</div>
+<div id="overview-of-results" class="section level2">
+<h2>Overview of results</h2>
+<!-- per group discussions - plan to move this section to the start to give an overview of the results before using the tool -->
+<p>Let’s look through an example of ORA results from WebGestalt for our
+bulk RNA-seq data.</p>
+<p><br></p>
+<hr />
+>>>>>>> main
 </div>
 </div>
 <div id="summary" class="section level1">
@@ -697,9 +749,10 @@ re-submit.</p>
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left"><a href="workshop-intro.html">Previous lesson</a></th>
+<th align="left"><a href="01-functional-analysis-overview.html">Previous
+lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a href="more-stuff.html">Next lesson</a></th>
+<th align="right"><a href="03-WebGestaltRORA.html">Next lesson</a></th>
 </tr>
 </thead>
 <tbody>
