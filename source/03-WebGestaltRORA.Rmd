@@ -30,7 +30,7 @@ pre {
 
 ```{r klippy, echo=FALSE, include=TRUE}
 klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
-getwd()
+#getwd()
 ```
 
 ```{r, 'chunk_options', include=FALSE}
@@ -43,6 +43,7 @@ source("../bin/set_values.R")
 ```
 
 <!-- Add wayfinder here -->
+<br>
 
 # Objectives
 
@@ -54,9 +55,105 @@ source("../bin/set_values.R")
 
 As we have seen with the web interface for WebGestalt, an over-representation analysis on differential expression results requires:
 
-- A list of differentially expressed genes (subject to some cutoff for significance),
-- A background list of genes measured by the experiment, and
-- The set of genesets / pathways on which to test for over-representation.
+- An *input* list of differentially expressed (subject to some cutoff for significance) that will be queried.   
+- A *reference/background gene set* of genes that are expected to be measured
+- The *functional/biological knowledge database*  which defines the gene sets that will be used to test for over-representation.
+
+# Orienting on RStudio
+
+To get started, let's **log in to the workshop server by going here**: [`r workshop_vars$rstudio_server_url`](`r workshop_vars$rstudio_server_url`){target="blank"}
+<br>
+
+The login page for the server looks like:
+
+<!--![RStudio Server - testing ](images/content/03-WebGestalt_R/02_rstudio_session_default.png)-->
+
+<img src="images/content/03-WebGestalt_R/01_rstudio_login_screen.png" alt="rstudio login screen" style="width: 1000px;"/>
+
+Enter your user credentials and click <kbd>Sign In</kbd>. The RStudio interface should load and look something like:
+
+<img src="images/content/03-WebGestalt_R/02_rstudio_session_default.png" alt="rstudio default session" style="width:1000px;"/>
+
+**Checkpoint** - after you've logged in put up a green check; if you need help put up a red check and post in slack. 
+
+RStudio is an integrated development environment where you can write, execute, and see the results of your code. The interface is arranged in different panes:
+
+- The **Console pane** along the left where you can enter commands and execute them.
+- The **Environment pane** in the upper right shows any variables you have created, along with their values.
+- The pane in the lower right has a few functions:
+    - The **Files tab** let's you navigate the file system.
+    - The **Plots tab** displays any plots from code run in the Console.
+    - The **Help tab** displays the documentation of functions.
+
+## Commands in the Script
+
+Commands can also be run in a script. Some benefits to using a script rather than relying on the Console pane:
+
+- Scripts are files that can be shared.
+- Scripts record the steps taken to analyze the data.
+- Scripts can be re-run, allowing for reproducibility.
+
+When first opening RStudio, a script file is not automatically opened. We'll create our script file by clicking on the icon in the upper-left of the interface (a blank piece of paper with a + sign), and selecting <KBD>R Script</KBD>.
+
+<img src="images/04_rstudio_create_script.png" alt="rstudio create script" style="width:1000px;"/>
+
+ The new pane that opens is the **Source pane**:
+
+<img src="images/05_rstudio_script_pane.png" alt="rstudio script pane" style="width:1000px;"/>
+
+You can think of this as a simple text editor. In the Script pane, enter:
+
+~~~
+3+2
+~~~
+
+Notice that if we press <KBD>Enter</KBD> in the Source pane, we get a new line instead of running the code. In order to execute the code, we press <KBD>Ctrl + Enter</KBD> either on the single line we want to run, or on a highlighted block of code. We then see that code executed, along with its result in in the Console pane.
+
+<img src="images/06_rstudio_script_execution.png" alt="rstudio script execution" style="width:1000px;"/>
+
+## Summary: Console vs Script
+
+Here are some of the key differences between the Console and Script panes in RStudio:
+
+| Console          | Script            |
+|:-----------------|:------------------|
+| Ephemeral code        | Preserved code         |
+| Run with <KBD>Enter</KBD> | Run with <KBD>Ctrl + Enter</KBD> |                  |
+| Hard to share    | Easy to share     |
+
+## Configuring RStudio
+
+All of the panes in RStudio have configuration options. For example, you can minimize/maximize a pane or resize panes by dragging the borders. The most important customization options for pane layout are in the <KBD>View</KBD> menu. Other options such as font sizes, colors/themes, and more are in the <KBD>Tools</KBD> menu under <KBD>Global Options</KBD>.
+
+We can enable soft-wrapping of code by selecting <KBD>Code</KBD> and then <KBD>Soft Wrap Long Lines</KBD>.
+
+<img src="images/07_rstudio_soft_wrap.png" alt="rstudio code execution" style="width:1000px;"/>
+
+# Workshop flow
+
+To accomodate learning styles and to keep us moving along, we'll provide code in three different ways, and you can get that code into RStudio in corresponding ways:
+
+| Source of Code   | Execution of Code |
+|:-----------------|:------------------|
+| Zoom screen share            | Type the code yourself.                            |
+| Slack            | Copy and paste code into RStudio.                  |
+| Website          | Use code block copy button and paste into RStudio. |
+
+**Questions?**
+
+# Setting up
+
+Before we begin, the folder structure of a working directory / project organizes all the relevant files. Typically we make directories for the following types of files:
+
+- Raw data, called `data`, `input`, etc,
+- Results, often `results` or `output` with subfolders for `tables`, `figures`, and `rdata`, and
+- Scripts, often `scripts`.
+
+We've already provided the raw data in the `data/` folder, but you'd otherwise want to move the starting, unaltered, data into this folder.
+
+
+
+# Using WebGestaltR
 
 Let's look at the documentation for the main function in WebGestaltR to understand how to input these required objects into the function. Think of it as reading the recipe before you start cooking.
 
