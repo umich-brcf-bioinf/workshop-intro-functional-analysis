@@ -42,7 +42,7 @@ knitr_fig_path("02-")
 source("../bin/set_values.R")
 ```
 
-<!-- Add overall diagram? -->
+<!-- Add wayfinder here -->
 
 <!-- map abstract schematics/inputs to WebGestalt 
 1) approach
@@ -108,9 +108,7 @@ Below that, there is a area labeled "Advanced parameters", that allows some chan
 
 Together we'll walk through the steps to run an over representation analysis (ORA) for bulk RNA-seq results from our [RNA-seq demystified workshop](https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/). 
 
-<!-- Note input gene list options - symbol, entrez, ensembl, etc. which will -->
-
-<!-- Focus for results is the table (take the most time with that) -->
+<!-- Note input gene list options - symbol, entrez, ensembl, etc. which might have different results -->
 
 ## Input data
 
@@ -149,57 +147,82 @@ First, we'll navigate back to the top section of the `Basic parameters` section 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_b_selectOrganism.png)  
 <br>
 
+For `Organism of Interest`, since our data is from a mouse experiment we want to select `Mus musculus` to have the appropriate knowledge bases of functional gene sets available for selection. 
+
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_c_main_databaseOptions.png)  
 <br>
 
+For `Functional Database`, we'll select `geneontology` as the category which means we'll be using *functional/biological gene sets* from the [gene ontology (GO) annotations](https://www.geneontology.org/) or per the GO consortium website a "network of biological classes describing the current best representation of the 'universe' of biology" via the [AmiGO 2](https://amigo.geneontology.org/amigo/search/ontology) database.
 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_d_main_databaseGO-selected.png)  
 <br>
+
+When we choose `geneontology`, a sub-menu pops up and prompts us to select a funcition database name. 
 
 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_e_subtype_processOptions.png)  
 <br>
 
+If we click the sub-menu, a list of options pops up. We'll select the `Biological Process noRedundant` which per WebGestalt's [manual](https://www.webgestalt.org/WG_2024_manual.pdf) is an option the authors created "used an algorithm to remove redundant terms" and is a version of the public Biological Process GO terms that "only contain[s] non-redundant terms". 
+
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_f_subtype_bioNonRedund-selected.png)  
 <br>
+
+Now that we've selected the knowledge base of *functional/biological gene sets*, we can scroll down to the next section of the page to specify the inputs for our enrichment analysis. 
 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_g_upload_listOptions.png)  
 <br>
 
+> To upload our DE genes as the input/interest list, we'll share a text file on slack that you will need to download to use as the input file. After you've downloaded the file and located it in the download folder on your computer, put up a green check.
+
+Once we have the input file downloaded, we'll select the `click to upload` option next to the `Upload ID List` label. 
+
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_h_upload_showFolderPrompt.png)  
 <br>
+
+This should open up a prompt that shows the file navigator/finder for your computer. Use the prompt to navigate to your download folder and select the `deficient_DE_GeneList.txt` file that we shared via slack. 
 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_i_upload_DE_fileUploaded.png)  
 <br>
 
+After selecting the file, you should now see the `deficient_DE_GeneList.txt` file name inside a small square next to the upload option. 
 
 <br>
 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_j_reference_listOptions.png)  
 <br>
 
+Now that we've specified our interest list of DE genes for the enrichment, we'll need to specify what reference (a.k.a. background) gene list should be used. To use one of the built-in background reference gene sets, we'll click the menu next to `Select Reference Set`. 
 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_j_reference_listOptions_detailed.png)  
 <br>
 
+If we scroll down we'll see `genome protein-coding`, which is an appropriate background reference to use since a polyA library prep approach used that means we expect protein-coding mRNAs were measured in our experiment so we'll select that option. 
 
 ![WebGestalt submit data for ORA](images/content/02-WebGestalt_browser/Submission_k_reference_genomeProtein-selected.png)  
 <br>
 
+After selecting `genome protein-coding` as our background reference, we should we that displayed on the page and see how the alternative options, which allow for a custom background reference to be used, are greyed out. 
+
 ![WebGestalt final selections](images/content/02-WebGestalt_browser/Submission_l_final-selections_fullScreen.png)  
 <br>
 
-Once we've double-checked our options, then we can submit the ORA job using the `Submit` button.
+Now let's double check each section - put up a **green check** after you've reviewed and confirmed your selections match the instructor's.  
 
 ![WebGestalt final selections](images/content/02-WebGestalt_browser/Submission_m_submission_button.png)
+<br>
 
+Once we've double-checked that our selections match, then we will submit the job to WebGestalt using the `Submit` button.
 
 
 ---
 
 ## Overrepresentation results for bulk RNA-seq data using WebGestalt
 
-Let's look through the results of our ORA (Over Representation Analysis) analysis using WebGestalt. We can use the web-interface or a static version of the html report, which one of the files that might be shared by a collaborator. These results were generated from the DE genes for our bulk RNA-seq experiment, which as a reminder compared gene expression between erythroblasts, cells that make red blood cells, isolated from wild-type mice fed an iron deficient vs wild-type mice fed a control diet. 
+Let's look through the results from WebGestalt for our ORA (Over Representation Analysis) analysis. We can use the web-interface or a static version of the html report, which one of the files that might be shared by a collaborator. 
+<!-- Focus for results is the table (take the most time with that) -->
+
+As a reminder - these results were generated from the DE genes for our bulk RNA-seq experiment, which compared gene expression between erythroblasts, cells that make red blood cells, isolated from wild-type mice fed an iron deficient versus those isolated from wild-type mice fed a control diet.   
 
 <br>
 
@@ -207,12 +230,12 @@ Let's look through the results of our ORA (Over Representation Analysis) analysi
 
 Once the submission has run, we see an html format interactive result displayed. We'll navigate through the sections of the report together, starting with the `Job summary`. <!-- add step to or point out how to download results here? -->
 
-Note - if we can't look at the results live there is a copy of the web results at [ADD LINK HERE].
+Note - if we can't look at the results live, there is a copy of the results available [ADD LINK HERE].
 
 ![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_b_jobSummary.png)  
 <br>
 
-Within the `Job summary` drop down menu, WebGestalt summarizes the data that was submitted and the enrichment parameters. The bulk RNA-seq had 189 DE genes in total but only 180 genes mapped to gene symbols of the tool's reference (`entrezgene`) and then only 125 genes were annotated to the functional categories selected for this analysis, which was `geneontology_Biological_Process_noRedundant`.  
+Within the `Job summary` drop down menu, WebGestalt summarizes the data that was submitted and the enrichment parameters. The bulk RNA-seq had 189 DE genes in total but only 180 genes mapped to gene symbols from the tool's reference (`entrezgene`) and then only 125 genes were annotated to the functional categories selected for this analysis, which was `geneontology_Biological_Process_noRedundant`.  
 
 <!-- add section about gene symbol vs gene IDs ? or add DE list output file with ENSEMBL ids instead of Gene symbols??-->
 
@@ -233,67 +256,74 @@ While 10 terms are reported, only 6 are significant after FDR correction for mul
 ![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_d_tableStats-overview.png)  
 <br>
 
-If we look at the table option next,
+If we look at the table option next, we can see more detailed information provided for each of the 10 gene sets included in our results. 
 
 ![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_dd_tableStats-details.png)  
 <br>
 
-1. `Gene set` - 
-1. `Description` - 
-1. `Size` -
-1. `Expect` -
-1. `Ratio` -
-1. `P Value` - 
-1. `FDR` - 
+1. `Gene set` - Accession number for the GO term.     
+1. `Description` - Descriptive label (for Biological function in this case).     
+1. `Size` - Total number of genes annotated for that term.    
+1. `Expect` - Number of genes expected to be DE for that term based on chance.   
+1. `Ratio` - Ratio of observed DE genes over expected for term.    
+1. `P Value` - Nominal p-values from statistical comparison, risk of false positives due to number of tests performed.    
+1. `FDR` - False Discovery Rate corrected p-values, default method is Benjamini-Hochberg (BH).   
 
 <br>
+
+Now that we have a better understanding of the results table, let's change the ranking to be by `Ratio`.
 
 ![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_dd_tableStats-rankedByRatio.png)  
 <br>
 
-When we rank the table by `Ratio`, we see that the top significant term is `glutathione metabolic process` with the `GO:0006749` functional `Gene Set` highlighted as a link. Let's click on the link for `GO:0006749` to see what that does. 
+When we rank the table by `Ratio`, we see that the top significant (FDR =< 0.05) gene set is `glutathione metabolic process` with the `GO:0006749` set ID highlighted as a link. Let's click on the link for `GO:0006749` to see what information that gives us for the `glutathione metabolic process`. 
 
 ### Individual GO-term examples
 
 ![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_f_glutMetabolism-overview.png) 
 <br>
 
-When we click the GO term id, the page jumps to a new section that displays more details for the `glutathione metabolic process` enrichment.  
+When we click the GO term accession number, the page jumps to a new section that displays more details for the `glutathione metabolic process` enrichment.  
 
 ![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_ff_glutMetabolism-details.png) 
 <br>
 
-Within this section we see several familiar fields on the top left, including the `FDR` and Enrichment ratio values for this enrichment.  <!-- add more context, ratio is overlapping genes / expected number (value) -->
+Within this section we see several familiar fields on the top left, including the `FDR` and `Enrichment ratio` values for this enrichment. We also see the overlap number between the input (a.k.a. interest or query) DE genes and the reference *functional/biological* gene set reported which is how the enrichment ratio is calculated. <!-- add more context, ratio is overlapping genes / expected number (value) -->
 
+On the right we see a diagram showing the number of overlapping genes in the center (5) and then the total number of mapped input DE genes (125) and the total number of genes annotated for the reference (58).
 
+To get more information about the reference term, let's click on the `GO:00067491` link. 
 
 ![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_fff_glutMetabolism_GOlinkOut.png) 
 <br>
 
+That links out to the AmiGO2 entry for `glutathione metabolic process`, which provides some additional details but isn't necessarily tailored to our specific enrichment (e.g. limited to mouse). 
+
+After reviewing the AmiGO2 page, let's navigate back to the results.
+
 ![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_ff_glutMetabolism-details.png) 
 <br>
 
-Going back to the results, let's also click on the link for G6pdx in the `Entrez Gene ID` column (14381).
-
-![WebGestalt ORA Glutathione metabolic process](images/content/02-WebGestalt_browser/WGResults_ffff_G6pdx_geneExample.png) 
-<br>
-
-After reviewing the
 
 > Based on the experimental design, is finding a enrichment for a metabolic process surprising? Is it surprising to find that this specific process is enriched? 
 
 <!--- add call out box or quote to highlight question ---> 
 
-Let's look at some of our other enriched results. 
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_dd_tableStats-rankedByRatio.png)  
 
-![WebGestalt ORA intrinsic apoptotic signaling pathway](images/content/02-WebGestalt_browser/02-bulkRNA_gg_ORA-Apoptosis-enrichment.png) 
+Let's go back to the table and look at some of our other enriched results, selecting the `intrinsic apoptotic signaling pathway` next. 
+
+![WebGestalt ORA intrinsic apoptotic signaling pathway](images/content/02-WebGestalt_browser/WGResults_g_intrinsticApop-overview.png) 
 <br>
 
 For the intrinsic apoptotic signaling pathway, we see ... <!-- add more context -->
 
-For the neuron apoptotic process, would we expect to see similar or difference genes represented for that GO term annotation>?
+![WebGestalt ORA neuron apoptotic process](images/content/02-WebGestalt_browser/WGResults_i_neuronApop-overview.png) 
 
-<!-- if add neuronal, consider setting up how it would be helpful to be able to ask which/how many genes are shared between the two GO terms -->
+In the neuron apoptotic process, 
+
+
+<!-- if add neuronal, consider noting how it would be helpful to be able to ask which/how many genes are shared between the two GO terms -->
 
 <!-- add example of neuronal enrichment to show overlap in genes between terms later on in workshop --> 
 
