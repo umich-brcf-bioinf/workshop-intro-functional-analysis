@@ -411,7 +411,6 @@ pre {
   addClassKlippyTo("pre.r, pre.markdown, pre.bash");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<pre><code>## [1] &quot;/home/workshop/damki/workshop-intro-functional-analysis/source&quot;</code></pre>
 <!-- Add wayfinder here -->
 <!-- map abstract schematics/inputs to WebGestalt 
 1) approach
@@ -426,7 +425,7 @@ enrichment</li>
 interface</li>
 <li>Understand results and outputs for ORA on bulk RNA-seq data</li>
 </ul>
-<p>…</p>
+<p><br></p>
 </div>
 <div id="getting-started-with-functional-enrichments"
 class="section level1">
@@ -513,7 +512,7 @@ containing a custom <em>reference/background gene</em> set.</li>
 allows some changes to the default options multiple hypothesis
 correction method and significance cutoff, but we’ll also skip that
 section for now.</p>
-<p><br></p>
+<p><br> <br></p>
 </div>
 <div id="webgestalt-browser-demonstration" class="section level1">
 <h1>WebGestalt browser demonstration</h1>
@@ -788,7 +787,7 @@ significant (FDR =&lt; 0.05) gene set is
 <code>glutathione metabolic process</code> with the
 <code>GO:0006749</code> set ID highlighted as a link. Let’s click on the
 link for <code>GO:0006749</code> to see what information that gives us
-for the <code>glutathione metabolic process</code>.</p>
+for the <code>glutathione metabolic process</code>. <br></p>
 <div id="individual-go-term-examples" class="section level3">
 <h3>Individual GO-term examples</h3>
 <p><img
@@ -871,8 +870,21 @@ about Bcl2l1.</p>
 <p><img
 src="images/content/02-WebGestalt_browser/WGResults_gg_Bcl2l1_geneExample.png"
 alt="WebGestalt ORA neuron apoptotic process" /> <br></p>
+<p>Although we followed this link from the
+<code>neuron apoptotic process</code> result, it looks like this gene
+has a function that’s not necessarily specific to neurons.</p>
+<blockquote>
+<p>Does this gene name look familiar? What are some reasons why we might
+see a functional annotation like <code>neuron apoptotic process</code>
+enriched for an unrelated cell-type/tissue?</p>
+</blockquote>
+<p><br></p>
 <!-- if add neuronal, consider noting how it would be helpful to be able to ask which/how many genes are shared between the two GO terms -->
 <!-- add example of neuronal enrichment to show overlap in genes between terms later on in workshop -->
+<p>Next, let’s go back to the main results and look at the Directed
+Acyclic Graph (DAG) of the enriched GO terms to see if that provides any
+insights regarding the <code>neuron apoptotic process</code> enrichment.
+<br></p>
 </div>
 </div>
 <div id="dag-maps" class="section level2">
@@ -883,10 +895,12 @@ alt="WebGestalt DAG map" /> <br></p>
 <p>When we look at the DAG map, we can see that some of the significant
 terms are related, like
 <code>intrinsic apoptotic signaling pathway</code> and
-<code>neuron apoptotic process</code>. This can be useful for
-interpreting why a GO term that’s unlikely to be applicable to the
-experiment (e.g. neuronal process from non-brain tissue) might be coming
-up as enriched.</p>
+<code>neuron apoptotic process</code>.</p>
+<p>This can be useful for interpreting why a GO term that’s unlikely to
+be applicable to the experiment (e.g. neuronal process from non-brain
+tissue) might be coming up as enriched and further supports how
+functional enrichment results may need to be curated prior to reporting
+them, particularly in the body of a paper. <br></p>
 <hr />
 <div id="webgestalt-documentation" class="section level3">
 <h3>WebGestalt documentation</h3>
@@ -916,10 +930,13 @@ specified by the authors.</p>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
 <ul>
-<li>1</li>
-<li>2</li>
-<li>Using a point and click interface can lower friction of use but make
-documenting and sharing how to run the analysis more challenging.</li>
+<li>Learned about the ORA approach for functional enrichment.<br />
+</li>
+<li>Used a point and click interface, which has lower friction of use,
+to run our analysis.<br />
+</li>
+<li>However, this point and click approach also makes documenting and
+sharing <em>how</em> to run this analysis more challenging.</li>
 </ul>
 <br/> <br/>
 <hr/>

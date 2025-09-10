@@ -30,7 +30,7 @@ pre {
 
 ```{r klippy, echo=FALSE, include=TRUE}
 klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
-getwd()
+#getwd()
 ```
 
 ```{r, 'chunk_options', include=FALSE}
@@ -55,7 +55,7 @@ source("../bin/set_values.R")
 - Run over representation analysis (ORA) using WebGestalt's browser interface
 - Understand results and outputs for ORA on bulk RNA-seq data
 
-...
+<br>
 
 # Getting started with functional enrichments
 
@@ -101,8 +101,7 @@ On right side are prompts for:
 Below that, there is a area labeled "Advanced parameters", that allows some changes to the default options multiple hypothesis correction method and significance cutoff, but we'll also skip that section for now.
 
 <br>
-
-
+<br>
 
 # WebGestalt browser demonstration
 
@@ -277,6 +276,7 @@ Now that we have a better understanding of the results table, let's change the r
 <br>
 
 When we rank the table by `Ratio`, we see that the top significant (FDR =< 0.05) gene set is `glutathione metabolic process` with the `GO:0006749` set ID highlighted as a link. Let's click on the link for `GO:0006749` to see what information that gives us for the `glutathione metabolic process`. 
+<br>
 
 ### Individual GO-term examples
 
@@ -334,16 +334,28 @@ Next, let's click on the link in Entrez Gene ID to see more details about Bcl2l1
 ![WebGestalt ORA neuron apoptotic process](images/content/02-WebGestalt_browser/WGResults_gg_Bcl2l1_geneExample.png) 
 <br>
 
+Although we followed this link from the `neuron apoptotic process` result, it looks like this gene has a function that's not necessarily specific to neurons. 
+
+> Does this gene name look familiar? What are some reasons why we might see a functional annotation like `neuron apoptotic process` enriched for an unrelated cell-type/tissue?
+
+<br>
+
 <!-- if add neuronal, consider noting how it would be helpful to be able to ask which/how many genes are shared between the two GO terms -->
 
 <!-- add example of neuronal enrichment to show overlap in genes between terms later on in workshop --> 
+
+Next, let's go back to the main results and look at the Directed Acyclic Graph (DAG) of the enriched GO terms to see if that provides any insights regarding the `neuron apoptotic process` enrichment. 
+<br>
 
 ## DAG maps
 
 ![WebGestalt DAG map](images/content/02-WebGestalt_browser/WGResults_j_DAG-overview.png) 
 <br>
 
-When we look at the DAG map, we can see that some of the significant terms are related, like `intrinsic apoptotic signaling pathway` and `neuron apoptotic process`. This can be useful for interpreting why a GO term that's unlikely to be applicable to the experiment (e.g. neuronal process from non-brain tissue) might be coming up as enriched. 
+When we look at the DAG map, we can see that some of the significant terms are related, like `intrinsic apoptotic signaling pathway` and `neuron apoptotic process`. 
+
+This can be useful for interpreting why a GO term that's unlikely to be applicable to the experiment (e.g. neuronal process from non-brain tissue) might be coming up as enriched and further supports how functional enrichment results may need to be curated prior to reporting them, particularly in the body of a paper. 
+<br>
 
 
 ---
@@ -376,9 +388,9 @@ If we scroll down, then we can see a bit of an introduction to the tool. For the
 
 # Summary
 
-- 1
-- 2
-- Using a point and click interface can lower friction of use but make documenting and sharing how to run the analysis more challenging.   
+- Learned about the ORA approach for functional enrichment.  
+- Used a point and click interface, which has lower friction of use, to run our analysis.   
+- However, this point and click approach also makes documenting and sharing *how* to run this analysis more challenging.   
 
 
 <br/>
