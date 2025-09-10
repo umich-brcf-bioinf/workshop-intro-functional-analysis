@@ -384,6 +384,29 @@ If we scroll down, then we can see a bit of an introduction to the tool. For the
 
 ```
 
+<br>
+
+# Take aways for WebGestalt (in a browser)
+
+In this section we used a web-based, "point and click tool" - what are the advantages and disadvantages of this approach?  
+
+Advantages:
+
+- Smaller learning curve than something that requires programming.    
+- Easy access to a range of functional databases for many different species.    
+- Flexiblity to try out different approaches and database options within the same interface.    
+
+Disadvantages: 
+
+- Depends on website server being available for results to be generated.    
+- Harder to reproduce, especially if testing out different combinations of DE thresholds, enrichment approach, and annotation database sources.    
+- Figures and files need to be downloaded from web report to have record of results and are limited in how much they can be customized.   
+
+How can we get around some of the disadvantages?
+
+Programming! We can use R/RStudio to use functional enrichment tools and access databases while capturing what parameters were used with more flexibility in what outputs are generated, which is exactly what we will do in the next module.
+<br>
+
 ---
 
 # Summary
