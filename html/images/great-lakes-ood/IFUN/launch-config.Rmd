@@ -1,0 +1,10 @@
+    | Field | Value |
+    |-------|-------|
+    | R Version | **Rtidyverse/4.4.0** |
+    | RStudio version | **RStudio/2024.04.1** |
+    | Slurm account | _(This is in the email from ARC)_ |
+    | Partition | **standard** |
+    | Number of hours | **4** <br/> _(Enough to get started, adjust if you need more time)_|
+    | Number of cores | **4** |
+    | Memory (GB) | **16** <br/> _(Enough to get started, ok to boost if you ever run out)_ |
+    | Module commands | **load Bioinformatics Rutils-BFX** |
