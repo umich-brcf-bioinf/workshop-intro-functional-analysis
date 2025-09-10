@@ -1,0 +1,11 @@
+    ```
+    tree inputs
+    inputs
+    ├── bulk_de_results
+    │   └── de_deficient_vs_control_annotated.csv
+    └── single_cell_de_results
+        ├── de_pseudo_pericyte_D21_vs_D7.csv
+        ├── de_pseudo_pericyte_D7_vs_D0.csv
+        ├── de_standard_pericyte_D21_vs_D7.csv
+        └── de_standard_pericyte_D7_vs_D0.csv
+    ```
