@@ -316,12 +316,23 @@ Let's go back to the table and look at some of our other enriched results, selec
 ![WebGestalt ORA intrinsic apoptotic signaling pathway](images/content/02-WebGestalt_browser/WGResults_g_intrinsticApop-overview.png) 
 <br>
 
-For the intrinsic apoptotic signaling pathway, we see ... <!-- add more context -->
+For the intrinsic apoptotic signaling pathway, we see a higher number of genes overlapping but also a smaller enrichment ratio since the reference gene set and the expected DE genes are larger.  <!-- add more context -->
+
+> Is this enrichment surprising to find for erythroblasts? What does this enrichment suggest about the impact of a iron-deficient diet? 
+
+![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_dd_tableStats-rankedByRatio.png)  
+<br>
+
+Let's go back to the table to look at our other results. A potentially unexpected results is the significant enrichment of `neuron apopotic process` for data generated for blood cell progenitors, so let's select that term next. 
 
 ![WebGestalt ORA neuron apoptotic process](images/content/02-WebGestalt_browser/WGResults_i_neuronApop-overview.png) 
 
-In the neuron apoptotic process, 
+When we look the neuron apoptotic process, it looks like there are some familiar genes from the `intrinsic apoptotic signaling pathway` which might explain why this term is enriched. While the term is significant, it's probably not very informative since it obviously can't apply to the cell type assayed in this experiment and is unlikely to be worth including in the main body of a paper.
 
+Next, let's click on the link in Entrez Gene ID to see more details about Bcl2l1. 
+
+![WebGestalt ORA neuron apoptotic process](images/content/02-WebGestalt_browser/WGResults_gg_Bcl2l1_geneExample.png) 
+<br>
 
 <!-- if add neuronal, consider noting how it would be helpful to be able to ask which/how many genes are shared between the two GO terms -->
 
@@ -337,24 +348,22 @@ When we look at the DAG map, we can see that some of the significant terms are r
 
 ---
 
-## WebGestalt documentation
+### WebGestalt documentation
 
 <!-- keep as is or move to hidden drop down? -->
 
-![WebGestalt homepage find manual](images/content/02-WebGestalt_browser/02-webgestalt_ClickManual.png)  
-
 A good practice when using a new tool is to read the documentation provided by the developers, which we can find by selecting Manual from the top of WebGestalt site.
 
-![WebGestalt homepage manual top](images/content/02-WebGestalt_browser/02-webgestalt_TopOfManual.png)  
+![WebGestalt homepage manual top](images/content/02-WebGestalt_browser/Webgestalt_b_TopOfManual.png)  
 
 At the top of the manual page, we can see an overview of some of the related publications as well as a comparison between an older 2019 version and the current 2024 version.
 
-![WebGestalt homepage manual page 2](images/content/02-WebGestalt_browser/02-webgestalt_Manual2ndPage.png)
+![WebGestalt homepage manual page 2](images/content/02-WebGestalt_browser/Webgestalt_c_Manual2ndPage.png)
 
-If we scroll down, then we can see a bit of an introduction to the tool. However, the manual seems to already have some terminology and assumptions about a user's familiarity with functional enrichment so let's go back to the tool site and focus on a more limited set of options for our first pass. 
+If we scroll down, then we can see a bit of an introduction to the tool. For the sake of time, we won't go through the manual at this point but it's a useful resource, particularly to search to find terminology that might not be familiar or that might have a specific definition specified by the authors. 
 
+<br>
 
-<!-- try to start with results downloaded for RSD DE data -->
 ```{r echo=FALSE, eval=FALSE}
 # add section to create output file(s), looking at previous version with file processing
 
