@@ -1,5 +1,5 @@
 ---
-title: "ORA with R"
+title: "Over representation analysis (ORA) using R"
 output:
         html_document:
             includes:
@@ -41,6 +41,8 @@ knitr_fig_path("02-")
 ```{r, include = FALSE}
 source("../bin/set_values.R")
 ```
+
+<!-- Add wayfinder here -->
 
 # Objectives
 

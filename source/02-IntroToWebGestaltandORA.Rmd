@@ -1,5 +1,5 @@
 ---
-title: "Introduction to functional enrichment with WebGestalt
+title: "Introduction to functional enrichment with WebGestalt"
 output:
         html_document:
             includes:
@@ -51,9 +51,9 @@ source("../bin/set_values.R")
 
 # Objectives
 
-- 1
-- 2
-- 3
+- Introduce "point and click" option for running functional enrichment 
+- Run over representation analysis (ORA) using WebGestalt's browser interface
+- Understand results and outputs for ORA on bulk RNA-seq data
 
 ...
 
