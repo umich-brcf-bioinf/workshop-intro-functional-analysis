@@ -11,7 +11,7 @@
 
 
 
-<title>ORA with R</title>
+<title>Over representation analysis (ORA) using R</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -374,6 +374,9 @@ div.tocify {
   </ul>
 </li>
 <li>
+  <a href="exercises.html">Exercises</a>
+</li>
+<li>
   <a href="workshop-wrap-up.html">Wrap up</a>
 </li>
       </ul>
@@ -388,7 +391,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">ORA with R</h1>
+<h1 class="title toc-ignore">Over representation analysis (ORA) using
+R</h1>
 
 </div>
 
@@ -410,7 +414,8 @@ pre {
   addClassKlippyTo("pre.r, pre.markdown, pre.bash");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<pre><code>## [1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
+<!-- Add wayfinder here -->
+<p><br></p>
 <div id="objectives" class="section level1">
 <h1>Objectives</h1>
 <ul>
@@ -426,12 +431,163 @@ WebGestaltR from a differential expression analysis.</li>
 over-representation analysis on differential expression results
 requires:</p>
 <ul>
-<li>A list of differentially expressed genes (subject to some cutoff for
-significance),</li>
-<li>A background list of genes measured by the experiment, and</li>
-<li>The set of genesets / pathways on which to test for
-over-representation.</li>
+<li>An <em>input</em> list of differentially expressed (subject to some
+cutoff for significance) that will be queried.<br />
+</li>
+<li>A <em>reference/background gene set</em> of genes that are expected
+to be measured</li>
+<li>The <em>functional/biological knowledge database</em> which defines
+the gene sets that will be used to test for over-representation.</li>
 </ul>
+</div>
+<div id="orienting-on-rstudio" class="section level1">
+<h1>Orienting on RStudio</h1>
+<p>To get started, let’s <strong>log in to the workshop server by going
+here</strong>: <a href="https://bfx-workshop02.med.umich.edu"
+target="blank">https://bfx-workshop02.med.umich.edu</a> <br></p>
+<p>The login page for the server looks like:</p>
+<!--![RStudio Server - testing ](images/content/03-WebGestalt_R/02_rstudio_session_default.png)-->
+<p><img src="images/content/03-WebGestalt_R/01_rstudio_login_screen.png" alt="rstudio login screen" style="width: 1000px;"/></p>
+<p>Enter your user credentials and click <kbd>Sign In</kbd>. The RStudio
+interface should load and look something like:</p>
+<p><img src="images/content/03-WebGestalt_R/02_rstudio_session_default.png" alt="rstudio default session" style="width:1000px;"/></p>
+<p><strong>Checkpoint</strong> - after you’ve logged in put up a green
+check; if you need help put up a red check and post in slack.</p>
+<p>RStudio is an integrated development environment where you can write,
+execute, and see the results of your code. The interface is arranged in
+different panes:</p>
+<ul>
+<li>The <strong>Console pane</strong> along the left where you can enter
+commands and execute them.</li>
+<li>The <strong>Environment pane</strong> in the upper right shows any
+variables you have created, along with their values.</li>
+<li>The pane in the lower right has a few functions:
+<ul>
+<li>The <strong>Files tab</strong> let’s you navigate the file
+system.</li>
+<li>The <strong>Plots tab</strong> displays any plots from code run in
+the Console.</li>
+<li>The <strong>Help tab</strong> displays the documentation of
+functions.</li>
+</ul></li>
+</ul>
+<div id="commands-in-the-script" class="section level2">
+<h2>Commands in the Script</h2>
+<p>Commands can also be run in a script. Some benefits to using a script
+rather than relying on the Console pane:</p>
+<ul>
+<li>Scripts are files that can be shared.</li>
+<li>Scripts record the steps taken to analyze the data.</li>
+<li>Scripts can be re-run, allowing for reproducibility.</li>
+</ul>
+<p>When first opening RStudio, a script file is not automatically
+opened. We’ll create our script file by clicking on the icon in the
+upper-left of the interface (a blank piece of paper with a + sign), and
+selecting <KBD>R Script</KBD>.</p>
+<p><img src="images/04_rstudio_create_script.png" alt="rstudio create script" style="width:1000px;"/></p>
+<p>The new pane that opens is the <strong>Source pane</strong>:</p>
+<p><img src="images/05_rstudio_script_pane.png" alt="rstudio script pane" style="width:1000px;"/></p>
+<p>You can think of this as a simple text editor. In the Script pane,
+enter:</p>
+<pre><code>3+2</code></pre>
+<p>Notice that if we press <KBD>Enter</KBD> in the Source pane, we get a
+new line instead of running the code. In order to execute the code, we
+press <KBD>Ctrl + Enter</KBD> either on the single line we want to run,
+or on a highlighted block of code. We then see that code executed, along
+with its result in in the Console pane.</p>
+<p><img src="images/06_rstudio_script_execution.png" alt="rstudio script execution" style="width:1000px;"/></p>
+</div>
+<div id="summary-console-vs-script" class="section level2">
+<h2>Summary: Console vs Script</h2>
+<p>Here are some of the key differences between the Console and Script
+panes in RStudio:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Console</th>
+<th align="left">Script</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Ephemeral code</td>
+<td align="left">Preserved code</td>
+</tr>
+<tr class="even">
+<td align="left">Run with <KBD>Enter</KBD></td>
+<td align="left">Run with <KBD>Ctrl + Enter</KBD></td>
+</tr>
+<tr class="odd">
+<td align="left">Hard to share</td>
+<td align="left">Easy to share</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="configuring-rstudio" class="section level2">
+<h2>Configuring RStudio</h2>
+<p>All of the panes in RStudio have configuration options. For example,
+you can minimize/maximize a pane or resize panes by dragging the
+borders. The most important customization options for pane layout are in
+the <KBD>View</KBD> menu. Other options such as font sizes,
+colors/themes, and more are in the <KBD>Tools</KBD> menu under
+<KBD>Global Options</KBD>.</p>
+<p>We can enable soft-wrapping of code by selecting <KBD>Code</KBD> and
+then <KBD>Soft Wrap Long Lines</KBD>.</p>
+<p><img src="images/07_rstudio_soft_wrap.png" alt="rstudio code execution" style="width:1000px;"/></p>
+</div>
+</div>
+<div id="workshop-flow" class="section level1">
+<h1>Workshop flow</h1>
+<p>To accomodate learning styles and to keep us moving along, we’ll
+provide code in three different ways, and you can get that code into
+RStudio in corresponding ways:</p>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Source of Code</th>
+<th align="left">Execution of Code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Zoom screen share</td>
+<td align="left">Type the code yourself.</td>
+</tr>
+<tr class="even">
+<td align="left">Slack</td>
+<td align="left">Copy and paste code into RStudio.</td>
+</tr>
+<tr class="odd">
+<td align="left">Website</td>
+<td align="left">Use code block copy button and paste into RStudio.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Questions?</strong></p>
+</div>
+<div id="setting-up" class="section level1">
+<h1>Setting up</h1>
+<p>Before we begin, the folder structure of a working directory /
+project organizes all the relevant files. Typically we make directories
+for the following types of files:</p>
+<ul>
+<li>Raw data, called <code>data</code>, <code>input</code>, etc,</li>
+<li>Results, often <code>results</code> or <code>output</code> with
+subfolders for <code>tables</code>, <code>figures</code>, and
+<code>rdata</code>, and</li>
+<li>Scripts, often <code>scripts</code>.</li>
+</ul>
+<p>We’ve already provided the raw data in the <code>data/</code> folder,
+but you’d otherwise want to move the starting, unaltered, data into this
+folder.</p>
+</div>
+<div id="using-webgestaltr" class="section level1">
+<h1>Using WebGestaltR</h1>
 <p>Let’s look at the documentation for the main function in WebGestaltR
 to understand how to input these required objects into the function.
 Think of it as reading the recipe before you start cooking.</p>
@@ -462,8 +618,8 @@ referred to.</li>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List available organisms
 listOrganism()</code></pre>
-<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;       &quot;dmelanogaster&quot; &quot;ggallus&quot;       &quot;hsapiens&quot;     
-[10] &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
+<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;       &quot;dmelanogaster&quot;
+ [8] &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
 <ul>
 <li><code>enrichDatabase</code> are the genesets and pathways we want to
 perform the enrichment analysis over. Use the <code>listGeneSet()</code>
@@ -557,21 +713,26 @@ other common (and not-so-common) identifiers.</li>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List gene identifier types for mmusculus
 listIdType(organism = &#39;mmusculus&#39;)</code></pre>
-<pre><code> [1] &quot;ABI_550XL_Wildfire&quot;                  &quot;ABI_SOLiD&quot;                           &quot;ABI_SOLiD_Exon&quot;                      &quot;ABI_SOLiD_Klaus&quot;                    
- [5] &quot;IonTorrent_RNASeqMature&quot;             &quot;MGI&quot;                                 &quot;Protein_GeneChip34&quot;                  &quot;Protein_GeneChip41&quot;                 
- [9] &quot;Protein_GeneChip51&quot;                  &quot;affy_ClariomD-MTA-1_0&quot;               &quot;affy_HTMG-430PM_GPL11180&quot;            &quot;affy_mg_u74a&quot;                       
-[13] &quot;affy_mg_u74av2&quot;                      &quot;affy_mg_u74b&quot;                        &quot;affy_mg_u74bv2&quot;                      &quot;affy_mg_u74c&quot;                       
-[17] &quot;affy_mg_u74cv2&quot;                      &quot;affy_microRNA4&quot;                      &quot;affy_moe430a&quot;                        &quot;affy_moe430b&quot;                       
-[21] &quot;affy_moex_1_0_st_v1&quot;                 &quot;affy_mogene_1_0_st_v1&quot;               &quot;affy_mogene_2_1_st_v1&quot;               &quot;affy_mouse430_2&quot;                    
-[25] &quot;affy_mouse430a_2&quot;                    &quot;affy_mu11ksuba&quot;                      &quot;affy_mu11ksubb&quot;                      &quot;agilent_Custom_GPL2510&quot;             
-[29] &quot;agilent_ToxicogenomicsG4121A_GPL891&quot; &quot;agilent_sureprint_g3_ge_8x60k&quot;       &quot;agilent_wholegenome&quot;                 &quot;agilent_wholegenome_4x44k_v1&quot;       
-[33] &quot;agilent_wholegenome_4x44k_v2&quot;        &quot;codelink_codelink&quot;                   &quot;dbSNP&quot;                               &quot;embl&quot;                               
-[37] &quot;ensembl_gene_id&quot;                     &quot;ensembl_peptide_id&quot;                  &quot;entrezgene&quot;                          &quot;entrezgene_protein-coding&quot;          
-[41] &quot;genename&quot;                            &quot;genesymbol&quot;                          &quot;illumina_ScriptSeq_RNASeqV2&quot;         &quot;illumina_WG6_Customarray&quot;           
-[45] &quot;illumina_mouseref_8&quot;                 &quot;illumina_mouseref_8_v2&quot;              &quot;illumina_mousewg_6_v1&quot;               &quot;illumina_mousewg_6_v2&quot;              
-[49] &quot;interpro&quot;                            &quot;phalanx_onearray&quot;                    &quot;phosphositeEnsembl&quot;                  &quot;phosphositeRefseq&quot;                  
-[53] &quot;phosphositeSeq&quot;                      &quot;phosphositeUniprot&quot;                  &quot;protein_id&quot;                          &quot;refseq_mrna&quot;                        
-[57] &quot;refseq_peptide&quot;                      &quot;unigene&quot;                             &quot;uniprotswissprot&quot;                   </code></pre>
+<pre><code> [1] &quot;ABI_550XL_Wildfire&quot;                  &quot;ABI_SOLiD&quot;                           &quot;ABI_SOLiD_Exon&quot;                     
+ [4] &quot;ABI_SOLiD_Klaus&quot;                     &quot;IonTorrent_RNASeqMature&quot;             &quot;MGI&quot;                                
+ [7] &quot;Protein_GeneChip34&quot;                  &quot;Protein_GeneChip41&quot;                  &quot;Protein_GeneChip51&quot;                 
+[10] &quot;affy_ClariomD-MTA-1_0&quot;               &quot;affy_HTMG-430PM_GPL11180&quot;            &quot;affy_mg_u74a&quot;                       
+[13] &quot;affy_mg_u74av2&quot;                      &quot;affy_mg_u74b&quot;                        &quot;affy_mg_u74bv2&quot;                     
+[16] &quot;affy_mg_u74c&quot;                        &quot;affy_mg_u74cv2&quot;                      &quot;affy_microRNA4&quot;                     
+[19] &quot;affy_moe430a&quot;                        &quot;affy_moe430b&quot;                        &quot;affy_moex_1_0_st_v1&quot;                
+[22] &quot;affy_mogene_1_0_st_v1&quot;               &quot;affy_mogene_2_1_st_v1&quot;               &quot;affy_mouse430_2&quot;                    
+[25] &quot;affy_mouse430a_2&quot;                    &quot;affy_mu11ksuba&quot;                      &quot;affy_mu11ksubb&quot;                     
+[28] &quot;agilent_Custom_GPL2510&quot;              &quot;agilent_ToxicogenomicsG4121A_GPL891&quot; &quot;agilent_sureprint_g3_ge_8x60k&quot;      
+[31] &quot;agilent_wholegenome&quot;                 &quot;agilent_wholegenome_4x44k_v1&quot;        &quot;agilent_wholegenome_4x44k_v2&quot;       
+[34] &quot;codelink_codelink&quot;                   &quot;dbSNP&quot;                               &quot;embl&quot;                               
+[37] &quot;ensembl_gene_id&quot;                     &quot;ensembl_peptide_id&quot;                  &quot;entrezgene&quot;                         
+[40] &quot;entrezgene_protein-coding&quot;           &quot;genename&quot;                            &quot;genesymbol&quot;                         
+[43] &quot;illumina_ScriptSeq_RNASeqV2&quot;         &quot;illumina_WG6_Customarray&quot;            &quot;illumina_mouseref_8&quot;                
+[46] &quot;illumina_mouseref_8_v2&quot;              &quot;illumina_mousewg_6_v1&quot;               &quot;illumina_mousewg_6_v2&quot;              
+[49] &quot;interpro&quot;                            &quot;phalanx_onearray&quot;                    &quot;phosphositeEnsembl&quot;                 
+[52] &quot;phosphositeRefseq&quot;                   &quot;phosphositeSeq&quot;                      &quot;phosphositeUniprot&quot;                 
+[55] &quot;protein_id&quot;                          &quot;refseq_mrna&quot;                         &quot;refseq_peptide&quot;                     
+[58] &quot;unigene&quot;                             &quot;uniprotswissprot&quot;                   </code></pre>
 <ul>
 <li><code>referenceGene</code> is also a vector of gene identifiers, but
 this is the background set of genes. In our case, it will be all the
@@ -609,7 +770,7 @@ can read in with the <code>read_csv()</code> function:</p>
 # Read diffex results
 rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
 <pre><code>Rows: 16249 Columns: 9
-── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (3): id, symbol, call
 dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
@@ -748,20 +909,34 @@ head(rsd_ora_result)</code></pre>
 4   mmu01230                    Biosynthesis of amino acids
 5 GO:0006575 cellular modified amino acid metabolic process
 6   mmu05202        Transcriptional misregulation in cancer
-                                                                                                link size overlap    expect enrichmentRatio       pValue
-1                                                http://amigo.geneontology.org/amigo/term/GO:0070997  263      14 3.7246486        3.758744 1.999371e-05
-2                                                http://amigo.geneontology.org/amigo/term/GO:0098754   77       7 1.0904865        6.419153 1.026811e-04
-3                                                http://amigo.geneontology.org/amigo/term/GO:0062012  235      12 3.3281081        3.605652 1.198921e-04
-4           http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60       6 0.8497297        7.061069 1.924572e-04
-5                                                http://amigo.geneontology.org/amigo/term/GO:0006575  120       8 1.6994595        4.707379 2.906659e-04
-6 http://www.kegg.jp/kegg-bin/show_pathway?mmu05202+107986+12048+12395+12575+12608+13198+16421+56312  124       8 1.7561081        4.555528 3.632686e-04
-         FDR                                                                            overlapId                                    database
-1 0.02185312 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405 geneontology_Biological_Process_noRedundant
-2 0.04368069                                       11816;14782;17748;17750;76650;230784;100503605 geneontology_Biological_Process_noRedundant
-3 0.04368069          11816;12048;12724;14783;26570;59090;67300;77781;227358;228775;230784;266645 geneontology_Biological_Process_noRedundant
-4 0.05258893                                               100678;107869;209027;27053;56421;56454                                pathway_KEGG
-5 0.05694797                                    14381;14782;17768;18451;26570;69065;107869;112405 geneontology_Biological_Process_noRedundant
-6 0.05694797                                     107986;12048;12395;12575;12608;13198;16421;56312                                pathway_KEGG
+                                                                                                link size overlap
+1                                                http://amigo.geneontology.org/amigo/term/GO:0070997  263      14
+2                                                http://amigo.geneontology.org/amigo/term/GO:0098754   77       7
+3                                                http://amigo.geneontology.org/amigo/term/GO:0062012  235      12
+4           http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60       6
+5                                                http://amigo.geneontology.org/amigo/term/GO:0006575  120       8
+6 http://www.kegg.jp/kegg-bin/show_pathway?mmu05202+107986+12048+12395+12575+12608+13198+16421+56312  124       8
+     expect enrichmentRatio       pValue        FDR
+1 3.7246486        3.758744 1.999371e-05 0.02185312
+2 1.0904865        6.419153 1.026811e-04 0.04368069
+3 3.3281081        3.605652 1.198921e-04 0.04368069
+4 0.8497297        7.061069 1.924572e-04 0.05258893
+5 1.6994595        4.707379 2.906659e-04 0.05694797
+6 1.7561081        4.555528 3.632686e-04 0.05694797
+                                                                             overlapId
+1 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405
+2                                       11816;14782;17748;17750;76650;230784;100503605
+3          11816;12048;12724;14783;26570;59090;67300;77781;227358;228775;230784;266645
+4                                               100678;107869;209027;27053;56421;56454
+5                                    14381;14782;17768;18451;26570;69065;107869;112405
+6                                     107986;12048;12395;12575;12608;13198;16421;56312
+                                     database
+1 geneontology_Biological_Process_noRedundant
+2 geneontology_Biological_Process_noRedundant
+3 geneontology_Biological_Process_noRedundant
+4                                pathway_KEGG
+5 geneontology_Biological_Process_noRedundant
+6                                pathway_KEGG
                                                                               userId
 1 Apoe;Bcl2l1;Vegfa;Ddit3;Slc7a11;Trim2;Coro1a;G6pdx;Mt1;Egln1;Jun;Cebpb;Hipk2;Bnip3
 2                                                Apoe;Sesn2;Gsr;Mt2;Mt1;Srxn1;Hbb-bs
