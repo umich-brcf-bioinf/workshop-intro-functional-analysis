@@ -2,7 +2,7 @@
 # 9/6/2025 cgates
 
 library(ggplot2)
-library(patchwork)
+#library(patchwork)
 library(spatstat.random)
 library(tidyverse)
 library(here)
@@ -14,7 +14,7 @@ base_path = 'source/images/functional-analysis-overview/'
 
 n_genes = 100
 n_bio_gs = 20
-n_interesting_genes = 20
+n_interesting_genes = 25
 
 # initial volcano plot
 diffex_results_file = 'data/de_deficient_vs_control_annotated.csv'
@@ -95,16 +95,18 @@ y_min <- 0
 y_max <- 10
 min_dist <- 0.75   # minimum distance between points
 fill_color_values = c("bio_gs" = "purple", "background" ="white")
-stroke_color='darkgray'
-gene_of_interest_color = 'sienna1'
-partition_color = 'lightgray'
+stroke_color='black'
+gene_of_interest_color = 'darkorange1'
+partition_color = 'black'
 
 
 # helper functions --------------------------------------------------------
 
 add_category = function(df, proportion_gsoi_and_in_category) {
+#df = genes_df
+#proportion_gsoi_and_in_category = n_bio_gs/n_genes
   ca = round(n_interesting_genes * proportion_gsoi_and_in_category, 0)
-  cc = n_interesting_genes - ca
+  cc = n_bio_gs - ca
   gene_ids <- c(
     sample(df[df$gsoi == 'interesting',]$gene_id, ca, replace=FALSE),
     sample(df[df$gsoi != 'interesting',]$gene_id, cc, replace=FALSE)
@@ -119,6 +121,7 @@ add_category = function(df, proportion_gsoi_and_in_category) {
 }
 
 build_plot_points = function(df) {
+  #df = x_df
   x_break = x_min + (x_max * (n_bio_gs / n_genes))
   y_break = y_min + (y_max * (1-(n_interesting_genes / n_genes)))
   
@@ -128,24 +131,24 @@ build_plot_points = function(df) {
   win_d <- spatstat.geom::owin(xrange = c(x_break + min_dist, x_max), yrange = c(y_min, y_break - min_dist))
 
   contingency_table = as.matrix(with(df, table(gsoi, category)))
-  n_gsoi = nrow(contingency_table)
-  n_categories = ncol(contingency_table)
-  if (n_gsoi==2 && n_categories==2) {
+  check_gsoi = nrow(contingency_table)
+  check_categories = ncol(contingency_table)
+  if (check_gsoi==2 && check_categories==2) {
     # We have a gene set of interest and category
-    a = contingency_table[1,1]
-    b = contingency_table[2,1]
-    c = contingency_table[1,2]
-    d = contingency_table[2,2]
+    ca = contingency_table[1,1]
+    cb = contingency_table[1,2]
+    cc = contingency_table[2,1]
+    cd = contingency_table[2,2]
   } else {
     stop("Check your input df has gsoi and category")
   }
   
   # Generate random points with inhibition (no closer than min_dist)
   set.seed(123)  # for reproducibility
-  points_a <- rSSI(r = min_dist*.5, n = a, win = win_a)
-  points_b <- rSSI(r = min_dist, n = b, win = win_b)
-  points_c <- rSSI(r = min_dist, n = c, win = win_c)
-  points_d <- rSSI(r = min_dist, n = d, win = win_d)
+  points_a <- rSSI(r = min_dist*.5, n = ca, win = win_a)
+  points_b <- rSSI(r = min_dist, n = cb, win = win_b)
+  points_c <- rSSI(r = min_dist, n = cc, win = win_c)
+  points_d <- rSSI(r = min_dist, n = cd, win = win_d)
 
   df = df |> arrange(gsoi, category)
   df$x = c(points_a$x, points_b$x, points_c$x, points_d$x)
@@ -155,29 +158,29 @@ build_plot_points = function(df) {
 }
 
 build_plot = function(df, x_break, y_break) {
-#  fill_color_values = c("bio_gs" = "darkgreen", "background" ="white")
   plt = ggplot(df, aes(x = x, y = y, fill = category)) +
     geom_point(size = 5, shape = 21, stroke = 2, color = stroke_color) +
     geom_point(data=subset(df, gsoi=='interesting'), size=3, stroke=2, shape=3, color=gene_of_interest_color) +
     scale_fill_manual(values = fill_color_values) +
     coord_fixed(xlim = c(x_min, x_max), ylim = c(y_min, y_max)) +
-    theme_void() +
-    theme(legend.position = "none") +
     geom_hline(yintercept = y_break, color=partition_color) +
-    geom_vline(xintercept =  x_break, color=partition_color)
+    geom_vline(xintercept =  x_break, color=partition_color) + 
+    theme_void() +
+    theme(legend.position = "none",
+          panel.border = element_rect(colour = "black", fill=NA, linewidth=2))
   return (plt)
 }
 
 build_stats = function(df) {
   contingency_table = as.matrix(with(df, table(gsoi, category)))
-  a = contingency_table[1,1]
-  b = contingency_table[2,1]
-  c = contingency_table[1,2]
-  d = contingency_table[2,2]
-  n = a + b + c + d
-  expected =  (a+c) * (a+b) / n 
-  observed = a 
-  enrichment_ratio = (a / (a+c)) / ((a+b) / n)
+  ca = contingency_table[1,1]
+  cb = contingency_table[1,2]
+  cc = contingency_table[2,1]
+  cd = contingency_table[2,2]
+  cn = ca + cb + cc + cd
+  expected =  (ca+cc) * (ca+cb) / cn 
+  observed = ca 
+  enrichment_ratio = (ca / (ca+cc)) / ((ca+cb) / cn)
   ft = fisher.test(contingency_table)
   return(list(
     contingency=contingency_table,
@@ -213,8 +216,9 @@ build_split_background_plot = function(df) {
     geom_hline(yintercept = y_break, color=partition_color) +
     coord_fixed(xlim = c(x_min, x_max), ylim = c(y_min-1, y_max+1)) +
     theme_void() +
-    theme(legend.position = "none")
-  return (split_background_plot)
+    theme(legend.position = "none",
+          panel.border = element_rect(colour = "black", fill=NA, linewidth=2))
+    return (split_background_plot)
   
 }
 
@@ -244,59 +248,76 @@ background_plot = ggplot(
   geom_point(size = 5, shape = 21, stroke = 2, color=stroke_color) +
   coord_fixed(xlim = c(x_min, x_max), ylim = c(y_min-1, y_max+1)) +
   theme_void() +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        panel.border = element_rect(colour = "black", fill=NA, linewidth=2))
 background_plot
-ggsave(file = here(base_path,'01-background.png'), plot = background_plot)
+ggsave(file = here(base_path,'01-background.png'), 
+       plot = background_plot,
+       height = 5, width = 11, units = 'in')
 
 background_gsoi_plot = background_plot + 
   geom_point(data=subset(x_df, gsoi=='interesting'), size=3, stroke=2, shape=3, color=gene_of_interest_color)
 background_gsoi_plot
 
-ggsave(file = here(base_path,'02-background_gsoi.png'), plot = background_gsoi_plot)
+ggsave(file = here(base_path,'02-background_gsoi.png'), 
+       plot = background_gsoi_plot,
+       height = 5, width = 11, units = 'in')
 
 gsoi_over_background_plot = build_split_background_plot(x_df)
 gsoi_over_background_plot
-ggsave(file = here(base_path,'03-gsoi_over_background.png'), plot = gsoi_over_background_plot)
+ggsave(file = here(base_path,'03-gsoi_over_background.png'), 
+       plot = gsoi_over_background_plot,
+       height = 5, width = 11, units = 'in')
 
 
 # Neutral bio_gs in place
 x_df = add_category(genes_df, n_bio_gs/n_genes)
 neutral_biogs_in_place_plt = build_split_background_plot(x_df)
 neutral_biogs_in_place_plt
-ggsave(file = here(base_path,'04-neutral_biogs_in_place.png'), plot = neutral_biogs_in_place_plt)
+ggsave(file = here(base_path,'04-neutral_biogs_in_place.png'), 
+       plot = neutral_biogs_in_place_plt,
+       height = 5, width = 11, units = 'in')
 
 
-# Neutral
+# Neutral quadrant
 x_df = add_category(genes_df, n_bio_gs/n_genes)
 x = build_plot_points(x_df)
 plt = build_plot(x$df, x$x_break, x$y_break)
 plt
-ggsave(file = here(base_path,'05-quandrant_neutral.png'), plot = plt)
+ggsave(file = here(base_path,'05-quandrant_neutral.png'), 
+       plot = plt,
+       height = 5, width = 11, units = 'in')
 build_stats(x_df)
 
-# Enriched
-x_df = add_category(genes_df, 0.9)
+# Enriched quadrant
+x_df = add_category(genes_df, 0.7)
 x = build_plot_points(x_df)
 plt = build_plot(x$df, x$x_break, x$y_break)
 plt
-ggsave(file = here(base_path,'06-quandrant_enriched.png'), plot = plt)
+ggsave(file = here(base_path,'06-quandrant_enriched.png'), 
+       plot = plt,
+       height = 5, width = 11, units = 'in')
 build_stats(x_df)
 
-# Depleted
+# Depleted quadrant
 x_df = add_category(genes_df, 0.05)
 x = build_plot_points(x_df)
 plt = build_plot(x$df, x$x_break, x$y_break)
 plt
-ggsave(file = here(base_path,'07-quandrant_depleted.png'), plot = plt)
+ggsave(file = here(base_path,'07-quandrant_depleted.png'), 
+       plot = plt,
+       height = 5, width = 11, units = 'in')
 build_stats(x_df)
 
 
-# Ambiguous
+# Ambiguous quadrant
 x_df = add_category(genes_df, 0.3)
 x = build_plot_points(x_df)
 plt = build_plot(x$df, x$x_break, x$y_break)
 plt
-ggsave(file = here(base_path,'08-quandrant_ambiguous.png'), plot = plt)
+ggsave(file = here(base_path,'08-quandrant_ambiguous.png'), 
+       plot = plt,
+       height = 5, width = 11, units = 'in')
 build_stats(x_df)
 
 
