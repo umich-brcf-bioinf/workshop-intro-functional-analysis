@@ -229,7 +229,7 @@ As a reminder - these results were generated from the DE genes for our bulk RNA-
 
 Once the submission has run, we see an html format interactive result displayed. We'll navigate through the sections of the report together, starting with the `Job summary`. <!-- add step to or point out how to download results here? -->
 
-Note - if we can't look at the results live, there is a copy of the results available [ADD LINK HERE].
+Note - if we can't look at the results live, here is a copy of the [WebGestalt analysis results](Report_wg_result-bulk_deficient.html){target="blank"}.
 
 ![WebGestalt ORA example](images/content/02-WebGestalt_browser/WGResults_b_jobSummary.png)  
 <br>

@@ -33,6 +33,7 @@ render_site("source/06-WebGestaltRGSEA.Rmd")
 
 render_site("source/07-advanced-visualizations.Rmd")
 render_site("source/08-analysis-summary.Rmd")
+render_site("source/exercises.Rmd")
 render_site("source/webgestaltr-on-great-lakes.Rmd")
 
 render_site('source/workshop-wrap-up.Rmd')
