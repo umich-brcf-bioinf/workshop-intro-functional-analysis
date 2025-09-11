@@ -22,11 +22,19 @@ render_site('source/analysis-scripts.Rmd')
 render_site('source/index.md')
 render_site('source/workshop-intro.Rmd')
 
-render_site('source/02-IntroToWebGestaltandORA.Rmd')
+render_site("source/01-functional-analysis-overview.Rmd")
+render_site("source/02-IntroToWebGestaltandORA.Rmd")
 
-render_site('source/introduction.Rmd')
-render_site('source/more-stuff.Rmd')
-render_site('source/fancy-stuff.Rmd')
+render_site("source/03-WebGestaltRORA.Rmd")
+render_site("source/04-gene-set-references.Rmd")
+
+render_site("source/05-fcs-gsea-overview.Rmd")
+render_site("source/06-WebGestaltRGSEA.Rmd")
+
+render_site("source/07-advanced-visualizations.Rmd")
+render_site("source/08-analysis-summary.Rmd")
+render_site("source/exercises.Rmd")
+render_site("source/webgestaltr-on-great-lakes.Rmd")
 
 render_site('source/workshop-wrap-up.Rmd')
 

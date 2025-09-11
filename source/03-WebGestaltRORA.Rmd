@@ -1,0 +1,354 @@
+---
+title: "ORA with R"
+output:
+        html_document:
+            includes:
+                in_header: header.html
+            theme: paper
+            toc: true
+            toc_depth: 4
+            toc_float: true
+            number_sections: false
+            fig_caption: false
+            markdown: GFM
+            code_download: false
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 16px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+
+</style>
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
+#getwd()
+```
+
+```{r, 'chunk_options', include=FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("02-")
+```
+
+```{r, include = FALSE}
+source("../bin/set_values.R")
+```
+
+![workshop wayfinder](images/wayfinder/wayfinder-03.png)
+<br>
+
+# Objectives
+
+- Form the inputs for over-representation analysis (ORA) in WebGestaltR from a differential expression analysis.
+- Use WebGestaltR to do an ORA analysis.
+- Understand how to interpret the results of ORA analysis.
+
+# Getting started
+
+As we have seen with the web interface for WebGestalt, an over-representation analysis on differential expression results requires:
+
+- An *input* list of differentially expressed (subject to some cutoff for significance) that will be queried.   
+- A *reference/background gene set* of genes that are expected to be measured
+- The *functional/biological knowledge database*  which defines the gene sets that will be used to test for over-representation.
+
+# Orienting on RStudio
+
+To get started, let's **log in to the workshop server by going here**: [`r workshop_vars$rstudio_server_url`](`r workshop_vars$rstudio_server_url`){target="blank"}
+<br>
+
+The login page for the server looks like:
+
+<!--![RStudio Server - testing ](images/content/03-WebGestalt_R/02_rstudio_session_default.png)-->
+
+<img src="images/content/03-WebGestalt_R/01_rstudio_login_screen.png" alt="rstudio login screen" style="width: 1000px;"/>
+
+Enter your user credentials and click <kbd>Sign In</kbd>. The RStudio interface should load and look something like:
+
+<img src="images/content/03-WebGestalt_R/02_rstudio_session_default.png" alt="rstudio default session" style="width:1000px;"/>
+
+**Checkpoint** - after you've logged in put up a green check; if you need help put up a red check and post in slack. 
+
+RStudio is an integrated development environment where you can write, execute, and see the results of your code. The interface is arranged in different panes:
+
+- The **Console pane** along the left where you can enter commands and execute them.
+- The **Environment pane** in the upper right shows any variables you have created, along with their values.
+- The pane in the lower right has a few functions:
+    - The **Files tab** let's you navigate the file system.
+    - The **Plots tab** displays any plots from code run in the Console.
+    - The **Help tab** displays the documentation of functions.
+
+## Commands in the Script
+
+Commands can also be run in a script. Some benefits to using a script rather than relying on the Console pane:
+
+- Scripts are files that can be shared.
+- Scripts record the steps taken to analyze the data.
+- Scripts can be re-run, allowing for reproducibility.
+
+When first opening RStudio, a script file is not automatically opened. We'll create our script file by clicking on the icon in the upper-left of the interface (a blank piece of paper with a + sign), and selecting <KBD>R Script</KBD>.
+
+<img src="images/04_rstudio_create_script.png" alt="rstudio create script" style="width:1000px;"/>
+
+ The new pane that opens is the **Source pane**:
+
+<img src="images/05_rstudio_script_pane.png" alt="rstudio script pane" style="width:1000px;"/>
+
+You can think of this as a simple text editor. In the Script pane, enter:
+
+~~~
+3+2
+~~~
+
+Notice that if we press <KBD>Enter</KBD> in the Source pane, we get a new line instead of running the code. In order to execute the code, we press <KBD>Ctrl + Enter</KBD> either on the single line we want to run, or on a highlighted block of code. We then see that code executed, along with its result in in the Console pane.
+
+<img src="images/06_rstudio_script_execution.png" alt="rstudio script execution" style="width:1000px;"/>
+
+## Summary: Console vs Script
+
+Here are some of the key differences between the Console and Script panes in RStudio:
+
+| Console          | Script            |
+|:-----------------|:------------------|
+| Ephemeral code        | Preserved code         |
+| Run with <KBD>Enter</KBD> | Run with <KBD>Ctrl + Enter</KBD> |                  |
+| Hard to share    | Easy to share     |
+
+## Configuring RStudio
+
+All of the panes in RStudio have configuration options. For example, you can minimize/maximize a pane or resize panes by dragging the borders. The most important customization options for pane layout are in the <KBD>View</KBD> menu. Other options such as font sizes, colors/themes, and more are in the <KBD>Tools</KBD> menu under <KBD>Global Options</KBD>.
+
+We can enable soft-wrapping of code by selecting <KBD>Code</KBD> and then <KBD>Soft Wrap Long Lines</KBD>.
+
+<img src="images/07_rstudio_soft_wrap.png" alt="rstudio code execution" style="width:1000px;"/>
+
+# Workshop flow
+
+To accomodate learning styles and to keep us moving along, we'll provide code in three different ways, and you can get that code into RStudio in corresponding ways:
+
+| Source of Code   | Execution of Code |
+|:-----------------|:------------------|
+| Zoom screen share            | Type the code yourself.                            |
+| Slack            | Copy and paste code into RStudio.                  |
+| Website          | Use code block copy button and paste into RStudio. |
+
+**Questions?**
+
+# Setting up
+
+Before we begin, the folder structure of a working directory / project organizes all the relevant files. Typically we make directories for the following types of files:
+
+- Raw data, called `data`, `input`, etc,
+- Results, often `results` or `output` with subfolders for `tables`, `figures`, and `rdata`, and
+- Scripts, often `scripts`.
+
+We've already provided the raw data in the `data/` folder, but you'd otherwise want to move the starting, unaltered, data into this folder.
+
+
+
+# Using WebGestaltR
+
+Let's look at the documentation for the main function in WebGestaltR to understand how to input these required objects into the function. Think of it as reading the recipe before you start cooking.
+
+```{r load_webgestalt}
+# =========================================================================
+# ORA with WebGestlatR
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load the libraries
+library(WebGestaltR)
+library(tidyverse)
+```
+
+```{r webgestalt_doc, eval = FALSE}
+# -------------------------------------------------------------------------
+# Look at the manual for the main function
+?WebGestaltR
+```
+
+There are a lot of arguments that go into this function, but, like many other R functions, we won't need or use all of them. Let's focus on the arguments we'll be using, while noting some of the defaults.
+
+- `enrichMethod` is the statistical method used for the functional enrichment. We will use `'ORA'` or `'GSEA'` for this workshop.
+- `organism` is the organism used for the experiment. The selection helps WebGestaltR extract the correct genes for the correct gene sets. Use the `listOrganism()` function to see all available organisms in the package, and, importantly, how they're referred to.
+
+```{r organisms}
+# -------------------------------------------------------------------------
+# List available organisms
+listOrganism()
+```
+
+- `enrichDatabase` are the genesets and pathways we want to perform the enrichment analysis over. Use the `listGeneSet()` function to see the available genesets for specific organisms. For this 
+
+```{r listGeneSet}
+# -------------------------------------------------------------------------
+# List available genesets for mmusculus
+listGeneSet(organism = 'mmusculus')
+```
+
+- `interestGene` should be a vector of gene identifiers which are differentially expressed. When it comes time to use the GSEA method, we'll highlight the different form this particular input takes.
+- `interestGeneType` is the type of identifier used to describe the genes. Use the `listIdType()` function to see which identifiers are available for which organisms. We will be using the `'genesymbol'` type, but note the presence of `'ensemble_gene_id'` and `'entrezgene'`, among other common (and not-so-common) identifiers.
+
+```{r listIdType}
+# -------------------------------------------------------------------------
+# List gene identifier types for mmusculus
+listIdType(organism = 'mmusculus')
+```
+
+- `referenceGene` is also a vector of gene identifiers, but this is the background set of genes. In our case, it will be all the genes tested for differential expression, noting that this itself implies some filtering prior to the test for differential expression.
+- `referenceGeneType` is again the type of identifier used, but to describe the reference set.
+- `fdrThr` refers to the significance threshold for the `fdr` method (by default the Benjamini-Hochberg FDR correction). The default is `fdrThre = 0.05`, but you may want to relax this threshold to see what genesets are "close" to significance.
+- `outputDirectory` and `projectName` are used to specify where to put results and what to call them. By default, `WebGestaltR()` has rich output in the form of supporting files, but also an HTML report (just like the web-version) that summarizes the results and provides helpful visualizations.
+
+We can think of the above arguments as the minimum necessary for an over-representation analysis. Now let's read in the differential expression results, and create the right inputs for the ORA.
+
+## Read in diffex results
+
+For our first ORA, we will use the differential expression results from the same bulk RNA-seq data we use in the RNA-seq Demystified workshop [(link)](https://umich-brcf-bioinf.github.io/workshop-rnaseq-demystified/main/html/Module07_DESeq2Init.html#Sample_Information). Briefly, we have three replicates for each group of mice with an iron-deficient diet and a normal diet. We ran DESeq2 to test for differential expression between these two groups.
+
+We have provided these differential results as a CSV file, which we can read in with the `read_csv()` function:
+
+```{r rsd_read}
+# -------------------------------------------------------------------------
+# Read diffex results
+rsd_diffex = read_csv('inputs/bulk_de_results/de_deficient_vs_control_annotated.csv')
+```
+
+As always, it's helpful to look at the result of what we read in to get a sense for how to work with it:
+
+```{r rsd_preview}
+# -------------------------------------------------------------------------
+head(rsd_diffex)
+```
+
+## Extracting genes for ORA
+
+We can see some of the typical output from DESeq2, including a gene identifier (or two), overall expression, log fold-change, p-value, and adjusted p-value (FDR). As we saw in the documentation for `WebGestaltR()`, we'll need two lists of gene identifiers:
+
+1. `interestGene`: The gene identifiers representing all genes tested, and 
+2. `referenceGene`: The gene identifiers representing the differentially expressed genes.
+
+For simplicity, and slightly easier interpretability, let's use the gene symbol column. It's always a good idea to see how many identifiers are NA, and remove them because they can't be used in the analysis anyhow.
+
+```{r rsd_na}
+# -------------------------------------------------------------------------
+# How many symbols are NA?
+table(is.na(rsd_diffex$symbol))
+
+# -------------------------------------------------------------------------
+# Filter out the NAs
+rsd_diffex = rsd_diffex %>% dplyr::filter(!is.na(symbol))
+
+# Verify we have fewer by noting dimension of resulting table
+rsd_diffex
+```
+
+Let's start with the reference set because it doesn't require any filtering:
+
+```{r rsd_reference_set}
+# -------------------------------------------------------------------------
+# Pull all genes tested
+rsd_ref_ora = rsd_diffex %>% pull(symbol)
+
+# -------------------------------------------------------------------------
+# Preview the vector
+head(rsd_ref_ora)
+
+# -------------------------------------------------------------------------
+# How big is the background?
+length(rsd_ref_ora)
+```
+
+Next, let's extract the significantly differentially expressed genes. Let's use a "typical" significance threshold of FDR < 0.05 and |logFC| > 0.585 (|linearFC| > 1.5). 
+
+```{r rsd_interest_set}
+# -------------------------------------------------------------------------
+# Pull diffex genes
+rsd_sig_ora = rsd_diffex %>%
+    dplyr::filter(padj < 0.05 & abs(log2FoldChange) > 0.585) %>%
+    pull(symbol)
+
+# -------------------------------------------------------------------------
+# Preview the vector
+head(rsd_sig_ora)
+
+# -------------------------------------------------------------------------
+# How many significant genes are there?
+length(rsd_sig_ora)
+```
+
+# Running ORA
+
+We now have an understanding of the important parameters and vectors of genes prepared to follow through with the over-representation analysis. For demonstrative purposes we will do this on the KEGG pathways and a non-redundant version of the Gene Ontology Biological Process genesets.
+
+```{r rsd_ora}
+# -------------------------------------------------------------------------
+# ORA on bulk RNA-seq DESeq2 results
+rsd_ora_result = WebGestaltR(
+    enrichMethod = 'ORA',
+    organism = 'mmusculus',
+    enrichDatabase = c('pathway_KEGG', 'geneontology_Biological_Process_noRedundant'),
+    interestGene = rsd_sig_ora,
+    referenceGene = rsd_ref_ora,
+    interestGeneType = 'genesymbol',
+    referenceGeneType = 'genesymbol',
+    fdrThr = 0.1,
+    outputDirectory = './results',
+    projectName = 'deficient_vs_control_ORA')
+
+# -------------------------------------------------------------------------
+# View the first few results
+head(rsd_ora_result)
+```
+
+The columns of the table are:
+
+- `geneSet`: The database-specific identifier for the geneset/pathway.
+- `description`: A readable description of the geneset/pathway.
+- `link`: A link to the corresponding database giving more detail about the geneset/pathway.
+- `size`: The number of genes in the geneset.
+- `overlap`: The number of significantly differentially expressed genes from your dataset overlapping the geneset.
+- `expect`: The expected number of input genes annotated to the geneset.
+- `enrichmentRatio`: The actual / expected overlap.
+- `pValue`: the p-value from the hypergeometric test.
+- `FDR`: The corrected p-value using the Benjamini-Hochberg method.
+- `overlapID`: The Entrez Gene IDs overlapping the geneset.
+- `database`: The database of the geneset.
+- `userId`: The user-supplied gene ID overlapping the geneset.
+
+TODO: Here is where we'll actually talk more about the biological relevance of the results and pat ourselves on the back for our first ORA well done.
+
+# Results of ORA
+
+The R package for WebGestalt outputs a number of useful artifacts to an `outputDirectory` and `projectName` of our choosing. Some of the more important output files are:
+
+- `enrichment_results_{project name}.txt`: A tab-delimited text table of the full results which can be read in Excel. It is the same as the `rsd_ora_result` table.
+- `interestingID_mappingTable_{project name}.txt`: A table of the `interestGene` vector, with user-supplied identifiers and mappings to other identifiers.
+- `interestingID_unmappedList_{project_name}.txt`: The identifiers which could not be mapped. **This may be helpful to know if any key genes were dropped from the analysis.**
+- `Report_{project_name}.html`: An HTML report, like the web application, of the results. This may be more suitable for a first glance.
+
+# Summary
+
+In this section, we performed our first ORA with the WebGestalt R package. In so doing, we accomplished the following objectives:
+
+- Form the inputs for over-representation analysis (ORA) in WebGestaltR from a differential expression analysis.
+- Use WebGestaltR to do an ORA analysis.
+- Understand how to interpret the results of ORA analysis.
+
+# Questions
+
+- Are there any advantages to using a gene identifier other than the symbol?
+- Are there any advantages to this way of running WebGestaltR?
+
+<br/>
+<br/>
+<hr/>
+| [Previous lesson](02-IntroToWebGestaltandORA.html) | [Top of this lesson](#top) | [Next lesson](04-gene-set-references.html) |
+| :--- | :----: | ---: |

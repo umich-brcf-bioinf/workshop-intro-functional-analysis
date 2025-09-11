@@ -95,7 +95,7 @@ Please note that this is a standalone Slack workspace and not connected to UM or
 **3.1** Open the following web address: [`r workshop_vars$rstudio_server_url`](`r workshop_vars$rstudio_server_url`){target="blank"}
 
 **3.2** When prompted, enter the  username and password supplied by your hosts and
- click **Sign In**.
+ click <kbd>Sign In</kbd>.
 
  You should see a new webpage that looks like something like this:
 

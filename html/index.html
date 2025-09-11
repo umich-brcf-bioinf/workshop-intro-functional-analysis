@@ -32,7 +32,15 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="shortcut icon" href="favicon-16x16.png" />
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
 <!--Favicon from https://favicon.io/emoji-favicons -->
 <meta property="og:url" content="https://michmed.org/WXdGq"/>
 <meta property="og:title" content="Intro to Functional Analysis"/>
@@ -243,7 +251,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Intro to Functional Analysis</a>
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -258,10 +266,16 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="introduction.html">intro</a>
+      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
     </li>
     <li>
-      <a href="more-stuff.html">more stuff</a>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
     </li>
   </ul>
 </li>
@@ -273,9 +287,21 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="fancy-stuff.html">Fancy Stuff</a>
+      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="07-advanced-visualizations.html">Advanced visualizations</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="exercises.html">Exercises</a>
 </li>
 <li>
   <a href="workshop-wrap-up.html">Wrap up</a>
@@ -320,6 +346,10 @@ target="_blank">Slack workspace</a></h4>
 <div id="day-1-chrismarci-dana" class="section level3">
 <h3>Day 1 (Chris/Marci &amp; Dana)</h3>
 <table>
+<colgroup>
+<col width="17%" />
+<col width="82%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Time</th>
@@ -329,20 +359,31 @@ target="_blank">Slack workspace</a></h4>
 <tbody>
 <tr class="odd">
 <td align="left">9:00</td>
-<td align="left"><a href="workshop-intro.html">Workshop Intro and
-Startup</a></td>
+<td align="left"><a href="workshop-intro.html">Intro</a></td>
 </tr>
 <tr class="even">
 <td align="left">9:30</td>
-<td align="left"><a href="introduction.html">Introduction to X</a></td>
+<td align="left"><a
+href="01-functional-analysis-overview.html">Functional analysis and
+ORA</a></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
+<td align="left"><a href="02-IntroToWebGestaltandORA.html">ORA with
+WebGestalt</a></td>
+</tr>
+<tr class="even">
+<td align="left">11:00</td>
 <td align="left"><strong>Break</strong></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><a href="03-WebGestaltRORA.html">ORA with R</a></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
-<td align="left"><a href="more-stuff.html">More stuff</a></td>
+<td align="left"><a href="04-gene-set-references.html">GO, KEGG, and
+friends</a></td>
 </tr>
 <tr class="odd">
 <td align="left">1:00</td>
@@ -350,9 +391,10 @@ Startup</a></td>
 </tr>
 </tbody>
 </table>
+<hr />
 </div>
-<div id="day-2-dana" class="section level3">
-<h3>Day 2 (Dana)</h3>
+<div id="day-2-chris-dana" class="section level3">
+<h3>Day 2 (Chris &amp; Dana)</h3>
 <table>
 <thead>
 <tr class="header">
@@ -363,23 +405,38 @@ Startup</a></td>
 <tbody>
 <tr class="odd">
 <td align="left">9:00</td>
-<td align="left">Review</td>
+<td align="left">Review &amp; questions</td>
 </tr>
 <tr class="even">
 <td align="left">9:10</td>
-<td align="left"><a href="fancy-stuff.html">Fancy Stuff</a></td>
+<td align="left"><a href="05-fcs-gsea-overview.html">Functional Analysis
+and GSEA</a></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
-<td align="left"><strong>Break</strong></td>
+<td align="left"><a href="06-WebGestaltRGSEA.html">GSEA with R</a></td>
 </tr>
 <tr class="even">
-<td align="left">12:45</td>
-<td align="left"><a href="workshop-wrap-up.html">Wrap-up</a></td>
+<td align="left">11:00</td>
+<td align="left"><strong>Break</strong></td>
 </tr>
 <tr class="odd">
+<td align="left"></td>
+<td align="left"><a href="07-advanced-visualizations.html">Advanced
+visualizations</a></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><a href="08-analysis-summary.html">Analysis
+summary</a></td>
+</tr>
+<tr class="odd">
+<td align="left">12:45</td>
+<td align="left"><a href="workshop-wrap-up.html">Wrap up</a></td>
+</tr>
+<tr class="even">
 <td align="left">1:00</td>
-<td align="left">Day 2 concludes</td>
+<td align="left"><strong>Workshop concludes</strong></td>
 </tr>
 </tbody>
 </table>

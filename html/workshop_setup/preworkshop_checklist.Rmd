@@ -29,6 +29,8 @@ A separate email with the subject **"UM BioinfCore Workshop Login"** will detail
 3. Join the UM BioinfCore Workshops Slack channel<br/>
 You will receive an email invite soon; please accept that to set up your Slack account.
 
+4. If you have not taken a workshop with us recently, we recommend you review a brief [orientation on how we will be using Zoom/Slack](https://www.mivideo.it.umich.edu/media/t/1_dqou12ko).
+
 We are looking forward to seeing you in the workshop. Please let us know if you have any questions.<br/><br/>
 
 The Bioinformatics Core Workshop Team<br/>
