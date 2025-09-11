@@ -131,8 +131,11 @@ the workshop.
 <br/>
 <br/>
 
-
 ### Exercise: Using Zoom Breakout Rooms
+
+<details>
+<summary>An optional exercise</summary>
+
 Take a moment to briefly introduce yourself (name, dept/lab, area of study) in a
 breakout room.
 
@@ -143,9 +146,9 @@ breakout room.
 
 
 <img src="images/workshop-intro/zoom_breakout_room.png" width="60%"/>
-<br/>
-<br/>
 
+<br/>
+</details>
 
 ## <img src="images/workshop-intro/slack_logo.png" alt="Slack" width=120/>
 
@@ -190,7 +193,7 @@ What is one thing you hope to learn in this workshop?
 It is important that you can see:
 
  - Zoom (instructor's shared screen + reactions)
- - Your terminal/command window (days 1-2) or R/Studio (days 2-3)
+ - A web browser page (will be used for WebGestalt and R/Studio)
  - Slack
  - Lesson plan web page
 
@@ -226,7 +229,7 @@ It is important that you can see:
   including gene expression, epigenetic, variant identification, functional
   enrichment and many other kinds of analyses.
 - We provide letters of support for grant proposals.
-- We are creating a series of bioinformatics-focused workshops.
+- We offer a series of bioinformatics-focused workshops.
 
 
 ## [Biomedical Research Core Facilities](https://brcf.medicine.umich.edu/){target="_blank"}
@@ -242,7 +245,7 @@ It is important that you can see:
 
 * This workshop content is licensed under a [Creative Commons Attribution 4 License](https://creativecommons.org/licenses/by/4.0/){target="_blank"}.
 
-* The workshop Code of Conduct has been adapted the [NumFocus Code of Conduct](https://numfocus.org/code-of-conduct){target="_blank"} which itself draws from from numerous sources, including the Geek Feminism wiki, created by the Ada Initiative and other volunteers, which is under a Creative Commons Zero license, the Contributor Covenant version 1.2.0, the Bokeh Code of Conduct, the SciPy Code of Conduct, the Carpentries Code of Conduct, and the NeurIPS Code of Conduct.
+* The workshop Code of Conduct has been adapted from the [NumFocus Code of Conduct](https://numfocus.org/code-of-conduct){target="_blank"} which itself draws from numerous sources, including the Geek Feminism wiki, created by the Ada Initiative and other volunteers, which is under a Creative Commons Zero license, the Contributor Covenant version 1.2.0, the Bokeh Code of Conduct, the SciPy Code of Conduct, the Carpentries Code of Conduct, and the NeurIPS Code of Conduct.
 
 * This workshop relies heavily on these tools / approaches/ datasets:
 
