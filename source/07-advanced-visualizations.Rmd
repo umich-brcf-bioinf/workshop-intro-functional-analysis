@@ -37,6 +37,8 @@ source("../bin/chunk-options.R")
 knitr_fig_path("02-")
 ```
 
+![workshop wayfinder](images/wayfinder/wayfinder-07.png)
+
 # Objectives
 
 - 1 Meta-analysis Venn

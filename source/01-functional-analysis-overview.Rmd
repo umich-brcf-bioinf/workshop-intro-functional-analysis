@@ -132,7 +132,13 @@ An example bulk RNA-Seq experiment.
 Note that we are focusing on gene expression, but functional analysis can be applied to
 many experiment designs and analytes including non-coding RNA, protein 
 expression, metabolites, and DNA methylation.
-   
+
+
+
+![workshop wayfinder](images/wayfinder/wayfinder-01B.png)
+
+
+ 
 # Summary 
 
 1. Functional analysis is a useful extension of a differential expression (DE) analysis:
