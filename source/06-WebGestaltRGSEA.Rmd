@@ -30,7 +30,6 @@ pre {
 
 ```{r klippy, echo=FALSE, include=TRUE}
 klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
-getwd()
 ```
 
 ```{r, 'chunk_options', include=FALSE}
@@ -41,6 +40,8 @@ knitr_fig_path("02-")
 ```{r, include = FALSE}
 source("../bin/set_values.R")
 ```
+
+![workshop wayfinder](images/wayfinder/wayfinder-06A.png)
 
 # Objectives
 
@@ -155,6 +156,10 @@ TODO: Here is where we'll actually talk more about the biological relevance of t
 As with the ORA results, the GSEA method outputs similar results tables, gene identifier mappings, and HTML reports. Additionally, for each pathway with `FDR < fdrThr`, a GSEA enrichment plot is automatically generated. The following is an example:
 
 TODO: Include example GSEA plot.
+
+
+![workshop wayfinder](images/wayfinder/wayfinder-06B.png)
+
 
 # Exercise
 

@@ -1,5 +1,5 @@
 ---
-title: "Introduction to functional enrichment with WebGestalt"
+title: "ORA with WebGestalt"
 output:
         html_document:
             includes:
@@ -42,7 +42,7 @@ knitr_fig_path("02-")
 source("../bin/set_values.R")
 ```
 
-<!-- Add wayfinder here -->
+![workshop wayfinder](images/wayfinder/wayfinder-02.png)
 
 <!-- map abstract schematics/inputs to WebGestalt 
 1) approach

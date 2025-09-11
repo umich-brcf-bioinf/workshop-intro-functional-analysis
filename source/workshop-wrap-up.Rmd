@@ -36,6 +36,8 @@ source("../bin/set_values.R")
 klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
 ```
 
+![workshop wayfinder](images/wayfinder/wayfinder-wrap-up.png)
+
 We hope you now have more familiarity with key concepts, tools, and techniques
 that will enable more efficient, reproducible, and impactful computational research.
 
