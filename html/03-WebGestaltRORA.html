@@ -348,7 +348,7 @@ div.tocify {
       <a href="03-WebGestaltRORA.html">ORA with R</a>
     </li>
     <li>
-      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+      <a href="07A-advanced-visualizations.html">Advanced visualizations I</a>
     </li>
   </ul>
 </li>
@@ -366,7 +366,10 @@ div.tocify {
       <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
     </li>
     <li>
-      <a href="07-advanced-visualizations.html">Advanced visualizations</a>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+    </li>
+    <li>
+      <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
     </li>
     <li>
       <a href="08-analysis-summary.html">Analysis summary and next steps</a>
@@ -596,8 +599,23 @@ Think of it as reading the recipe before you start cooking.</p>
 
 # -------------------------------------------------------------------------
 # Load the libraries
-library(WebGestaltR)
-library(tidyverse)</code></pre>
+library(WebGestaltR)</code></pre>
+<pre><code>******************************************</code></pre>
+<pre><code>*                                        *</code></pre>
+<pre><code>*          Welcome to WebGestaltR !      *</code></pre>
+<pre><code>*                                        *</code></pre>
+<pre><code>******************************************</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching core tidyverse packages ─────────────────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     </code></pre>
+<pre><code>── Conflicts ───────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code># -------------------------------------------------------------------------
 # Look at the manual for the main function
 ?WebGestaltR</code></pre>
@@ -617,8 +635,9 @@ referred to.</li>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List available organisms
 listOrganism()</code></pre>
-<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;       &quot;dmelanogaster&quot;
- [8] &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
+<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;       
+ [6] &quot;sscrofa&quot;       &quot;dmelanogaster&quot; &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;    
+[11] &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
 <ul>
 <li><code>enrichDatabase</code> are the genesets and pathways we want to
 perform the enrichment analysis over. Use the <code>listGeneSet()</code>
@@ -712,26 +731,36 @@ other common (and not-so-common) identifiers.</li>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List gene identifier types for mmusculus
 listIdType(organism = &#39;mmusculus&#39;)</code></pre>
-<pre><code> [1] &quot;ABI_550XL_Wildfire&quot;                  &quot;ABI_SOLiD&quot;                           &quot;ABI_SOLiD_Exon&quot;                     
- [4] &quot;ABI_SOLiD_Klaus&quot;                     &quot;IonTorrent_RNASeqMature&quot;             &quot;MGI&quot;                                
- [7] &quot;Protein_GeneChip34&quot;                  &quot;Protein_GeneChip41&quot;                  &quot;Protein_GeneChip51&quot;                 
-[10] &quot;affy_ClariomD-MTA-1_0&quot;               &quot;affy_HTMG-430PM_GPL11180&quot;            &quot;affy_mg_u74a&quot;                       
-[13] &quot;affy_mg_u74av2&quot;                      &quot;affy_mg_u74b&quot;                        &quot;affy_mg_u74bv2&quot;                     
-[16] &quot;affy_mg_u74c&quot;                        &quot;affy_mg_u74cv2&quot;                      &quot;affy_microRNA4&quot;                     
-[19] &quot;affy_moe430a&quot;                        &quot;affy_moe430b&quot;                        &quot;affy_moex_1_0_st_v1&quot;                
-[22] &quot;affy_mogene_1_0_st_v1&quot;               &quot;affy_mogene_2_1_st_v1&quot;               &quot;affy_mouse430_2&quot;                    
-[25] &quot;affy_mouse430a_2&quot;                    &quot;affy_mu11ksuba&quot;                      &quot;affy_mu11ksubb&quot;                     
-[28] &quot;agilent_Custom_GPL2510&quot;              &quot;agilent_ToxicogenomicsG4121A_GPL891&quot; &quot;agilent_sureprint_g3_ge_8x60k&quot;      
-[31] &quot;agilent_wholegenome&quot;                 &quot;agilent_wholegenome_4x44k_v1&quot;        &quot;agilent_wholegenome_4x44k_v2&quot;       
-[34] &quot;codelink_codelink&quot;                   &quot;dbSNP&quot;                               &quot;embl&quot;                               
-[37] &quot;ensembl_gene_id&quot;                     &quot;ensembl_peptide_id&quot;                  &quot;entrezgene&quot;                         
-[40] &quot;entrezgene_protein-coding&quot;           &quot;genename&quot;                            &quot;genesymbol&quot;                         
-[43] &quot;illumina_ScriptSeq_RNASeqV2&quot;         &quot;illumina_WG6_Customarray&quot;            &quot;illumina_mouseref_8&quot;                
-[46] &quot;illumina_mouseref_8_v2&quot;              &quot;illumina_mousewg_6_v1&quot;               &quot;illumina_mousewg_6_v2&quot;              
-[49] &quot;interpro&quot;                            &quot;phalanx_onearray&quot;                    &quot;phosphositeEnsembl&quot;                 
-[52] &quot;phosphositeRefseq&quot;                   &quot;phosphositeSeq&quot;                      &quot;phosphositeUniprot&quot;                 
-[55] &quot;protein_id&quot;                          &quot;refseq_mrna&quot;                         &quot;refseq_peptide&quot;                     
-[58] &quot;unigene&quot;                             &quot;uniprotswissprot&quot;                   </code></pre>
+<pre><code> [1] &quot;ABI_550XL_Wildfire&quot;                  &quot;ABI_SOLiD&quot;                          
+ [3] &quot;ABI_SOLiD_Exon&quot;                      &quot;ABI_SOLiD_Klaus&quot;                    
+ [5] &quot;IonTorrent_RNASeqMature&quot;             &quot;MGI&quot;                                
+ [7] &quot;Protein_GeneChip34&quot;                  &quot;Protein_GeneChip41&quot;                 
+ [9] &quot;Protein_GeneChip51&quot;                  &quot;affy_ClariomD-MTA-1_0&quot;              
+[11] &quot;affy_HTMG-430PM_GPL11180&quot;            &quot;affy_mg_u74a&quot;                       
+[13] &quot;affy_mg_u74av2&quot;                      &quot;affy_mg_u74b&quot;                       
+[15] &quot;affy_mg_u74bv2&quot;                      &quot;affy_mg_u74c&quot;                       
+[17] &quot;affy_mg_u74cv2&quot;                      &quot;affy_microRNA4&quot;                     
+[19] &quot;affy_moe430a&quot;                        &quot;affy_moe430b&quot;                       
+[21] &quot;affy_moex_1_0_st_v1&quot;                 &quot;affy_mogene_1_0_st_v1&quot;              
+[23] &quot;affy_mogene_2_1_st_v1&quot;               &quot;affy_mouse430_2&quot;                    
+[25] &quot;affy_mouse430a_2&quot;                    &quot;affy_mu11ksuba&quot;                     
+[27] &quot;affy_mu11ksubb&quot;                      &quot;agilent_Custom_GPL2510&quot;             
+[29] &quot;agilent_ToxicogenomicsG4121A_GPL891&quot; &quot;agilent_sureprint_g3_ge_8x60k&quot;      
+[31] &quot;agilent_wholegenome&quot;                 &quot;agilent_wholegenome_4x44k_v1&quot;       
+[33] &quot;agilent_wholegenome_4x44k_v2&quot;        &quot;codelink_codelink&quot;                  
+[35] &quot;dbSNP&quot;                               &quot;embl&quot;                               
+[37] &quot;ensembl_gene_id&quot;                     &quot;ensembl_peptide_id&quot;                 
+[39] &quot;entrezgene&quot;                          &quot;entrezgene_protein-coding&quot;          
+[41] &quot;genename&quot;                            &quot;genesymbol&quot;                         
+[43] &quot;illumina_ScriptSeq_RNASeqV2&quot;         &quot;illumina_WG6_Customarray&quot;           
+[45] &quot;illumina_mouseref_8&quot;                 &quot;illumina_mouseref_8_v2&quot;             
+[47] &quot;illumina_mousewg_6_v1&quot;               &quot;illumina_mousewg_6_v2&quot;              
+[49] &quot;interpro&quot;                            &quot;phalanx_onearray&quot;                   
+[51] &quot;phosphositeEnsembl&quot;                  &quot;phosphositeRefseq&quot;                  
+[53] &quot;phosphositeSeq&quot;                      &quot;phosphositeUniprot&quot;                 
+[55] &quot;protein_id&quot;                          &quot;refseq_mrna&quot;                        
+[57] &quot;refseq_peptide&quot;                      &quot;unigene&quot;                            
+[59] &quot;uniprotswissprot&quot;                   </code></pre>
 <ul>
 <li><code>referenceGene</code> is also a vector of gene identifiers, but
 this is the background set of genes. In our case, it will be all the
@@ -769,7 +798,7 @@ can read in with the <code>read_csv()</code> function:</p>
 # Read diffex results
 rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
 <pre><code>Rows: 16249 Columns: 9
-── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (3): id, symbol, call
 dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
@@ -889,7 +918,8 @@ rsd_ora_result = WebGestaltR(
 <pre><code>Loading the functional categories...
 Loading the ID list...
 Loading the reference list...</code></pre>
-<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA&#39; already exists</code></pre>
+<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA&#39; already
+exists</code></pre>
 <pre><code>Summarizing the input ID list by GO Slim data...</code></pre>
 <pre><code>Performing the enrichment analysis...
 Begin affinity propagation...
@@ -908,20 +938,20 @@ head(rsd_ora_result)</code></pre>
 4   mmu01230                    Biosynthesis of amino acids
 5 GO:0006575 cellular modified amino acid metabolic process
 6   mmu05202        Transcriptional misregulation in cancer
-                                                                                                link size overlap
-1                                                http://amigo.geneontology.org/amigo/term/GO:0070997  263      14
-2                                                http://amigo.geneontology.org/amigo/term/GO:0098754   77       7
-3                                                http://amigo.geneontology.org/amigo/term/GO:0062012  235      12
-4           http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60       6
-5                                                http://amigo.geneontology.org/amigo/term/GO:0006575  120       8
-6 http://www.kegg.jp/kegg-bin/show_pathway?mmu05202+107986+12048+12395+12575+12608+13198+16421+56312  124       8
-     expect enrichmentRatio       pValue        FDR
-1 3.7246486        3.758744 1.999371e-05 0.02185312
-2 1.0904865        6.419153 1.026811e-04 0.04368069
-3 3.3281081        3.605652 1.198921e-04 0.04368069
-4 0.8497297        7.061069 1.924572e-04 0.05258893
-5 1.6994595        4.707379 2.906659e-04 0.05694797
-6 1.7561081        4.555528 3.632686e-04 0.05694797
+                                                                                                link
+1                                                http://amigo.geneontology.org/amigo/term/GO:0070997
+2                                                http://amigo.geneontology.org/amigo/term/GO:0098754
+3                                                http://amigo.geneontology.org/amigo/term/GO:0062012
+4           http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454
+5                                                http://amigo.geneontology.org/amigo/term/GO:0006575
+6 http://www.kegg.jp/kegg-bin/show_pathway?mmu05202+107986+12048+12395+12575+12608+13198+16421+56312
+  size overlap    expect enrichmentRatio       pValue        FDR
+1  263      14 3.7246486        3.758744 1.999371e-05 0.02185312
+2   77       7 1.0904865        6.419153 1.026811e-04 0.04368069
+3  235      12 3.3281081        3.605652 1.198921e-04 0.04368069
+4   60       6 0.8497297        7.061069 1.924572e-04 0.05258893
+5  120       8 1.6994595        4.707379 2.906659e-04 0.05694797
+6  124       8 1.7561081        4.555528 3.632686e-04 0.05694797
                                                                              overlapId
 1 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405
 2                                       11816;14782;17748;17750;76650;230784;100503605
@@ -1021,7 +1051,7 @@ symbol?</li>
 <th align="left"><a href="02-IntroToWebGestaltandORA.html">Previous
 lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a href="04-gene-set-references.html">Next
+<th align="right"><a href="07A-advanced-visualizations.html">Next
 lesson</a></th>
 </tr>
 </thead>

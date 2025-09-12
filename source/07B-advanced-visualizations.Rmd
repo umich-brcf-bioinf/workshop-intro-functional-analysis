@@ -1,5 +1,5 @@
 ---
-title: "GO, KEGG, and friends"
+title: "Advanced Visualizations II"
 output:
         html_document:
             includes:
@@ -37,11 +37,15 @@ source("../bin/chunk-options.R")
 knitr_fig_path("02-")
 ```
 
+![workshop wayfinder](images/wayfinder/wayfinder-07B.png)
+
 # Objectives
 
-- 1
-- 2
-- 3
+- 1 Meta-analysis Venn
+- 2 Meta-analysis Upset
+- 3 Barplot
+- 4 Heatmap
+- 5 KEGG highlighting?
 
 ...
 
@@ -54,5 +58,5 @@ knitr_fig_path("02-")
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](06-WebGestaltRGSEA.html) | [Top of this lesson](#top) | [Next lesson](07B-advanced-visualizations.html) |
+| [Previous lesson](04-gene-set-references.html) | [Top of this lesson](#top) | [Next lesson](08-analysis-summary.html) |
 | :--- | :----: | ---: |
