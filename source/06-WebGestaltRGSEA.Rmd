@@ -199,5 +199,5 @@ A first approach to these questions might be to take the GSEA results from both 
 # Questions
 
 
-| [Previous lesson](05-fcs-gsea-overview.html) | [Top of this lesson](#top) | [Next lesson](07-advanced-visualizations.html) |
+| [Previous lesson](05-fcs-gsea-overview.html) | [Top of this lesson](#top) | [Next lesson](04-gene-set-references.html) |
 | :--- | :----: | ---: |

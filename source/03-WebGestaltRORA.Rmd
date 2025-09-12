@@ -469,5 +469,5 @@ In this section, we performed our first ORA with the WebGestalt R package. In so
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](02-IntroToWebGestaltandORA.html) | [Top of this lesson](#top) | [Next lesson](04-gene-set-references.html) |
+| [Previous lesson](02-IntroToWebGestaltandORA.html) | [Top of this lesson](#top) | [Next lesson](07A-advanced-visualizations.html) |
 | :--- | :----: | ---: |
