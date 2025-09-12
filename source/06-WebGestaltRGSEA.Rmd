@@ -45,7 +45,7 @@ source("../bin/set_values.R")
 
 # Objectives
 
-- Form the inputs for Gene Set Enrichment Analysis (GSEA) in WebGestaltR from a differential expression analysis.
+- Form the inputs for Gene Set Enrichment Analysis (GSEA) in WebGestaltR from single-cell results.
 - Use WebGestaltR to do a GSEA analysis.
 - Understand how to interpret the results of GSEA analysis.
 - Compare and contrast the results of two GSEA results.
@@ -57,7 +57,11 @@ The setup for GSEA is similar to ORA, but there are two key differences:
 1. We do not require a threshold for significance, and
 2. We need to pass gene identifiers **and** the log fold-change for the gene from the differential expression test.
 
-Again, we will take a look at the documentation for the `WebGestaltR()` function, and note the difference in input between ORA and GSEA.
+This gives the advantage of being able to use the differential expression results more fully, instead of limiting to DE genes.
+
+# Running GSEA using WebGestalt
+
+First, we'll re-load the libraries to ensure they are available.
 
 ```{r load_webgestalt}
 # =========================================================================
@@ -70,6 +74,9 @@ library(WebGestaltR)
 library(tidyverse)
 ```
 
+
+We'll then will take a second look at the documentation for the `WebGestaltR()` function, and note the difference in input between ORA and GSEA.
+
 ```{r webgestalt_doc, eval = FALSE}
 # -------------------------------------------------------------------------
 # Look at the manual for the main function
@@ -80,7 +87,7 @@ We note from the documentation that `interestGene` "should be an R data.frame ob
 
 ## Read in diffex results
 
-We will demonstrate GSEA on a differential analysis from the single-cell RNA-seq experiment we explored in the Introduction to Single-cell Analysis [(link)](https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/00A-OrientingOnScRNASeq.html#Consider_a_specific_scRNA-Seq_experiment). In particular, we perform GSEA on the differential expression results in the pericyte cluster, comparing day 21 to day 7.
+We will demonstrate GSEA on a differential analysis from the single-cell RNA-seq experiment we explored in the Introduction to Single-cell Analysis [(link)](https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/00A-OrientingOnScRNASeq.html#Consider_a_specific_scRNA-Seq_experiment). In particular, we'll start by perform GSEA on the differential expression results in the pericyte cluster, comparing day 21 to day 7.
 
 ```{r isc_read}
 # -------------------------------------------------------------------------
@@ -92,21 +99,21 @@ isc_d21_v_d7 = read_csv('inputs/single_cell_de_results/de_pseudo_pericyte_D21_vs
 head(isc_d21_v_d7)
 ```
 
+Before preparing our data for GSEA, let's also 
+```{r isc_DE}
+# -------------------------------------------------------------------------
+# Load pseudo-bulk analysis for D21 vs D7 in pericyte cluster
+isc_d21_v_d7 %>% head()
+```
+
 ## Extracting data for GSEA
 
-The key columns to extract, as per the documentation, are the `gene` and `avg_log2FC` columns. As before, we'll want to see how many gene symbols are NA and remove them.
+The key columns to extract from our Day 21 vs Day 7 pericyte results table, as per the documentation, are the `gene` and `avg_log2FC` columns. Before proceeding, it's prudent to check if there are missing values in the column we'll use as our gene identifier:
 
 ```{r isc_na}
 # -------------------------------------------------------------------------
 # How many symbols are NA?
 table(is.na(isc_d21_v_d7$gene))
-
-# -------------------------------------------------------------------------
-# Filter out the NAs
-isc_d21_v_d7 = isc_d21_v_d7 %>% dplyr::filter(!is.na(gene))
-
-# Verify we have fewer by noting dimension of resulting table
-isc_d21_v_d7
 ```
 
 And now we can create a table with just the `gene` and `avg_log2FC` columns with the `select()` function from `dplyr`:
@@ -124,20 +131,34 @@ head(isc_d21_v_d7_gsea)
 
 # Running GSEA
 
-As with the ORA, we will perform GSEA on the KEGG pathways and a non-redundant version of the Gene Ontology Biological Process genesets.
+We will start by running GSEA on the non-redundant version of the Gene Ontology Biological Process genesets.
 
 ```{r isc_gsea}
+# -------------------------------------------------------------------------
+# Run GSEA
 isc_d21_v_d7_gsea_result = WebGestaltR(
     enrichMethod = 'GSEA',
     nThreads = 8,
     organism = 'mmusculus',
-    enrichDatabase = c('pathway_KEGG', 'geneontology_Biological_Process_noRedundant'),
+    enrichDatabase = c('geneontology_Biological_Process_noRedundant'),
     interestGene = isc_d21_v_d7_gsea,
     interestGeneType = 'genesymbol',
     fdrThr = 0.1,
+    minNum = 60,
     outputDirectory = './results',
-    projectName = 'D21_v_D7_GSEA')
+    projectName = 'D21_v_D7_GSEA_GO_BP', 
+    cache = "./rdata")
 
+# clean up session
+gc()
+```
+One downside of GSEA is that it is more computationally demanding than ORA. While the GSEA analysis is running, let's touch on why this enrichment process takes so much longer. As the enrichment runs, we'll see the reporting messages `1000 permutations of score complete` - what does that mean? 
+
+<!-- what to add here?-->
+
+For more details, this [Pathways Common guide](https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/) delves into the history and algorithm details 
+
+```{r isc_check_results}
 # -------------------------------------------------------------------------
 # View the first few results
 head(isc_d21_v_d7_gsea_result)
@@ -149,7 +170,7 @@ The columns of the GSEA results are quite similar to the ORA results, with the f
 - `normalizedEnrichmentScore`:
 - `leadingEdgeNum`: 
 
-TODO: Here is where we'll actually talk more about the biological relevance of the results.
+<!-- TODO: Here is where we'll actually talk more about the biological relevance of the results. -->
 
 # Results of GSEA
 
@@ -160,8 +181,6 @@ TODO: Include example GSEA plot.
 
 ![workshop wayfinder](images/wayfinder/wayfinder-06B.png)
 
-
-# Exercise
 
 # Comparing enrichment results
 
