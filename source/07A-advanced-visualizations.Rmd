@@ -1,5 +1,5 @@
 ---
-title: "Advanced Visualizations"
+title: "Advanced Visualizations I"
 output:
         html_document:
             includes:
@@ -37,7 +37,7 @@ source("../bin/chunk-options.R")
 knitr_fig_path("02-")
 ```
 
-![workshop wayfinder](images/wayfinder/wayfinder-07.png)
+![workshop wayfinder](images/wayfinder/wayfinder-07A.png)
 
 # Objectives
 
@@ -58,5 +58,5 @@ knitr_fig_path("02-")
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](06-WebGestaltRGSEA.html) | [Top of this lesson](#top) | [Next lesson](08-analysis-summary.html) |
+| [Previous lesson](06-WebGestaltRGSEA.html) | [Top of this lesson](#top) | [Next lesson](05-fcs-gsea-overview.html) |
 | :--- | :----: | ---: |
