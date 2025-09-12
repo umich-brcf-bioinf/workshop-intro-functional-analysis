@@ -52,10 +52,14 @@ source("../bin/set_values.R")
 
 # Getting started
 
+
+
 The setup for GSEA is similar to ORA, but there are two key differences:
 
 1. We do not require a threshold for significance, and
 2. We need to pass gene identifiers **and** the log fold-change for the gene from the differential expression test.
+
+# Running GSEA using WebGestalt
 
 Again, we will take a look at the documentation for the `WebGestaltR()` function, and note the difference in input between ORA and GSEA.
 

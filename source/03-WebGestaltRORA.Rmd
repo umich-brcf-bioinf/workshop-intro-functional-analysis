@@ -47,7 +47,7 @@ source("../bin/set_values.R")
 
 # Objectives
 
-- Form the inputs for over-representation analysis (ORA) in WebGestaltR from a differential expression analysis.
+- Generate the inputs for over-representation analysis (ORA) in WebGestaltR from a differential expression analysis.
 - Use WebGestaltR to do an ORA analysis.
 - Understand how to interpret the results of ORA analysis.
 
@@ -55,9 +55,11 @@ source("../bin/set_values.R")
 
 As we have seen with the web interface for WebGestalt, an over-representation analysis on differential expression results requires:
 
-- An *input* list of differentially expressed (subject to some cutoff for significance) that will be queried.   
-- A *reference/background gene set* of genes that are expected to be measured
+- An *input* list of differentially expressed - subject to cutoffs for significance - that will be queried.    
+- A *reference/background gene set* of genes that are expected to have be measured in the experiment
 - The *functional/biological knowledge database*  which defines the gene sets that will be used to test for over-representation.
+
+In addition to the browser version of `WebGestalt`, the authors also created an [R package called `WebGestaltR`](https://bzhanglab.github.io/WebGestaltR/) that can be used to run the tool in R instead of by using their webserver. This allows us to run functional enrichments in a more reproducible manner since we can record the exact inputs and parameters used.
 
 # Orienting on RStudio
 
@@ -190,8 +192,6 @@ Let's save our currently open script in the `scripts/` folder as `IFUN_day1.R` b
 
 
 # Using WebGestaltR
-
-In addition to the browser version of `WebGestalt`, the authors also created an [R package called `WebGestaltR`](https://bzhanglab.github.io/WebGestaltR/) that can be used to run the tool in R instead of by using their webserver. 
 
 To start, we'll load the `WebGestaltR` library along with `tidyverse`, which we'll use for data processing and visualization. Both packages were both pre-installed on the workshop server but later in the workshop we'll discuss how to use these packages on other compute resources like GreatLakes. 
 
@@ -401,7 +401,7 @@ The columns of the table are similar to the results displayed in the web-version
 - `userId`: The user-supplied gene ID overlapping the geneset.
 
 
-To expand our analysis and aid with interpretation of our DE results, we'll run a second enrichment adding a different knowledge base called [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) that per the website "is a database resource for understanding high-level functions and utilities of the biological system". Broadly speaking, KEGG includes gene sets for known pathways as well as other functional annotations. 
+To expand our analysis and aid with interpretation of our DE results, we'll run a second enrichment adding a different knowledge base called [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) that per the website "is a database resource for understanding high-level functions and utilities of the biological system". Broadly speaking, KEGG includes gene sets for known pathways as well as other functional annotations. Here we'll also diverge from our previous enrichment by reducing the maximum gene number per category to limit the comparison to smaller, more specific categories.
 
 ```{r rsd_go_ora}
 # -------------------------------------------------------------------------
@@ -409,12 +409,13 @@ To expand our analysis and aid with interpretation of our DE results, we'll run 
 rsd_ora_kegg_result = WebGestaltR(
     enrichMethod = 'ORA',
     organism = 'mmusculus',
-    enrichDatabase = c('pathway_KEGG', 'geneontology_Biological_Process_noRedundant'),
+    enrichDatabase = c('pathway_KEGG'),
     interestGene = rsd_sig_ora,
     referenceGene = rsd_ref_ora,
     interestGeneType = 'genesymbol',
     referenceGeneType = 'genesymbol',
     fdrThr = 0.1,
+    maxNum = 60,
     outputDirectory = './results',
     projectName = 'deficient_vs_control_ORA-KEGG')
 
@@ -422,7 +423,7 @@ rsd_ora_kegg_result = WebGestaltR(
 # View the first few results
 head(rsd_ora_kegg_result)
 ```
-
+Although we limited the comparisons to more specific terms, we only find two pathways that have significant enrichment below an FDR < 0.10 threshold. This could be because the treatment doesn't impact a specific pathway or it could be due to the limits of ORA, which requires we subset our measured genes into DE and non-DE and also doesn't utilize the effect size data (e.g. fold-change).
 
 <!-- TODO: Here is where we'll actually talk more about the biological relevance of the results and pat ourselves on the back for our first ORA well done. -->
 
@@ -433,7 +434,9 @@ The R package for WebGestalt outputs a number of useful artifacts to an `outputD
 - `enrichment_results_{project name}.txt`: A tab-delimited text table of the full results which can be read in Excel. It is the same as the `rsd_ora_result` table.
 - `interestingID_mappingTable_{project name}.txt`: A table of the `interestGene` vector, with user-supplied identifiers and mappings to other identifiers.
 - `interestingID_unmappedList_{project_name}.txt`: The identifiers which could not be mapped. **This may be helpful to know if any key genes were dropped from the analysis.**
-- `Report_{project_name}.html`: An HTML report, like the web application, of the results. This may be more suitable for a first glance.
+- `Report_{project_name}.html`: An HTML report, like the web application, of the results. This may be more suitable for a first glance and if we review it, it looks quite familiar.
+
+<!-- enrichment_results_deficient_vs_control_ORA_GO_BP = file with terms and list of genes (in column "userId", split by semi-columns -->
 
 # Summary
 
@@ -445,8 +448,8 @@ In this section, we performed our first ORA with the WebGestalt R package. In so
 
 # Questions
 
-- Are there any advantages to using a gene identifier other than the symbol?
-- Are there any advantages to this way of running WebGestaltR?
+- What are the advantages of running WebGestaltR over using the browser version?
+- What differences in the results might you expect if an identifier other than the gene symbol was used?
 
 <br/>
 <br/>
