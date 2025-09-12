@@ -109,7 +109,7 @@ In order to execute code, we press <KBD>Ctrl + Enter</KBD> either on the single 
 
 We then see that code executed, along with its result in in the Console pane.
 
-<img src="images/06_rstudio_script_execution.png" alt="rstudio script execution" style="width:1000px;"/>
+<img src="images/content/03-WebGestlat_R/06_rstudio_script_execution.png" alt="rstudio script execution" style="width:1000px;"/>
 
 ## Summary: Console vs Script
 
@@ -237,7 +237,7 @@ To see what functional databases are available from the tool, we can see the `li
 ```{r listGeneSet}
 # -------------------------------------------------------------------------
 # List available reference genesets for mmusculus
-listGeneSet(organism = 'mmusculus')
+listGeneSet(organism = 'mmusculus') %>% head(10)
 ```
 
 Here we should see some familar options, including `geneontology_Biological_Process_noRedundant`.
@@ -363,7 +363,7 @@ To download these tables, we can use the file viewer tab to navigate to the `tab
 
 # Running ORA
 
-We now have an understanding of the important parameters and vectors of genes prepared to follow through with the over-representation analysis. For demonstrative purposes we will start with the same non-redundant version of the Gene Ontology Biological Process genesets used in the web version. <!-- repeat for 'pathway_KEGG' -->
+We now have an understanding of the important parameters and vectors of genes prepared to follow through with the over-representation analysis. For demonstrative purposes we will start with the same non-redundant version of the Gene Ontology Biological Process genesets used in the web version but relax our significance threshold. <!-- repeat for 'pathway_KEGG' -->
 
 ```{r rsd_go_ora}
 # -------------------------------------------------------------------------
@@ -403,7 +403,7 @@ The columns of the table are similar to the results displayed in the web-version
 
 To expand our analysis and aid with interpretation of our DE results, we'll run a second enrichment adding a different knowledge base called [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) that per the website "is a database resource for understanding high-level functions and utilities of the biological system". Broadly speaking, KEGG includes gene sets for known pathways as well as other functional annotations. Here we'll also diverge from our previous enrichment by reducing the maximum gene number per category to limit the comparison to smaller, more specific categories.
 
-```{r rsd_go_ora}
+```{r rsd_kegg_ora}
 # -------------------------------------------------------------------------
 # ORA on bulk RNA-seq DESeq2 results with KEGG knowledge base
 rsd_ora_kegg_result = WebGestaltR(
@@ -437,6 +437,21 @@ The R package for WebGestalt outputs a number of useful artifacts to an `outputD
 - `Report_{project_name}.html`: An HTML report, like the web application, of the results. This may be more suitable for a first glance and if we review it, it looks quite familiar.
 
 <!-- enrichment_results_deficient_vs_control_ORA_GO_BP = file with terms and list of genes (in column "userId", split by semi-columns -->
+
+# Clean up session
+
+```{r, ora_clear}
+# -------------------------------------------------------------------------
+# Clean up session to enable quick spin up tomorrow
+clear_list = c("rsd_ora_kegg_result", 
+          "rsd_ora_result", 
+          "rsd_ref_ora", 
+          "rsd_sig_ora")
+
+# Only remove plots that actually exist in the environment
+rm(list=Filter(exists, clear_list))
+gc()
+```
 
 # Summary
 

@@ -7,6 +7,8 @@
 
 library(rmarkdown)
 library(klippy)
+setwd("~/workshop-intro-functional-analysis/")
+
 
 # The html from the files below don't have the nav bar
 render('source/workshop_setup/preworkshop_checklist.Rmd', output_dir='html/workshop_setup/')

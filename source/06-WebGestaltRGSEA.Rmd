@@ -45,7 +45,7 @@ source("../bin/set_values.R")
 
 # Objectives
 
-- Form the inputs for Gene Set Enrichment Analysis (GSEA) in WebGestaltR from a differential expression analysis.
+- Form the inputs for Gene Set Enrichment Analysis (GSEA) in WebGestaltR from single-cell results.
 - Use WebGestaltR to do a GSEA analysis.
 - Understand how to interpret the results of GSEA analysis.
 - Compare and contrast the results of two GSEA results.
@@ -164,8 +164,6 @@ TODO: Include example GSEA plot.
 
 ![workshop wayfinder](images/wayfinder/wayfinder-06B.png)
 
-
-# Exercise
 
 # Comparing enrichment results
 
