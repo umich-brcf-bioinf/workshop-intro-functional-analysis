@@ -71,7 +71,7 @@ Functional analysis (aka enrichment analysis, pathway enrichment analysis, ...)
 Functional analysis identified patterns in your results and compares them to 
 known biological patterns.
 
-Imagine we constructed ths plot based on the volcano plot above:
+Imagine we constructed this plot based on the volcano plot above:
 
 !(Curiously simple enrichment plot of five reference gene sets)[]
 
@@ -167,7 +167,7 @@ expression, metabolites, and DNA methylation.
 
   - Is my experimental result related to any biological phenomena?
   - How strong is the relationship?
-  - How staistically significant is the relationship?
+  - How statistically significant is the relationship?
   
 
 4. The approaches share similar high-level steps and *outputs*:
