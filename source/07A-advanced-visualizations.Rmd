@@ -144,7 +144,7 @@ Let's breakdown the parts of this plot:
 
 Now that we understand the parts of the plot, let's make some adjustments to make the plot easier to read. You can use the same colors or [pick your own from ggplots named options](https://sape.inf.usi.ch/quick-reference/ggplot2/colour):
 
-```{r genes_upset, eval=TRUE}
+```{r genes_upset_2, eval=TRUE}
 # -------------------------------------------------------------------------
 # Make simple UpSet plot
 upsetGO <- UpSet(m, comb_order = rev(order(comb_size(m))), lwd = 3,
