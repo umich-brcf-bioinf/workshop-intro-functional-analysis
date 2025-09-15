@@ -133,7 +133,7 @@ head(isc_d21_v_d7_gsea)
 
 We will start by running GSEA on the non-redundant version of the Gene Ontology Biological Process genesets.
 
-```{r isc_gsea}
+```{r isc_gsea, warning = FALSE, message = FALSE}
 # -------------------------------------------------------------------------
 # Run GSEA
 isc_d21_v_d7_gsea_result = WebGestaltR(

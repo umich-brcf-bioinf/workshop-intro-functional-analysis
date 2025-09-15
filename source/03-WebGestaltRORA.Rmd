@@ -403,7 +403,7 @@ The columns of the table are similar to the results displayed in the web-version
 
 To expand our analysis and aid with interpretation of our DE results, we'll run a second enrichment adding a different knowledge base called [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) that per the website "is a database resource for understanding high-level functions and utilities of the biological system". Broadly speaking, KEGG includes gene sets for known pathways as well as other functional annotations. Here we'll also diverge from our previous enrichment by reducing the maximum gene number per category to limit the comparison to smaller, more specific categories.
 
-```{r rsd_kegg_ora}
+```{r rsd_kegg_ora, warning = FALSE, message = FALSE}
 # -------------------------------------------------------------------------
 # ORA on bulk RNA-seq DESeq2 results with KEGG knowledge base
 rsd_ora_kegg_result = WebGestaltR(
