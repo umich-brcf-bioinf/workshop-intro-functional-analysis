@@ -87,7 +87,7 @@ We note from the documentation that `interestGene` "should be an R data.frame ob
 
 ## Read in diffex results
 
-We will demonstrate GSEA on a differential analysis from the single-cell RNA-seq experiment we explored in the Introduction to Single-cell Analysis [(link)](https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/00A-OrientingOnScRNASeq.html#Consider_a_specific_scRNA-Seq_experiment). In particular, we'll start by perform GSEA on the differential expression results in the pericyte cluster, comparing day 21 to day 7.
+We will demonstrate GSEA on a differential analysis from the single-cell RNA-seq experiment we explored in the Introduction to Single-cell Analysis [(link)](https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/00A-OrientingOnScRNASeq.html#Consider_a_specific_scRNA-Seq_experiment). In particular, we'll perform GSEA on the differential expression results in the pericyte cluster, starting with the results from the day 21 to day 7 comparison.
 
 ```{r isc_read}
 # -------------------------------------------------------------------------
@@ -99,16 +99,19 @@ isc_d21_v_d7 = read_csv('inputs/single_cell_de_results/de_pseudo_pericyte_D21_vs
 head(isc_d21_v_d7)
 ```
 
-Before preparing our data for GSEA, let's also 
+Before preparing our data for GSEA, let's also check how many genes were DE in the pseudobulk D21 vs D7 comparison using the same thresholds from the workshop. 
 ```{r isc_DE}
 # -------------------------------------------------------------------------
 # Load pseudo-bulk analysis for D21 vs D7 in pericyte cluster
-isc_d21_v_d7 %>% head()
+table(isc_d21_v_d7$p_val_adj < 0.05 & abs(isc_d21_v_d7$avg_log2FC) > 1.5)
+
 ```
+
+<!-- NOTE - mistake in ISC results - miss log2 transformation of threshold in table step (https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/08-DifferentialExpression.html#Pseudobulk_comparisons) so the number of DE genes artificially  deflated and actually # of DE genes for scRNA is ~400 so is likely a better candidate for the ORA over the bulk results -->
 
 ## Extracting data for GSEA
 
-The key columns to extract from our Day 21 vs Day 7 pericyte results table, as per the documentation, are the `gene` and `avg_log2FC` columns. Before proceeding, it's prudent to check if there are missing values in the column we'll use as our gene identifier:
+The key columns to extract from our Day 21 vs Day 7 pericyte results table, as per the documentation, are the `gene` and a column of values to use to rank the genes. Before proceeding, it's prudent to check if there are missing values in the column we'll use as our gene identifier:
 
 ```{r isc_na}
 # -------------------------------------------------------------------------
@@ -116,7 +119,7 @@ The key columns to extract from our Day 21 vs Day 7 pericyte results table, as p
 table(is.na(isc_d21_v_d7$gene))
 ```
 
-And now we can create a table with just the `gene` and `avg_log2FC` columns with the `select()` function from `dplyr`:
+For ranking, we can use the values from the `avg_log2FC` column and create a table with just the `gene` and `avg_log2FC` columns with the `select()` function from `dplyr`:
 
 ```{r isc_interest_set}
 # -------------------------------------------------------------------------
@@ -129,6 +132,7 @@ isc_d21_v_d7_gsea = isc_d21_v_d7 %>%
 head(isc_d21_v_d7_gsea)
 ```
 
+
 # Running GSEA
 
 We will start by running GSEA on the non-redundant version of the Gene Ontology Biological Process genesets.
@@ -140,23 +144,67 @@ isc_d21_v_d7_gsea_result = WebGestaltR(
     enrichMethod = 'GSEA',
     nThreads = 8,
     organism = 'mmusculus',
-    enrichDatabase = c('geneontology_Biological_Process_noRedundant'),
+    enrichDatabase = c('pathway_KEGG'),
     interestGene = isc_d21_v_d7_gsea,
     interestGeneType = 'genesymbol',
     fdrThr = 0.1,
-    minNum = 60,
     outputDirectory = './results',
-    projectName = 'D21_v_D7_GSEA_GO_BP', 
-    cache = "./rdata")
+    projectName = 'D21_v_D7_GSEA_KEGG', 
+    cache = NULL)
 
 # clean up session
 gc()
 ```
-One downside of GSEA is that it is more computationally demanding than ORA. While the GSEA analysis is running, let's touch on why this enrichment process takes so much longer. As the enrichment runs, we'll see the reporting messages `1000 permutations of score complete` - what does that mean? 
+One downside of GSEA is that it is more computationally demanding than ORA. While the GSEA analysis is running, let's touch on why this enrichment process takes so much longer. As the enrichment runs, we'll see the reporting messages `1000 permutations of score complete` this permutation was introduced in the overview and is what generates the null distribution that's needed to compare against to answer the question of "how surprising".
+
+But what about our input? Why did we provide fold-change as a column for ranking our genes?
 
 <!-- what to add here?-->
 
 For more details, this [Pathways Common guide](https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/) delves into the history and algorithm details 
+
+
+<!-- These results are from the genes ranked by effect size only (e.g. fold-change). What would change if we incorporated both the sign of the fold change and the level of significance? 
+
+Spoiler - both -log10pvalue * logFc or * sign of logFC yeild no sig enrichment above threhsold
+
+```{r isc_interest_set2}
+# -------------------------------------------------------------------------
+# Select gene and combined stat column that will be used for ranking
+isc_d21_v_d7_gsea_p2 = isc_d21_v_d7 %>%
+  dplyr::mutate(pres = -log10(p_val_adj) * sign(avg_log2FC)) %>%
+  dplyr::select(gene, pres) 
+
+# -------------------------------------------------------------------------
+# Preview the table
+head(isc_d21_v_d7_gsea_p2)
+
+```
+
+
+```{r isc_gsea_2}
+# -------------------------------------------------------------------------
+# Run GSEA
+isc_d21_v_d7_gsea_result_2 = WebGestaltR(
+    enrichMethod = 'GSEA',
+    nThreads = 8,
+    organism = 'mmusculus',
+    enrichDatabase = c('pathway_KEGG'),
+    interestGene = isc_d21_v_d7_gsea_p2,
+    interestGeneType = 'genesymbol',
+    fdrThr = 0.1,
+    outputDirectory = './results',
+    projectName = 'D21_v_D7_GSEA_KEGG_alt', 
+    cache = NULL)
+
+# clean up session
+gc()
+
+# look at results
+isc_d21_v_d7_gsea_result_2
+```
+--->
+
 
 ```{r isc_check_results}
 # -------------------------------------------------------------------------
