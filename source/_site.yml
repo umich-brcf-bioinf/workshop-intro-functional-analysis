@@ -29,7 +29,5 @@ navbar:
           href: 07B-advanced-visualizations.html
         - text: "Analysis summary and next steps"
           href: 08-analysis-summary.html
-    - text: "Exercises"
-      href: exercises.html
     - text: "Wrap up"
       href: workshop-wrap-up.html
