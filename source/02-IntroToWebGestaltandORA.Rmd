@@ -419,5 +419,5 @@ Programming! We can use R/RStudio to use functional enrichment tools and access 
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](workshop-intro.html) | [Top of this lesson](#top) | [Next lesson](more-stuff.html) |
+| [Previous lesson](01-functional-analysis-overview.html) | [Top of this lesson](#top) | [Next lesson](03-WebGestaltRORA.html) |
 | :--- | :----: | ---: |
