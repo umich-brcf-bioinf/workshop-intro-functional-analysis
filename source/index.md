@@ -32,19 +32,27 @@ body, td {
 
 
 ### Day 1 (Chris/Marci & Dana)
-| Time | Topic |
-| :---  | :----------------------------------------------------------- |
-|  9:00 | [Workshop Intro and Startup](workshop-intro.html) |
-|  9:30 | [Introduction to X](introduction.html)
-|       | **Break** |
-|       | [More stuff](more-stuff.html) |
+| Time  | Topic |
+| :---- | :----------------------- |
+|  9:00 | [Intro](workshop-intro.html) |
+|  9:30 | [Functional analysis and ORA](01-functional-analysis-overview.html) |
+|       | [ORA with WebGestalt](02-IntroToWebGestaltandORA.html) |  
+| 11:00 | **Break** |
+|       | [ORA with R](03-WebGestaltRORA.html) |
+|       | [Advanced visualizations I](07A-advanced-visualizations.html) | 
 |  1:00 | Day 1 concludes |
 
-### Day 2 (Dana)
-| Time | Topic |
-| :-----  | :------------------------------------ |
-|  9:00 | Review |
-|  9:10 | [Fancy Stuff](fancy-stuff.html) |
-|       | **Break** |
-| 12:45 | [Wrap-up](workshop-wrap-up.html) |
-|  1:00 | Day 2 concludes |
+---
+
+### Day 2 (Chris & Dana)
+| Time  | Topic |
+| :---- | :----------------------- |
+|  9:00 | Review & questions |
+|  9:10 | [Functional Analysis and GSEA](05-fcs-gsea-overview.html) |
+|       | [GSEA with R](06-WebGestaltRGSEA.html) |
+| 11:00 | **Break** |
+|       | [GO, KEGG, and friends](04-gene-set-references.html) |
+|       | [Advanced visualizations II](07B-advanced-visualizations.html) | 
+|       | [Analysis summary](08-analysis-summary.html) | 
+| 12:45 | [Wrap up](workshop-wrap-up.html) |
+|  1:00 | **Workshop concludes** |

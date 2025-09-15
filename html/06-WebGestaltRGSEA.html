@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>GSEA with R</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from built via
+https://favicon.io/emoji-favicons/computer/
+-->
+<meta name="google-site-verification" content="t-Wgs-RXt8xi94RSoFamxoD2P2h-Hh7M_t_iOuxFZUo" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="workshop-intro.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
+    </li>
+    <li>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="07A-advanced-visualizations.html">Advanced visualizations I</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+    </li>
+    <li>
+      <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="workshop-wrap-up.html">Wrap up</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">GSEA with R</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 16px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+
+</style>
+<script>
+  addClassKlippyTo("pre.r, pre.markdown, pre.bash");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<p><img src="images/wayfinder/wayfinder-06A.png"
+alt="workshop wayfinder" /></p>
+<div id="objectives" class="section level1">
+<h1>Objectives</h1>
+<ul>
+<li>Form the inputs for Gene Set Enrichment Analysis (GSEA) in
+WebGestaltR from single-cell results.</li>
+<li>Use WebGestaltR to do a GSEA analysis.</li>
+<li>Understand how to interpret the results of GSEA analysis.</li>
+<li>Compare and contrast the results of two GSEA results.</li>
+</ul>
+</div>
+<div id="getting-started" class="section level1">
+<h1>Getting started</h1>
+<p>The setup for GSEA is similar to ORA, but there are two key
+differences:</p>
+<ol style="list-style-type: decimal">
+<li>We do not require a threshold for significance, and</li>
+<li>We need to pass gene identifiers <strong>and</strong> the log
+fold-change for the gene from the differential expression test.</li>
+</ol>
+<p>This gives the advantage of being able to use the differential
+expression results more fully, instead of limiting to DE genes.</p>
+</div>
+<div id="running-gsea-using-webgestalt" class="section level1">
+<h1>Running GSEA using WebGestalt</h1>
+<p>First, we’ll re-load the libraries to ensure they are available.</p>
+<pre class="r"><code># =========================================================================
+# ORA with WebGestlatR
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load the libraries
+library(WebGestaltR)
+library(tidyverse)</code></pre>
+<p>We’ll then will take a second look at the documentation for the
+<code>WebGestaltR()</code> function, and note the difference in input
+between ORA and GSEA.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Look at the manual for the main function
+?WebGestaltR</code></pre>
+<p>We note from the documentation that <code>interestGene</code> “should
+be an R data.frame object containing two columns: the gene list and the
+corresponding scores.” We also note that we will <strong>not</strong>
+make use of the <code>referenceGene</code> argument.</p>
+<div id="read-in-diffex-results" class="section level2">
+<h2>Read in diffex results</h2>
+<p>We will demonstrate GSEA on a differential analysis from the
+single-cell RNA-seq experiment we explored in the Introduction to
+Single-cell Analysis <a
+href="https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/00A-OrientingOnScRNASeq.html#Consider_a_specific_scRNA-Seq_experiment">(link)</a>.
+In particular, we’ll start by perform GSEA on the differential
+expression results in the pericyte cluster, comparing day 21 to day
+7.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Load pseudo-bulk analysis for D21 vs D7 in pericyte cluster
+isc_d21_v_d7 = read_csv(&#39;inputs/single_cell_de_results/de_pseudo_pericyte_D21_vs_D7.csv&#39;)</code></pre>
+<pre><code>Rows: 23608 Columns: 6
+── Column specification ────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (1): gene
+dbl (5): p_val, avg_log2FC, pct.1, pct.2, p_val_adj
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Preview the result
+head(isc_d21_v_d7)</code></pre>
+<pre><code># A tibble: 6 × 6
+      p_val avg_log2FC pct.1 pct.2 p_val_adj gene   
+      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
+1 3.86e-232       2.91     1     1 1.02e-227 Cilp2  
+2 5.63e-118       1.71     1     1 1.49e-113 Ltbp4  
+3 1.85e- 95       1.29     1     1 4.91e- 91 Cd55   
+4 2.60e- 87       1.64     1     1 6.88e- 83 Prss23 
+5 3.02e- 87      -1.59     1     1 8.00e- 83 Nav3   
+6 7.46e- 82       2.25     1     1 1.98e- 77 Gm42418</code></pre>
+<p>Before preparing our data for GSEA, let’s also</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Load pseudo-bulk analysis for D21 vs D7 in pericyte cluster
+isc_d21_v_d7 %&gt;% head()</code></pre>
+<pre><code># A tibble: 6 × 6
+      p_val avg_log2FC pct.1 pct.2 p_val_adj gene   
+      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
+1 3.86e-232       2.91     1     1 1.02e-227 Cilp2  
+2 5.63e-118       1.71     1     1 1.49e-113 Ltbp4  
+3 1.85e- 95       1.29     1     1 4.91e- 91 Cd55   
+4 2.60e- 87       1.64     1     1 6.88e- 83 Prss23 
+5 3.02e- 87      -1.59     1     1 8.00e- 83 Nav3   
+6 7.46e- 82       2.25     1     1 1.98e- 77 Gm42418</code></pre>
+</div>
+<div id="extracting-data-for-gsea" class="section level2">
+<h2>Extracting data for GSEA</h2>
+<p>The key columns to extract from our Day 21 vs Day 7 pericyte results
+table, as per the documentation, are the <code>gene</code> and
+<code>avg_log2FC</code> columns. Before proceeding, it’s prudent to
+check if there are missing values in the column we’ll use as our gene
+identifier:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# How many symbols are NA?
+table(is.na(isc_d21_v_d7$gene))</code></pre>
+<pre><code>
+FALSE 
+23608 </code></pre>
+<p>And now we can create a table with just the <code>gene</code> and
+<code>avg_log2FC</code> columns with the <code>select()</code> function
+from <code>dplyr</code>:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Select gene and avg_log2FC columns
+isc_d21_v_d7_gsea = isc_d21_v_d7 %&gt;%
+    dplyr::select(gene, avg_log2FC)
+
+# -------------------------------------------------------------------------
+# Preview the table
+head(isc_d21_v_d7_gsea)</code></pre>
+<pre><code># A tibble: 6 × 2
+  gene    avg_log2FC
+  &lt;chr&gt;        &lt;dbl&gt;
+1 Cilp2         2.91
+2 Ltbp4         1.71
+3 Cd55          1.29
+4 Prss23        1.64
+5 Nav3         -1.59
+6 Gm42418       2.25</code></pre>
+</div>
+</div>
+<div id="running-gsea" class="section level1">
+<h1>Running GSEA</h1>
+<p>We will start by running GSEA on the non-redundant version of the
+Gene Ontology Biological Process genesets.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Run GSEA
+isc_d21_v_d7_gsea_result = WebGestaltR(
+    enrichMethod = &#39;GSEA&#39;,
+    nThreads = 8,
+    organism = &#39;mmusculus&#39;,
+    enrichDatabase = c(&#39;geneontology_Biological_Process_noRedundant&#39;),
+    interestGene = isc_d21_v_d7_gsea,
+    interestGeneType = &#39;genesymbol&#39;,
+    fdrThr = 0.1,
+    minNum = 60,
+    outputDirectory = &#39;./results&#39;,
+    projectName = &#39;D21_v_D7_GSEA_GO_BP&#39;, 
+    cache = &quot;./rdata&quot;)</code></pre>
+<pre><code>Use cache data if available.
+Loading the functional categories...
+Loading the ID list...
+Summarizing the uploaded ID list by GO Slim data...</code></pre>
+<pre><code>Performing the enrichment analysis...</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0000959</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0001539</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0001562</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0001945</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0001963</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002011</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002021</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002209</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002251</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002269</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002347</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002437</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002507</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0002931</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0003170</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006040</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006353</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006354</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006360</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006383</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006414</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006471</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006515</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006730</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006925</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006929</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006949</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0006984</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007031</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007164</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007190</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007205</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007210</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007212</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007214</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007271</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007274</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007530</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007585</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007588</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007618</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007625</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0007635</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0008214</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0008334</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009112</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009187</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009225</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009262</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009268</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009299</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009311</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009595</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0009620</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0010171</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0010257</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0010324</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0010463</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0010573</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0010737</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0014075</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0015695</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0017004</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0017145</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018126</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018149</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018195</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018196</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018198</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018200</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018208</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0018904</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0019098</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0019236</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0019692</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0019748</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0019835</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0021591</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0023019</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0023058</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0030104</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0030431</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0030865</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0030901</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031050</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031122</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031128</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031163</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031279</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031365</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031529</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0031579</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032069</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032094</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032098</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032104</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032196</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032527</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032528</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032613</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032615</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032616</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032620</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032633</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032634</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0032941</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0033013</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0033028</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0033619</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0033622</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0033627</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0033687</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034067</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034113</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034340</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034367</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034394</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034405</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034453</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0034698</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035094</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035272</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035329</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035455</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035456</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035587</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035634</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035640</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035902</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0035924</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0036010</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0036119</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0036314</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0036342</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0038179</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042044</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042092</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042219</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042398</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042430</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042440</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042537</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042558</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0042982</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043094</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043171</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043276</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043331</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043586</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043620</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043631</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0043687</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0044091</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0044321</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0044331</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0044346</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0044380</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0044764</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0045056</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0045103</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0045117</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0045454</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0045730</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0046685</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048008</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048009</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048010</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048013</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048483</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048532</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048535</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048536</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048538</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048569</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048854</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0048857</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0050435</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0050879</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0050909</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0050918</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0050919</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0050951</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051156</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051180</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051181</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051339</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051383</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051602</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051646</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051647</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051653</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051703</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051767</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0051932</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0055081</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0055094</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0060004</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0060037</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0060039</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0060216</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0060324</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0060571</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0061311</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0061383</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0061512</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0061614</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0061842</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070193</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070206</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070265</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070269</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070528</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070670</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070741</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070841</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070849</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070972</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0070988</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071402</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071514</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071526</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071542</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071604</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071684</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071800</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071806</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071825</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071867</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071875</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0071985</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0072337</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0072348</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0072350</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0072376</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0072665</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0090077</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0090382</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0090662</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0097006</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0097028</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0097035</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0097066</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0097366</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0097503</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0098743</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0098780</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0098927</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0099132</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0099601</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0106030</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0140112</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0140115</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0140253</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:0150076</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1900115</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1901571</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1901998</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1902074</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1902742</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1903131</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1903513</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:1990089</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:2000272</code></pre>
+<pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for GO:2000273</code></pre>
+<pre><code>1000 permutations of score complete...</code></pre>
+<pre><code>Begin affinity propagation...
+End affinity propagation...
+Begin weighted set cover...
+End weighted set cover...
+Generate the final report...
+Results can be found in the ./results/Project_D21_v_D7_GSEA_GO_BP!</code></pre>
+<pre class="r"><code># clean up session
+gc()</code></pre>
+<pre><code>           used  (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
+Ncells  4381380 234.0    7314937  390.7         NA   7314937  390.7
+Vcells 10166153  77.6  189203352 1443.6      36864 236503676 1804.4</code></pre>
+<p>One downside of GSEA is that it is more computationally demanding
+than ORA. While the GSEA analysis is running, let’s touch on why this
+enrichment process takes so much longer. As the enrichment runs, we’ll
+see the reporting messages
+<code>1000 permutations of score complete</code> - what does that
+mean?</p>
+<!-- what to add here?-->
+<p>For more details, this <a
+href="https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/">Pathways
+Common guide</a> delves into the history and algorithm details</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# View the first few results
+head(isc_d21_v_d7_gsea_result)</code></pre>
+<pre><code>     geneSet                          description                                                link
+1 GO:0050953 sensory perception of light stimulus http://amigo.geneontology.org/amigo/term/GO:0050953
+2 GO:0006281                           DNA repair http://amigo.geneontology.org/amigo/term/GO:0006281
+3 GO:0006397                      mRNA processing http://amigo.geneontology.org/amigo/term/GO:0006397
+4 GO:0008380                         RNA splicing http://amigo.geneontology.org/amigo/term/GO:0008380
+5 GO:0007059               chromosome segregation http://amigo.geneontology.org/amigo/term/GO:0007059
+6 GO:0006260                      DNA replication http://amigo.geneontology.org/amigo/term/GO:0006260
+  enrichmentScore normalizedEnrichmentScore pValue          FDR size
+1       0.6807680                  1.935257      0 0.0000000000  122
+2      -0.6063874                 -1.835637      0 0.0000000000  419
+3      -0.6127408                 -1.847001      0 0.0000000000  407
+4      -0.6204177                 -1.853977      0 0.0000000000  329
+5      -0.6280825                 -1.857539      0 0.0000000000  297
+6      -0.6039461                 -1.724993      0 0.0007146445  223
+                                           plotPath leadingEdgeNum
+1 ./Project_D21_v_D7_GSEA_GO_BP_GSEA/GO_0050953.png             12
+2 ./Project_D21_v_D7_GSEA_GO_BP_GSEA/GO_0006281.png            232
+3 ./Project_D21_v_D7_GSEA_GO_BP_GSEA/GO_0006397.png            203
+4 ./Project_D21_v_D7_GSEA_GO_BP_GSEA/GO_0008380.png            176
+5 ./Project_D21_v_D7_GSEA_GO_BP_GSEA/GO_0007059.png            152
+6 ./Project_D21_v_D7_GSEA_GO_BP_GSEA/GO_0006260.png            120
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                leadingEdgeId
+1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     12824;19662;17022;12814;16779;12842;94220;17918;19063;11994;76376;12296
+2 60344;545085;16588;330177;18854;71702;209334;69113;11546;50883;11350;57434;208836;60534;12190;114714;208084;320209;211064;77782;231855;22632;27223;14087;12581;17685;19356;240087;70790;24061;72103;19366;66233;72199;18294;11920;51869;75570;26909;67030;12144;59029;230709;69747;68145;13211;211651;78412;22594;14884;73172;17688;231724;66105;66911;12572;226409;58186;237211;101831;17766;223970;72170;17686;71175;75317;68251;56249;17535;77622;78610;67196;80285;234258;12545;69723;19367;71988;19704;231642;209200;56207;67872;228140;218973;12189;19355;108937;107951;68501;50721;68067;233789;18973;229543;67849;67967;225876;235441;100710;67484;117599;230484;74355;17420;67788;66589;226151;19090;110052;13649;233545;21974;235626;69714;19357;21853;21665;14885;60530;20892;22209;12649;75686;19361;66713;20422;14375;224008;51812;99982;232314;56456;319162;19359;56505;18968;59026;18974;13990;268395;12544;71101;66799;104721;77987;24128;66165;234736;26383;70620;68275;110749;212377;21761;18972;75801;19362;76938;69724;56196;319604;13006;19687;20937;71890;107976;98415;225182;20174;18971;19714;226026;17314;268465;69716;237911;70099;223989;50776;27221;235559;12013;76843;74996;12566;66467;14897;269582;56371;69928;27050;22589;107823;114741;103554;13194;72931;53610;67513;110033;269523;56397;69920;109145;107260;28000;22256;71514;20833;272551;14211;18148;68240;18140;56438;93765;67711;18538;15364;56420;56424;19363;16881;15312;57320;18752;21849;11792;22059;15270;68026
+3                                                                                                                                                                                            234723;22380;72198;66070;171170;28035;20227;56403;66185;14300;20924;13211;51786;54723;233900;229709;70225;238831;19826;57905;20637;54633;209003;67010;66492;74111;68879;69131;20639;69562;69241;331401;65105;53317;218543;320632;100715;212880;68927;54188;381802;53890;268859;72692;224432;66810;72290;83410;18747;67039;66660;67242;237221;214572;101471;67178;20901;68183;230753;56031;66880;107951;231386;107817;66354;67755;20817;78372;56194;22687;53861;27632;20624;60365;12192;100336;68035;224903;60532;66177;74213;18789;22185;66603;219158;20595;76522;51796;67487;101739;22083;386612;232314;16549;101943;12455;66441;66637;20643;74737;69305;19712;230596;83701;104721;24128;68092;59092;20815;13204;54196;67465;116748;229700;66055;76938;19663;68479;229279;18458;20638;68988;12457;17149;27374;21841;56009;69269;68011;27756;20630;66077;75062;14007;69878;72935;230908;67684;107701;56215;319322;66585;20382;19655;20220;23983;19383;73666;432508;66078;231889;68991;107686;75956;53610;67959;67996;27366;51810;108014;20641;20218;78651;66094;15381;269966;70248;108121;59013;28000;71514;68981;67332;15387;71973;18148;68219;66101;268697;53607;228410;268420;53817;76936;19656;20462;67678;68816;98758;66125;66373;110809;19652;50783;20383;53379;15382;22608;225027;11758;21681;66704;20492
+4                                                                                                                                                                                                                                                                                                                                                                     234723;22380;72198;66070;171170;28035;20227;56403;66185;14300;66381;13211;54723;70225;238831;101985;19826;57905;20637;54633;209003;67010;66492;74111;68879;69131;20639;69562;331401;65105;53317;218543;320632;212880;381802;53890;268859;72692;66810;67039;67242;237221;214572;67178;20901;68183;230753;56031;66880;231386;107817;66354;67755;20817;78372;117198;56194;22687;53861;20624;60365;102414;100336;68035;60532;66177;22185;66603;219158;20595;76522;51796;69207;67487;101739;386612;232314;16549;101943;66441;66637;20643;69305;19712;230596;104721;20020;68092;59092;20815;13204;67465;116748;229700;66055;76938;19663;68479;229279;18458;20638;68988;18708;17149;27374;21841;56009;69269;68011;27756;20630;75062;14007;68045;69878;72935;230908;67684;107701;56215;319322;66585;20382;19655;20220;19383;73666;66078;231889;107686;75956;53610;67959;67996;27366;51810;108014;20641;20218;78651;66094;15381;269966;70248;108121;59013;28000;71514;68981;67332;15387;71973;18148;110213;66101;53607;53817;76936;19656;20462;67678;68816;98758;66125;66373;110809;19652;50783;20383;53379;15382;22608;225027;11758;21681;66704
+5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          26951;72124;217232;208718;211651;68549;51792;214901;56742;67141;219114;23834;72107;215387;58186;70385;223970;71175;17535;52683;78610;229776;12617;66934;67166;57261;71988;67139;230936;18005;12235;20479;381293;12189;71878;78658;218914;68501;66156;67849;110147;70012;74117;100710;66385;12704;21969;54392;226151;21974;19357;72415;18226;12448;20892;72787;83815;16571;66591;66713;52206;22284;54141;66977;224727;17120;13605;66578;13018;69912;13990;224023;73804;72117;67177;20815;66468;12236;72155;80912;229524;56292;21951;16211;75801;53869;52696;12387;56150;210711;214444;108912;13006;67203;67052;108907;83560;226026;21749;66617;268465;69716;69736;237911;70099;66140;71846;70799;12540;71819;20842;12237;68298;22680;108000;69928;27050;22589;26886;51944;100502766;100088;12447;75430;20877;12034;110033;51810;16319;229841;17345;71514;66311;14211;68523;103733;268697;18817;26914;26934;66440;67037;66442;68250;52276;22196;21973;107995;19384;59126;11740;11799
+6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 16193;12144;230709;68145;78833;13211;60364;70024;214901;16332;67141;17688;67444;23834;72107;226409;20466;223970;17686;17535;12545;69723;71988;52679;19704;66404;18969;108961;218973;107951;218914;18973;68964;110147;67967;237877;117599;71735;22687;21969;108689;13649;21853;12448;20892;19361;18027;69270;19076;18968;18974;12544;106344;66131;67177;234736;13874;68275;12301;110749;212377;245688;18972;19075;69724;210711;13006;19687;21376;98415;27214;18971;19714;21749;81702;268465;233877;50776;27221;76843;12566;12540;14084;107373;72151;69928;22589;114741;319651;69263;17217;66592;12447;381760;20133;216156;17220;109145;19646;269966;17215;19718;20833;272551;16476;18148;68240;17216;20135;17219;18538;50927;16881;12428;57441;22059;20492;18028;12534;68026
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     userId
+1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Cacnb2;Cnnm4;Col11a1;Col1a1;Col2a1;Lamb2;Lum;Myo5a;Pcdh15;Ppt1;Rbp4;Slc24a2
+2 4930447C04Rik;Abl1;Actl6a;Actr2;Actr8;Alkbh1;Alkbh2;Alkbh3;Ap5z1;Apex1;Apex2;Aplf;Ascc3;Atm;Atrx;Babam1;Babam2;Bach1;Bccip;Blm;Brca1;Brca2;Brip1;Cdc45;Cdc5l;Cdc7;Cdca5;Cdk2;Cdk7;Cdk9;Cdkn2d;Cenps;Cenpx;Chaf1a;Chaf1b;Chchd4;Chek1;Chek2;Clspn;Cyren;Ddb1;Ddx1;Ddx11;Dek;Dhx9;Dmap1;Dtl;Dtx3l;Eepd1;Egfr;Eme1;Emsy;Esco2;Etaa1;Exo1;Exo5;Faap20;Faap24;Fam168a;Fanca;Fancb;Fancd2;Fancg;Fanci;Fancl;Fign;Fignl1;Fto;Fzr1;Gen1;Gins2;Gins4;Gtf2h1;Gtf2h4;Gtf2h5;H2afx;Helb;Hist3h2a;Hmga2;Hmgn1;Huwe1;Ints3;Kdm1a;Kdm2a;Kif22;Kin;Lig1;Mad2l2;Marf1;Mcrs1;Mdc1;Mgmt;Mms19;Mms22l;Mnat1;Morf4l1;Morf4l2;Mpg;Mre11a;Mrnip;Msh2;Msh3;Msh6;Neil3;Nhej1;Nipbl;Nono;Npm1;Nsd2;Nsmce1;Nsmce2;Nsmce4a;Nucks1;Nudt1;Nudt16;Nudt16l1;Ogg1;Otub1;Park7;Parp2;Parp9;Parpbp;Pclaf;Pcna;Pds5b;Pif1;Pml;Pola1;Pold1;Pold2;Pold3;Pole;Pole2;Polg2;Polq;Polr2i;Ppp4c;Ppp4r2;Prkcg;Prkdc;Prpf19;Psmd14;Psme4;Rad1;Rad17;Rad18;Rad21;Rad23b;Rad51;Rad51ap1;Rad51b;Rad51c;Rad54l;Rad9a;Rad9b;Rbbp8;Rbm17;Rbx1;Rev3l;Rfc1;Rfwd3;Rif1;Rmi2;Rnaseh2a;Rnf169;Rpa1;Rpa3;Rpain;Rps3;Ruvbl1;Ruvbl2;Sem1;Setd2;Sfpq;Sfr1;Sirt6;Slf2;Smarcad1;Smc1a;Smc2;Smc3;Smc4;Smc5;Smchd1;Smg1;Spidr;Ssrp1;Stub1;Supt16;Suv39h1;Swi5;Taok3;Tdg;Tdp2;Tfpt;Timeless;Tnks1bp1;Top2b;Topbp1;Trim28;Trip12;Trip13;Trp53;Trp53bp1;Ube2a;Ube2d3;Ube2n;Ube2t;Ube2v1;Ube2v2;Ube2w;Ubr5;Uchl5;Uhrf1;Ung;Upf1;Usp1;Usp3;Usp47;Uvrag;Uvssa;Vcp;Wdhd1;Wdr70;Xrcc1;Xrcc2;Xrcc6;Xrn2;Yy1;Zmpste24;Zranb3;Zswim7
+3                                                                                                                                             Acin1;Ahcyl1;Alkbh5;Alyref;Alyref2;Arl6ip4;Aurkaip1;Bcas2;Bud31;Ccar2;Ccnb1;Ccnt1;Cdk12;Cdk13;Cdk9;Celf2;Cpsf2;Cpsf4;Cpsf6;Cstf2t;Cstf3;Ctr9;Cwc15;Dazap1;Dcps;Ddx1;Ddx39b;Ddx41;Ddx46;Ddx47;Dhx15;Dhx40;Dhx9;Eftud2;Frg1;Gemin2;Gemin6;Gemin8;Hnrnpa1;Hnrnpa2b1;Hnrnpa3;Hnrnpc;Hnrnpf;Hnrnph1;Hnrnpk;Hnrnpll;Hnrnpm;Hnrnpu;Isy1;Jmjd6;Khdrbs1;Khsrp;Lsm10;Lsm11;Lsm2;Lsm3;Lsm4;Lsm5;Lsm6;Lsm7;Lsm8;Luc7l3;Magoh;Magohb;Mbnl3;Mtrex;Ncbp2;Nelfe;Noct;Nono;Npm1;Nudt21;Nup98;Pabpc1;Pabpn1;Papola;Pcbp1;Pcbp4;Pcf11;Phf5a;Phrf1;Plrg1;Polr2d;Ppie;Ppih;Ppil1;Ppil3;Ppp1r8;Ppp4r2;Ppwd1;Pqbp1;Prdx6;Prkaca;Prmt5;Prmt7;Prpf19;Prpf31;Prpf38a;Prpf40a;Prpf6;Psip1;Ptcd2;Puf60;Raly;Rbfox1;Rbm15;Rbm17;Rbm19;Rbm22;Rbm25;Rbm26;Rbm3;Rbm42;Rbm4b;Rbm7;Rbm8a;Rbmx;Rbmx2;Rbmxl1;Rbpms;Rbpms2;Rest;Rnf40;Rnps1;Rsrc1;Safb;Sap18;Sart1;Sart3;Scaf4;Scnm1;Sf3a1;Sf3a3;Sf3b2;Sf3b3;Sf3b4;Sf3b5;Sf3b6;Sfpq;Slbp;Sltm;Smn1;Snrnp200;Snrnp25;Snrnp40;Snrnp70;Snrpa;Snrpa1;Snrpb;Snrpb2;Snrpc;Snrpd1;Snrpd2;Snrpd3;Snrpe;Snrpf;Snrpg;Snw1;Srek1;Srpk1;Srpk2;Srrm1;Srrm2;Srrt;Srsf1;Srsf2;Srsf3;Srsf6;Srsf7;Srsf9;Ssu72;Strap;Supt5;Syncrip;Tardbp;Tent2;Tfip11;Thoc2;Thoc3;Thoc6;Thrap3;Tia1;Tra2b;Tsen15;Tsen2;Tsen34;Txnl4a;Txnl4b;U2af1;U2af2;Ubl5;Usp39;Virma;Wbp4;Wtap;Xrn2;Ybx1;Ythdc1;Zfp36l1;Zmat2;Zmat5;Zpr1;Zranb2
+4                                                                                                                                                                                                                                                                                                            Acin1;Alyref;Alyref2;Arl6ip4;Bcas2;Bud31;Ccar2;Cdk12;Cdk13;Celf2;Clk3;Cwc15;Dazap1;Dcps;Ddx1;Ddx39b;Ddx41;Ddx46;Ddx47;Dhx15;Dhx40;Dhx9;Eftud2;Frg1;Gemin2;Gemin6;Gemin8;Hnrnpa1;Hnrnpa2b1;Hnrnpa3;Hnrnpc;Hnrnpf;Hnrnph1;Hnrnpk;Hnrnpll;Hnrnpm;Hnrnpu;Isy1;Ivns1abp;Jmjd6;Khdrbs1;Khsrp;Lsm10;Lsm2;Lsm3;Lsm4;Lsm5;Lsm6;Lsm7;Lsm8;Luc7l3;Magoh;Magohb;Mbnl3;Mtrex;Ncbp2;Nono;Npm1;Nup98;Pabpc1;Pcbp4;Phf5a;Pik3r1;Plrg1;Polr2a;Ppie;Ppih;Ppil1;Ppil3;Ppp1r8;Ppp4r2;Ppwd1;Pqbp1;Prdx6;Prmt5;Prmt7;Prpf19;Prpf31;Prpf38a;Prpf40a;Prpf6;Psip1;Puf60;Raly;Rbfox1;Rbm15;Rbm17;Rbm19;Rbm22;Rbm25;Rbm3;Rbm42;Rbm4b;Rbm7;Rbm8a;Rbmx;Rbmx2;Rbmxl1;Rbpms;Rbpms2;Rest;Rnf113a2;Rnps1;Rsrc1;Rtraf;Sap18;Sart1;Sart3;Scnm1;Sf3a1;Sf3a3;Sf3b2;Sf3b3;Sf3b4;Sf3b5;Sf3b6;Sfpq;Smn1;Snrnp200;Snrnp25;Snrnp40;Snrnp70;Snrpa;Snrpa1;Snrpb;Snrpb2;Snrpc;Snrpd1;Snrpd2;Snrpd3;Snrpe;Snrpf;Snrpg;Snw1;Srek1;Srpk1;Srpk2;Srrm1;Srrm2;Srsf1;Srsf11;Srsf2;Srsf3;Srsf6;Srsf7;Srsf9;Strap;Syncrip;Tardbp;Tfip11;Thoc2;Thoc3;Thoc6;Thrap3;Tia1;Tmbim6;Tra2b;Tsen15;Tsen2;Tsen34;Txnl4a;Txnl4b;U2af1;U2af2;Ubl5;Usb1;Usp39;Virma;Wbp4;Wtap;Ybx1;Ythdc1;Zmat2;Zmat5;Zpr1;Zranb2
+5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              4930447C04Rik;Actr2;Actr3;Anapc11;Anapc15;Anapc4;Arl8b;Atrx;Aurkb;Bag6;Birc5;Brca1;Brd4;Brip1;Bub1;Bub1b;Bub3;Ccnb1;Ccne1;Ccne2;Cdc14a;Cdc20;Cdc26;Cdc27;Cdc42;Cdc6;Cdca2;Cdca5;Cdca8;Cdk5rap2;Cdt1;Cenpc1;Cenpe;Cenpf;Cenph;Cenpn;Cenpq;Cenps;Cenpw;Cenpx;Cep192;Cep85;Chtf18;Ciao2a;Ciao2b;Cit;Ctcf;Ctnnb1;Dis3l2;Dscc1;Dsn1;Ect2;Ehmt2;Eme1;Esco2;Fam83d;Fancd2;Fbxo5;H2afy;Hnrnpu;Incenp;Kif14;Kif22;Kif23;Kif2c;Kif4;Kifc1;Klhl22;Knstrn;Kpnb1;Mad1l1;Mad2l1;Mad2l1bp;Mcmbp;Mis12;Mis18a;Mki67;Mre11a;Msto1;Naa10;Naa50;Ncapd2;Ncapd3;Ncapg;Ncaph;Ncaph2;Ndc1;Ndc80;Nde1;Nek2;Nek6;Nipbl;Nsmce2;Ntmt1;Nuf2;Nup37;Nup43;Nup62;Nusap1;Pds5b;Phb2;Phf13;Plk1;Pmf1;Ppp1r7;Ppp2r1a;Psrc1;Pum1;Rab11a;Racgap1;Rad18;Rad21;Ran;Rcc1;Rmi2;Rps3;Seh1l;Sfpq;Sgo1;Sgo2a;Ska1;Ska2;Ska3;Slc25a5;Slf2;Smarcad1;Smc2;Smc3;Smc4;Smc5;Spag5;Spc25;Spdl1;Srpk1;Stag1;Syce2;Terf1;Tex14;Tnks;Top1;Top2a;Top2b;Trip13;Tubg1;Ube2i;Usp9x;Uvrag;Vps4b;Wapl;Zfp207;Zw10;Zwint
+6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Ankrd17;Atad5;Atrx;Blm;Cacybp;Ccna2;Ccne1;Ccne2;Cdc42;Cdc45;Cdc6;Cdc7;Cdk1;Cdk2;Cdk9;Cdt1;Cenps;Cenpx;Chaf1a;Chaf1b;Chtf18;Ctc1;Dbf4;Dhx9;Donson;Dscc1;Dtl;E2f7;E2f8;Egfr;Ehmt2;Eme1;Ereg;Esco2;Etaa1;Faf1;Fam111a;Fbxo5;Gins1;Gins2;Gins3;Gins4;Gmnn;Helb;Il6;Ilkap;Inppl1;Jun;Kctd13;Lig1;Lrwd1;Mcm10;Mcm2;Mcm3;Mcm4;Mcm6;Mcm7;Mcmbp;Mms22l;Mre11a;Msh3;Msh6;Nasp;Nfia;Nfib;Npm1;Nucks1;Nup98;Pclaf;Pcna;Pola1;Pola2;Pold1;Pold2;Pold3;Pole;Pole2;Polg2;Prim1;Prim2;Rad51;Rbbp4;Rbbp7;Rev3l;Rfc1;Rfc2;Rfc3;Rfc4;Rfc5;Rfwd3;Rmi2;Rnaseh2a;Rpa1;Rpa3;Rpain;Rrm1;Rrm2;Rtf2;Sin3a;Slbp;Smc3;Ssbp1;Ssrp1;Stn1;Stoml2;Supt16;Tbrg1;Terf1;Timeless;Tipin;Top1;Trp53;Upf1;Usp37;Wapl;Wdhd1;Wdr18;Zmpste24;Zpr1;Zranb3</code></pre>
+<p>The columns of the GSEA results are quite similar to the ORA results,
+with the following exceptions:</p>
+<ul>
+<li><code>enrichmentScore</code>:</li>
+<li><code>normalizedEnrichmentScore</code>:</li>
+<li><code>leadingEdgeNum</code>:</li>
+</ul>
+<!-- TODO: Here is where we'll actually talk more about the biological relevance of the results. -->
+</div>
+<div id="results-of-gsea" class="section level1">
+<h1>Results of GSEA</h1>
+<p>As with the ORA results, the GSEA method outputs similar results
+tables, gene identifier mappings, and HTML reports. Additionally, for
+each pathway with <code>FDR &lt; fdrThr</code>, a GSEA enrichment plot
+is automatically generated. The following is an example:</p>
+<p>TODO: Include example GSEA plot.</p>
+<p><img src="images/wayfinder/wayfinder-06B.png"
+alt="workshop wayfinder" /></p>
+</div>
+<div id="comparing-enrichment-results" class="section level1">
+<h1>Comparing enrichment results</h1>
+<p>Now that we have two GSEA results from related differential
+expression results, we may want to know:</p>
+<ul>
+<li>What genesets are in common?</li>
+<li>What genesets are unique?</li>
+<li>Are there any insights in the pathways at one time point versus
+another?</li>
+</ul>
+<p>A first approach to these questions might be to take the GSEA results
+from both comparisons and join them on the geneset identifier.</p>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+</div>
+<div id="questions" class="section level1">
+<h1>Questions</h1>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><a href="05-fcs-gsea-overview.html">Previous
+lesson</a></th>
+<th align="center"><a href="#top">Top of this lesson</a></th>
+<th align="right"><a href="04-gene-set-references.html">Next
+lesson</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

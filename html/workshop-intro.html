@@ -12,7 +12,7 @@
 <meta name="author" content="UM Bioinformatics Core Workshop Team" />
 
 
-<title>Functional Analysis</title>
+<title>Intro</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -321,7 +321,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Intro to Functional Analysis</a>
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -336,10 +336,16 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="introduction.html">intro</a>
+      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
     </li>
     <li>
-      <a href="more-stuff.html">more stuff</a>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="07A-advanced-visualizations.html">Advanced visualizations I</a>
     </li>
   </ul>
 </li>
@@ -351,7 +357,19 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="fancy-stuff.html">Fancy Stuff</a>
+      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+    </li>
+    <li>
+      <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
     </li>
   </ul>
 </li>
@@ -370,7 +388,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Functional Analysis</h1>
+<h1 class="title toc-ignore">Intro</h1>
 <h4 class="author">UM Bioinformatics Core Workshop Team</h4>
 
 </div>
@@ -395,29 +413,34 @@ a[target="_blank"]::after {
 </style>
 <div id="workshop-goals-and-topics" class="section level1">
 <h1>Workshop goals and topics</h1>
+<p><strong>Functional Enrichment Analysis</strong> places a list of
+differentially expressed genes into a biological context. It presents a
+systems-level perspective that can reveal expression patterns, elucidate
+molecular mechanisms, and guide follow-up experiments.</p>
+<p>This workshop is targeted toward researchers comfortable with
+R/RStudio who would like to better understand and apply functional
+enrichment approaches for bulk and/or single-cell RNA-seq datasets.</p>
+<p>By the end of this workshop, participants will be able to:</p>
 <ul>
-<li><p>We want to make the computers work harder so we can do more
-meaningful work. This workshop introduces foundational tools and
-techniques that make computational projects simpler, more powerful, and
-more reproducible.</p></li>
-<li><p>By the end of the workshop, attendees will be able to</p>
-<ul>
-<li>Use RStudio to build R scripts, examine R data structures, navigate
-directories and files</li>
-<li>Understand basics of importing data into R and ways to
-clean/manipulate data</li>
-<li>Visualize data as plots</li>
-</ul></li>
+<li><p>Describe common approaches, tools, and reference
+databases.</p></li>
+<li><p>Run analyses on single-cell and bulk RNA-Seq inputs using web
+tools and R.</p></li>
+<li><p>Understand and use different functional analysis approaches,
+including over-representation analysis and GSEA analysis.</p></li>
+<li><p>Build meta-analyses across multiple comparisons.</p></li>
+<li><p>Visualize gene-level activity within gene sets and create
+publication-ready figures.</p></li>
+<li><p>We hope that this introduction provides a foundation to help
+interpret and run functional analyses on your own.</p></li>
 <li><p>Our purpose is not to be exhaustive, there is a lot that we
 cannot cover in the allotted time, and we don’t expect anyone to be an
 expert at the end of the workshop.</p></li>
-<li><p>We hope that this introduction helps you over the steepest parts
-of the learning curve and gives a sense of what’s possible so you can
-recognize these techniques when you see them and, with some independent
-study, apply them in your own work.</p></li>
 <li><p>Please let us know if there is anything we can do to improve the
 workshop experience.</p></li>
 </ul>
+<div id="about-the-workshop-team" class="section level2">
+<h2>About the workshop team</h2>
 <table>
 <colgroup>
 <col width="25%" />
@@ -432,35 +455,36 @@ src="images/headshots/headshot_cgates.jpg" /></th>
 <th align="center"><img
 src="images/headshots/headshot_mbradenb.jpg" /></th>
 <th align="center"><img
-src="images/headshots/headshot_trsaari.jpg" /></th>
-<th align="center"><img src="images/headshots/headshot_wld.jpg" /></th>
+src="images/headshots/headshot_damki.jpg" /></th>
+<th align="center"><img
+src="images/headshots/headshot_rcavalca.jpg" /></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="center"><strong>Chris</strong></td>
 <td align="center"><strong>Marci</strong></td>
-<td align="center"><strong>Travis</strong></td>
-<td align="center"><strong>Bill</strong></td>
+<td align="center"><strong>Dana</strong></td>
+<td align="center"><strong>Raymond</strong></td>
 </tr>
 <tr class="even">
 <td align="center"><img
-src="images/headshots/headshot_damki.jpg" /></td>
+src="images/headshots/headshot_trsaari.jpg" /></td>
 <td align="center"><img
-src="images/headshots/headshot_clairis.jpg" /></td>
+src="images/headshots/headshot_rtagett.jpg" /></td>
 <td align="center"><img
-src="images/headshots/headshot_rcavalca.jpg" /></td>
+src="images/headshots/headshot_ncarruth.jpg" /></td>
 <td align="center"></td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>Dana</strong></td>
-<td align="center"><strong>Clair</strong></td>
-<td align="center"><strong>Raymond</strong></td>
+<td align="center"><strong>Travis</strong></td>
+<td align="center"><strong>Rebecca</strong></td>
+<td align="center"><strong>Nick</strong></td>
 <td align="center"></td>
 </tr>
 </tbody>
 </table>
-<p><br/></p>
+</div>
 </div>
 <div id="code-of-conduct" class="section level1">
 <h1>Code of Conduct</h1>
@@ -539,6 +563,10 @@ X</strong> to poll the group at checkpoints along the way. <br/>
 </div>
 <div id="exercise-using-zoom-breakout-rooms" class="section level3">
 <h3>Exercise: Using Zoom Breakout Rooms</h3>
+<details>
+<summary>
+An optional exercise
+</summary>
 <p>Take a moment to briefly introduce yourself (name, dept/lab, area of
 study) in a breakout room.</p>
 <ul>
@@ -549,8 +577,9 @@ name</li>
 <li>When you have completed introductions, you can leave the breakout
 room to rejoin the main room.</li>
 </ul>
-<p><img src="images/workshop-intro/zoom_breakout_room.png" width="60%"/>
-<br/> <br/></p>
+<p><img src="images/workshop-intro/zoom_breakout_room.png" width="60%"/></p>
+<br/>
+</details>
 </div>
 </div>
 <div id="section-1" class="section level2">
@@ -644,11 +673,11 @@ need clarification. <br/> <br/></li>
 <p>It is important that you can see:</p>
 <ul>
 <li>Zoom (instructor’s shared screen + reactions)</li>
-<li>Your terminal/command window (days 1-2) or R/Studio (days 2-3)</li>
+<li>A web browser page (will be used for WebGestalt and R/Studio)</li>
 <li>Slack</li>
 <li>Lesson plan web page</li>
 </ul>
-<p><img src="images/workshop-intro/arranged_screens.png?"
+<p><img src="images/workshop-intro/arranged_screens.png"
 alt="arranged screens" /> <br/> <br/></p>
 </div>
 </div>
@@ -685,7 +714,7 @@ interpret</strong> high-throughput genomics experiments.</li>
 identification, functional enrichment and many other kinds of
 analyses.</li>
 <li>We provide letters of support for grant proposals.</li>
-<li>We are creating a series of bioinformatics-focused workshops.</li>
+<li>We offer a series of bioinformatics-focused workshops.</li>
 </ul>
 </div>
 <div id="biomedical-research-core-facilities" class="section level2">
@@ -697,35 +726,94 @@ with top experts in the field. Established in 1986, the BRCF was formed
 to offer centralized access to research services and equipment. <br/>
 <br/></p>
 </div>
-<div id="acknowledgements" class="section level2">
-<h2>Acknowledgements</h2>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1>Acknowledgements</h1>
 <ul>
 <li><p>This workshop content is licensed under a <a
 href="https://creativecommons.org/licenses/by/4.0/"
 target="_blank">Creative Commons Attribution 4 License</a>.</p></li>
-<li><p>Large sections of this workshop content have been adapted and
-extended from materials created by <a
-href="https://software-carpentry.org/lessons/" target="_blank">Software
-Carpentry</a>. These are open access materials distributed under the
-terms of the <a href="http://creativecommons.org/licenses/by/4.0/"
-target="_blank">Creative Commons Attribution license (CC BY 4.0)</a>,
-which permits unrestricted use, distribution, and reproduction in any
-medium, provided the original author and source are credited.</p></li>
-<li><p>The workshop Code of Conduct has been adapted the <a
+<li><p>The workshop Code of Conduct has been adapted from the <a
 href="https://numfocus.org/code-of-conduct" target="_blank">NumFocus
-Code of Conduct</a> which itself draws from from numerous sources,
-including the Geek Feminism wiki, created by the Ada Initiative and
-other volunteers, which is under a Creative Commons Zero license, the
+Code of Conduct</a> which itself draws from numerous sources, including
+the Geek Feminism wiki, created by the Ada Initiative and other
+volunteers, which is under a Creative Commons Zero license, the
 Contributor Covenant version 1.2.0, the Bokeh Code of Conduct, the SciPy
 Code of Conduct, the Carpentries Code of Conduct, and the NeurIPS Code
 of Conduct.</p></li>
-<li><p>The dplyr icons were copied from the dplyr cheatsheet from
-posit.co (<a
-href="https://www.rstudio.org/links/data_transformation_cheat_sheet"
-class="uri">https://www.rstudio.org/links/data_transformation_cheat_sheet</a>)
-and they are licensed as CC BY SA.</p></li>
+<li><p>This workshop relies heavily on these tools / approaches/
+datasets:</p>
+<ul>
+<li><a href="https://www.webgestalt.org/#"
+target="_blank">WebGestalt</a>
+<ul>
+<li>John M Elizarraras, Yuxing Liao, Zhiao Shi, Qian Zhu, Alexander R
+Pico, Bing Zhang, WebGestalt 2024: faster gene set analysis and new
+support for metabolomics and multi-omics,<br />
+<a href="https://doi.org/10.1093/nar/gkae456" target="_blank">Nucleic
+Acids Research, 2024, gkae456</a>.</li>
+<li>Liao, Y., Wang, J., Jaehnig, E., Shi, Z., Zhang, B. WebGestalt 2019:
+gene set analysis toolkit with revamped UIs and APIs, <a
+href="https://doi.org/10.1093/nar/gkz401" target="_blank">Nucleic Acids
+Research, gkz401</a>.</li>
+<li>Wang, J., Vasaikar, S., Shi, Z., Greer, M., &amp; Zhang, B.
+WebGestalt 2017: a more comprehensive, powerful, flexible and
+interactive gene set enrichment analysis toolkit. <a
+href="https://academic.oup.com/nar/article-lookup/doi/10.1093/nar/gkx356"
+target="_blank">Nucleic Acids Research</a>.</li>
+<li>Wang, J., Duncan, D., Shi, Z., Zhang, B. (2013). WEB-based GEne SeT
+AnaLysis Toolkit (WebGestalt): update 2013. <a
+href="http://nar.oxfordjournals.org/content/41/W1/W77.full"
+target="_blank">Nucleic Acids Res, 41 (Web Server issue),
+W77-83</a>.</li>
+<li>Zhang, B., Kirov, S.A., Snoddy, J.R. (2005). WebGestalt: an
+integrated system for exploring gene sets in various biological
+contexts. <a
+href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=retrieve&amp;db=pubmed&amp;list_uids=15980575&amp;dopt=Abstract"
+target="_blank">Nucleic Acids Res, 33(Web Server issue),
+W741-748</a>.</li>
+</ul></li>
+<li><a href="https://www.gsea-msigdb.org/gsea/index.jsp">Broad GSEA</a>
+<ul>
+<li>Subramanian A, Tamayo P, Mootha VK, et al. Gene set enrichment
+analysis: a knowledge-based approach for interpreting genome-wide
+expression profiles. Proc Natl Acad Sci U S A. 2005;102(43):15545-15550.
+<a href="doi:10.1073/pnas.0506580102"
+class="uri">doi:10.1073/pnas.0506580102</a>. <a
+href="https://doi.org/10.1073/pnas.0506580102"
+target="_blank">https://doi.org/10.1073/pnas.0506580102</a></li>
+<li>Mootha VK, Lindgren CM, Eriksson KF, et al. PGC-1alpha-responsive
+genes involved in oxidative phosphorylation are coordinately
+downregulated in human diabetes. Nat Genet. 2003;34(3):267-273. <a
+href="doi:10.1038/ng1180" class="uri">doi:10.1038/ng1180</a>. <a
+href="https://doi.org/10.1038/ng1180"
+target="_blank">https://doi.org/10.1038/ng1180</a></li>
+</ul></li>
+<li>Bulk diffex data were derived from:
+<ul>
+<li>Zhang S, Macias-Garcia A, Ulirsch JC, et al. HRI coordinates
+translation necessary for protein homeostasis and mitochondrial function
+in erythropoiesis. Elife. 2019;8:e46976. Published 2019 Apr 29. <a
+href="doi:10.7554/eLife.46976" class="uri">doi:10.7554/eLife.46976</a>.
+<a href="https://doi.org/10.7554/elife.46976"
+target="_blank">https://doi.org/10.7554/elife.46976</a><br />
+<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119365"
+target="_blank">GEO accession GSE119365</a></li>
+</ul></li>
+<li>Single-cell diffex data were derived from:
+<ul>
+<li>Sorkin M, Huber AK, Hwang C, et al. Regulation of heterotopic
+ossification by monocytes in a mouse model of aberrant wound healing.
+Nat Commun. 2020;11(1):722. Published 2020 Feb 5. <a
+href="doi:10.1038/s41467-019-14172-4"
+class="uri">doi:10.1038/s41467-019-14172-4</a>.<br />
+<a href="https://doi.org/10.1038/s41467-019-14172-4"
+target="_blank">https://doi.org/10.1038/s41467-019-14172-4</a><br />
+<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126060"
+target="_blank">GEO accession GSE126060</a></li>
+</ul></li>
+</ul></li>
 </ul>
-</div>
 </div>
 
 
