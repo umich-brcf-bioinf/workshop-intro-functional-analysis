@@ -36,14 +36,22 @@ source("../bin/set_values.R")
 klippy::klippy(lang = c("r", "markdown", "bash"), position = c("top", "right"))
 ```
 
-![workshop wayfinder](images/wayfinder/wayfinder-wrap-up.png)
+![](images/wayfinder/wayfinder-wrap-up.png)
+
+---
+
+Functional analysis matches observed expression patterns against a library of 
+known biological gene sets. Adding this biological context connects observed 
+patterns with the research question. 
 
 We hope you now have more familiarity with key concepts, tools, and techniques
-that will enable more efficient, reproducible, and impactful computational research.
+used in functional analysis.
 
 ---
 
 ## Housekeeping
+
+- Please take our optional [post-workshop survey](https://michmed.org/eQVm3){target="_blank"} (5-10 minutes).
 
 - We will email you a link to the final session recordings next week.
 

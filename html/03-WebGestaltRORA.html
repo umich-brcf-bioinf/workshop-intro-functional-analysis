@@ -377,9 +377,6 @@ div.tocify {
   </ul>
 </li>
 <li>
-  <a href="exercises.html">Exercises</a>
-</li>
-<li>
   <a href="workshop-wrap-up.html">Wrap up</a>
 </li>
       </ul>
@@ -640,8 +637,13 @@ on other compute resources like GreatLakes.</p>
 
 # -------------------------------------------------------------------------
 # Load the libraries
-library(WebGestaltR)
-library(tidyverse)</code></pre>
+library(WebGestaltR)</code></pre>
+<pre><code>******************************************</code></pre>
+<pre><code>*                                        *</code></pre>
+<pre><code>*          Welcome to WebGestaltR !      *</code></pre>
+<pre><code>*                                        *</code></pre>
+<pre><code>******************************************</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
 <p><em>Note</em> - when loading <code>tidyverse</code> you will likely
 see some red text. Remember that this is an informative message about
 the package loading and functions that share names between multiple
@@ -674,8 +676,8 @@ specifying that argument.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List available organisms
 listOrganism()</code></pre>
-<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;       &quot;dmelanogaster&quot; &quot;ggallus&quot;      
- [9] &quot;hsapiens&quot;      &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
+<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;      
+ [7] &quot;dmelanogaster&quot; &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
 <p><br></p>
 <p>To see what functional databases are available from the tool, we can
 see the <code>listGeneSet()</code> function to see the available
@@ -737,12 +739,14 @@ other common (and not-so-common) identifiers.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List gene identifier types for mmusculus
 listIdType(organism = &#39;mmusculus&#39;) %&gt;% tail(25)</code></pre>
-<pre><code> [1] &quot;dbSNP&quot;                       &quot;embl&quot;                        &quot;ensembl_gene_id&quot;             &quot;ensembl_peptide_id&quot;         
- [5] &quot;entrezgene&quot;                  &quot;entrezgene_protein-coding&quot;   &quot;genename&quot;                    &quot;genesymbol&quot;                 
- [9] &quot;illumina_ScriptSeq_RNASeqV2&quot; &quot;illumina_WG6_Customarray&quot;    &quot;illumina_mouseref_8&quot;         &quot;illumina_mouseref_8_v2&quot;     
-[13] &quot;illumina_mousewg_6_v1&quot;       &quot;illumina_mousewg_6_v2&quot;       &quot;interpro&quot;                    &quot;phalanx_onearray&quot;           
-[17] &quot;phosphositeEnsembl&quot;          &quot;phosphositeRefseq&quot;           &quot;phosphositeSeq&quot;              &quot;phosphositeUniprot&quot;         
-[21] &quot;protein_id&quot;                  &quot;refseq_mrna&quot;                 &quot;refseq_peptide&quot;              &quot;unigene&quot;                    
+<pre><code> [1] &quot;dbSNP&quot;                       &quot;embl&quot;                        &quot;ensembl_gene_id&quot;            
+ [4] &quot;ensembl_peptide_id&quot;          &quot;entrezgene&quot;                  &quot;entrezgene_protein-coding&quot;  
+ [7] &quot;genename&quot;                    &quot;genesymbol&quot;                  &quot;illumina_ScriptSeq_RNASeqV2&quot;
+[10] &quot;illumina_WG6_Customarray&quot;    &quot;illumina_mouseref_8&quot;         &quot;illumina_mouseref_8_v2&quot;     
+[13] &quot;illumina_mousewg_6_v1&quot;       &quot;illumina_mousewg_6_v2&quot;       &quot;interpro&quot;                   
+[16] &quot;phalanx_onearray&quot;            &quot;phosphositeEnsembl&quot;          &quot;phosphositeRefseq&quot;          
+[19] &quot;phosphositeSeq&quot;              &quot;phosphositeUniprot&quot;          &quot;protein_id&quot;                 
+[22] &quot;refseq_mrna&quot;                 &quot;refseq_peptide&quot;              &quot;unigene&quot;                    
 [25] &quot;uniprotswissprot&quot;           </code></pre>
 <p>Continuing with the arguments for the function:</p>
 <ul>
@@ -779,7 +783,7 @@ can read in with the <code>read_csv()</code> function:</p>
 # Read diffex results
 rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
 <pre><code>Rows: 16249 Columns: 9
-── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────
+── Column specification ────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (3): id, symbol, call
 dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
@@ -923,9 +927,8 @@ rsd_ora_result = WebGestaltR(
     projectName = &#39;deficient_vs_control_ORA-GO_BP&#39;)</code></pre>
 <pre><code>Loading the functional categories...
 Loading the ID list...
-Loading the reference list...</code></pre>
-<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA_GO_BP&#39; already exists</code></pre>
-<pre><code>Summarizing the input ID list by GO Slim data...</code></pre>
+Loading the reference list...
+Summarizing the input ID list by GO Slim data...</code></pre>
 <pre><code>Performing the enrichment analysis...
 Begin affinity propagation...
 End affinity propagation...
@@ -936,27 +939,27 @@ Results can be found in the ./results/Project_deficient_vs_control_ORA_GO_BP!</c
 <pre class="r"><code># -------------------------------------------------------------------------
 # View the first few results
 head(rsd_ora_result)</code></pre>
-<pre><code>     geneSet                                                     description                                                link
-1 GO:0070997                                                    neuron death http://amigo.geneontology.org/amigo/term/GO:0070997
-2 GO:0098754                                                  detoxification http://amigo.geneontology.org/amigo/term/GO:0098754
-3 GO:0062012                  regulation of small molecule metabolic process http://amigo.geneontology.org/amigo/term/GO:0062012
-4 GO:0006575                  cellular modified amino acid metabolic process http://amigo.geneontology.org/amigo/term/GO:0006575
-5 GO:0097193                           intrinsic apoptotic signaling pathway http://amigo.geneontology.org/amigo/term/GO:0097193
-6 GO:0043620 regulation of DNA-templated transcription in response to stress http://amigo.geneontology.org/amigo/term/GO:0043620
-  size overlap    expect enrichmentRatio       pValue        FDR
-1  263      14 3.7281697        3.755194 1.979515e-05 0.01565796
-2   77       7 1.0915174        6.413091 1.026862e-04 0.03144459
-3  235      12 3.3312543        3.602247 1.192589e-04 0.03144459
-4  120       8 1.7010660        4.702933 2.905229e-04 0.05745090
-5  227      11 3.2178499        3.418432 3.635356e-04 0.05751133
-6   50       5 0.7087775        7.054400 6.718740e-04 0.08857539
-                                                                             overlapId
-1 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405
-2                                       11816;14782;17748;17750;76650;230784;100503605
-3          11816;12048;12724;14783;26570;59090;67300;77781;227358;228775;230784;266645
-4                                    14381;14782;17768;18451;26570;69065;107869;112405
-5                  12048;12176;12575;12608;13198;15258;56312;59041;69065;228775;242705
-6                                                       12608;13198;16476;22339;230784
+<pre><code>     geneSet                                                     description
+1 GO:0070997                                                    neuron death
+2 GO:0098754                                                  detoxification
+3 GO:0062012                  regulation of small molecule metabolic process
+4 GO:0006575                  cellular modified amino acid metabolic process
+5 GO:0097193                           intrinsic apoptotic signaling pathway
+6 GO:0043620 regulation of DNA-templated transcription in response to stress
+                                                 link size overlap    expect enrichmentRatio       pValue
+1 http://amigo.geneontology.org/amigo/term/GO:0070997  263      14 3.7281697        3.755194 1.979515e-05
+2 http://amigo.geneontology.org/amigo/term/GO:0098754   77       7 1.0915174        6.413091 1.026862e-04
+3 http://amigo.geneontology.org/amigo/term/GO:0062012  235      12 3.3312543        3.602247 1.192589e-04
+4 http://amigo.geneontology.org/amigo/term/GO:0006575  120       8 1.7010660        4.702933 2.905229e-04
+5 http://amigo.geneontology.org/amigo/term/GO:0097193  227      11 3.2178499        3.418432 3.635356e-04
+6 http://amigo.geneontology.org/amigo/term/GO:0043620   50       5 0.7087775        7.054400 6.718740e-04
+         FDR                                                                            overlapId
+1 0.01565796 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405
+2 0.03144459                                       11816;14782;17748;17750;76650;230784;100503605
+3 0.03144459          11816;12048;12724;14783;26570;59090;67300;77781;227358;228775;230784;266645
+4 0.05745090                                    14381;14782;17768;18451;26570;69065;107869;112405
+5 0.05751133                  12048;12176;12575;12608;13198;15258;56312;59041;69065;228775;242705
+6 0.08857539                                                       12608;13198;16476;22339;230784
                                                                               userId
 1 Apoe;Bcl2l1;Vegfa;Ddit3;Slc7a11;Trim2;Coro1a;G6pdx;Mt1;Egln1;Jun;Cebpb;Hipk2;Bnip3
 2                                                Apoe;Sesn2;Gsr;Mt2;Mt1;Srxn1;Hbb-bs
@@ -1013,9 +1016,8 @@ rsd_ora_kegg_result = WebGestaltR(
     projectName = &#39;deficient_vs_control_ORA-KEGG&#39;)</code></pre>
 <pre><code>Loading the functional categories...
 Loading the ID list...
-Loading the reference list...</code></pre>
-<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA_KEGG&#39; already exists</code></pre>
-<pre><code>Summarizing the input ID list by GO Slim data...</code></pre>
+Loading the reference list...
+Summarizing the input ID list by GO Slim data...</code></pre>
 <pre><code>Performing the enrichment analysis...
 Begin affinity propagation...
 End affinity propagation...
@@ -1026,12 +1028,15 @@ Results can be found in the ./results/Project_deficient_vs_control_ORA_KEGG!</co
 <pre class="r"><code># -------------------------------------------------------------------------
 # View the first few results
 head(rsd_ora_kegg_result)</code></pre>
-<pre><code>   geneSet                 description                                                                                     link
-1 mmu01230 Biosynthesis of amino acids http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454
-2 mmu04978          Mineral absorption                http://www.kegg.jp/kegg-bin/show_pathway?mmu04978+12724+14325+17748+17750
-  size overlap    expect enrichmentRatio       pValue        FDR                              overlapId
-1   60       6 0.9919513        6.048684 0.0004125129 0.07260228 100678;107869;209027;27053;56421;56454
-2   28       4 0.4629106        8.640977 0.0010455220 0.09200593                12724;14325;17748;17750
+<pre><code>   geneSet                 description
+1 mmu01230 Biosynthesis of amino acids
+2 mmu04978          Mineral absorption
+                                                                                      link size overlap
+1 http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60       6
+2                http://www.kegg.jp/kegg-bin/show_pathway?mmu04978+12724+14325+17748+17750   28       4
+     expect enrichmentRatio       pValue        FDR                              overlapId
+1 0.9919513        6.048684 0.0004125129 0.07260228 100678;107869;209027;27053;56421;56454
+2 0.4629106        8.640977 0.0010455220 0.09200593                12724;14325;17748;17750
                              userId
 1 Pfkp;Aldh18a1;Pycr1;Cth;Psph;Asns
 2                Clcn2;Mt2;Mt1;Ftl1</code></pre>
@@ -1076,9 +1081,9 @@ clear_list = c(&quot;rsd_ora_kegg_result&quot;,
 # Only remove plots that actually exist in the environment
 rm(list=Filter(exists, clear_list))
 gc()</code></pre>
-<pre><code>          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 3084206 164.8    5578594 298.0  5578594 298.0
-Vcells 6905126  52.7   14980584 114.3 12417153  94.8</code></pre>
+<pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
+Ncells 4330053 231.3    7314937 390.7         NA  7314937 390.7
+Vcells 9896113  75.6   17853880 136.3      36864 17853880 136.3</code></pre>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
