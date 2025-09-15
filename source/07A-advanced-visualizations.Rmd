@@ -276,5 +276,5 @@ setwd("~/IFUN_R/")
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](06-WebGestaltRGSEA.html) | [Top of this lesson](#top) | [Next lesson](05-fcs-gsea-overview.html) |
+| [Previous lesson](03-WebGestaltRORA.html) | [Top of this lesson](#top) | [Next lesson](05-fcs-gsea-overview.html) |
 | :--- | :----: | ---: |
