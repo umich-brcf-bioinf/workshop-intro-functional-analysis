@@ -157,31 +157,23 @@ gc()
 ```
 One downside of GSEA is that it is more computationally demanding than ORA. As the enrichment runs, we'll see the reporting messages `1000 permutations of score complete` this permutation was introduced in the overview and is what generates a null distribution to be able to determine "how surprising" the ranked overlaps are.
 
-But what about our input? Why did we use the fold-change column?
+But what about our input? Why did we use the fold-change column for the rank metric?
+
+
 
 <!-- what to add here?-->
 
-For more details, this [Pathways Common guide](https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/) delves into the history and more details about the algorithm.
+For more details, this [Pathways Common guide](https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/) delves into the history and more details about the algorithm. 
 
-<!-- What about if we used a different ranking approach?
-
-```{r isc_interest_set2}
-# -------------------------------------------------------------------------
-# Select gene and avg_log2FC columns
-isc_d21_v_d7_gsea_2 = isc_d21_v_d7 %>%
-  dplyr::mutate(rank = sign(avg_log2FC) * -log10(p_val)) %>%
-  dplyr::select(gene, rank)
-
-# -------------------------------------------------------------------------
-# Preview the table
-head(isc_d21_v_d7_gsea_2)
-```
+The original version of GSEA is described in [Mootha 2003](https://pubmed.ncbi.nlm.nih.gov/12808457/) the values were chosen specifically such that the sum over all genes would be zero. An updated procedure using a ‘weighted’ version of such that the increments to the running sum are proportional to the rank metric for that gene is described in [Subramanian et al 2005](https://www.pnas.org/doi/10.1073/pnas.0506580102) and is the GSEA method used by [WebGestaltR](https://cran.r-project.org/web/packages/WebGestaltR/WebGestaltR.pdf).
 
 
-```{r isc_gsea2}
+<!-- tested additional attempt with alternative ranking, with scaling factor of input set to 10 (since -1og10(pvalue) * sign(FC))
+
+```{r isc_gsea_alt, eval=FALSE, echo=FALSE}
 # -------------------------------------------------------------------------
 # Run GSEA
-isc_d21_v_d7_gsea_result2 = WebGestaltR(
+isc_d21_v_d7_gsea_result_2 = WebGestaltR(
     enrichMethod = 'GSEA',
     nThreads = 8,
     organism = 'mmusculus',
@@ -189,18 +181,16 @@ isc_d21_v_d7_gsea_result2 = WebGestaltR(
     interestGene = isc_d21_v_d7_gsea_2,
     interestGeneType = 'genesymbol',
     fdrThr = 0.1,
+    gseaP = 10,
     outputDirectory = './results',
-    projectName = 'D21_v_D7_GSEA_KEGG-alt', 
+    projectName = 'D21_v_D7_GSEA_KEGG', 
     cache = NULL)
 
 # clean up session
 gc()
 
-isc_d21_v_d7_gsea_result2
+isc_d21_v_d7_gsea_result_2
 ```
-
-If we incorporate p-values in the rankings, get generally similar results when it comes to the negative enrichments but lose the positive enrichment of ECM (which seems biologically relevant)
-
 -->
 
 # Results of GSEA
