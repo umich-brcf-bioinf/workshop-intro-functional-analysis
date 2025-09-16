@@ -24,7 +24,7 @@ navbar:
         - text: "GSEA with R"
           href: 06-WebGestaltRGSEA.html
         - text: "GO, KEGG, and friends"
-          href: 04-gene-set-references.html
+          href: gene-set-references.pdf
         - text: "Advanced visualizations II"
           href: 07B-advanced-visualizations.html
         - text: "Analysis summary and next steps"

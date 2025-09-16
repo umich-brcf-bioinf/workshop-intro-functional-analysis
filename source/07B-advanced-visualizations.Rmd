@@ -58,5 +58,5 @@ knitr_fig_path("02-")
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](04-gene-set-references.html) | [Top of this lesson](#top) | [Next lesson](08-analysis-summary.html) |
+| [Previous lesson](06-WebGestaltRGSEA.html) | [Top of this lesson](#top) | [Next lesson](08-analysis-summary.html) |
 | :--- | :----: | ---: |
