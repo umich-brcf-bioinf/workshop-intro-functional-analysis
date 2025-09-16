@@ -41,13 +41,67 @@ knitr_fig_path("02-")
 
 # Objectives
 
-- 1 Meta-analysis Venn
-- 2 Meta-analysis Upset
-- 3 Barplot
-- 4 Heatmap
-- 5 KEGG highlighting?
+- Meta-analysis Upset
+- Heatmap
+- KEGG highlighting?
 
-...
+<!-- # library(VennDiagram) # missing library -->
+```{r getwd, eval = FALSE}
+# =========================================================================
+# Advanced Visualizations II
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load additional libraries
+library(ComplexHeatmap)
+
+# -------------------------------------------------------------------------
+# Check current working directory
+getwd()
+```
+
+We should have the GSEA results in our session but we can read in the results from the table output to file by `WebGestaltR` for the results from the Day21 vs Day7 and Day7 vs Day 0 pericyte single-cell RNA-seq comparisons. 
+
+```{r viz_read_ora}
+# -------------------------------------------------------------------------
+# Read in results for the enrichment for each set of timpoint comparisons
+isc_d21_v_d7_gsea_result = read_delim('results/Project_D21_v_D7_GSEA_KEGG/enrichment_results_D21_v_D7_GSEA_KEGG.txt')
+
+isc_d7_v_d0_gsea_result = read_delim('results/Project_D7_v_D0_GSEA_KEGG//enrichment_results_D7_v_D0_GSEA_KEGG.txt')
+
+head(isc_d21_v_d7_gsea_result); head(isc_d7_v_d0_gsea_result)
+```
+
+Instead of comparing gene sets between enriched terms from a single set of results, we can instead compare what enrichments are found from two different comparisons. Since the KEGG ids and descriptions are organized into columns of the results tables we don't need to do as many extra steps to compare between the enriched pathways.
+
+```{r path_overlaps}
+# -------------------------------------------------------------------------
+KEGG_results <- c("d21_v_d7_ID" = isc_d21_v_d7_gsea_result$geneSet,
+                  "d7_v_d0_ID" = isc_d7_v_d0_gsea_result$geneSet)
+```
+
+```{r path_upset_matrix, eval=TRUE}
+# -------------------------------------------------------------------------
+# First make the combination matrix from our list of genes for each GO term
+m = make_comb_mat(go_geneSets)
+m
+```
+
+In the combination matrix results, we can see the total number of sets being compared and a representation of the overlaps. This is useful not as nice as something more visual. 
+
+Using the combination matrix, we can create a simple UpSet plot comparing the DE genes annotated for each GO term:
+
+```{r genes_upset, eval=TRUE}
+# -------------------------------------------------------------------------
+# Make simple UpSet plot
+UpSet(m)
+```
+
+
+
+
+
+
 
 # Summary
 
