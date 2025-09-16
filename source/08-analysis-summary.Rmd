@@ -39,7 +39,7 @@ knitr_fig_path("02-")
 
 ![workshop wayfinder](images/wayfinder/wayfinder-08.png)
 
-# Objectives
+# Summary
 
 - 1
 - 2
@@ -47,11 +47,17 @@ knitr_fig_path("02-")
 
 ...
 
-# Summary
+# Resources
 
-- 1
-- 2
-- 3
+Alternative tools and tutorials:
+
+- GSEA with ClusterProfiler: https://learn.gencore.bio.nyu.edu/rna-seq-analysis/gene-set-enrichment-analysis/
+- ESCAPE for single-cell enrichments: https://www.borch.dev/uploads/screpertoire/articles/running_escape
+- Single Cell Best Practices book chapter on Funtional Enrichments: https://www.sc-best-practices.org/conditions/gsea_pathway.html#
+- Broad GSEA: https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html
+
+<br>
+
 
 <br/>
 <br/>
