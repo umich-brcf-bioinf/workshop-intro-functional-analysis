@@ -155,56 +155,57 @@ isc_d21_v_d7_gsea_result = WebGestaltR(
 # clean up session
 gc()
 ```
-One downside of GSEA is that it is more computationally demanding than ORA. While the GSEA analysis is running, let's touch on why this enrichment process takes so much longer. As the enrichment runs, we'll see the reporting messages `1000 permutations of score complete` this permutation was introduced in the overview and is what generates the null distribution that's needed to compare against to answer the question of "how surprising".
+One downside of GSEA is that it is more computationally demanding than ORA. As the enrichment runs, we'll see the reporting messages `1000 permutations of score complete` this permutation was introduced in the overview and is what generates a null distribution to be able to determine "how surprising" the ranked overlaps are.
 
-But what about our input? Why did we provide fold-change as a column for ranking our genes?
+But what about our input? Why did we use the fold-change column?
 
 <!-- what to add here?-->
 
-For more details, this [Pathways Common guide](https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/) delves into the history and algorithm details 
+For more details, this [Pathways Common guide](https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/) delves into the history and more details about the algorithm.
 
-
-<!-- These results are from the genes ranked by effect size only (e.g. fold-change). What would change if we incorporated both the sign of the fold change and the level of significance? 
-
-Spoiler - both -log10pvalue * logFc or * sign of logFC yeild no sig enrichment above threhsold
+<!-- What about if we used a different ranking approach?
 
 ```{r isc_interest_set2}
 # -------------------------------------------------------------------------
-# Select gene and combined stat column that will be used for ranking
-isc_d21_v_d7_gsea_p2 = isc_d21_v_d7 %>%
-  dplyr::mutate(pres = -log10(p_val_adj) * sign(avg_log2FC)) %>%
-  dplyr::select(gene, pres) 
+# Select gene and avg_log2FC columns
+isc_d21_v_d7_gsea_2 = isc_d21_v_d7 %>%
+  dplyr::mutate(rank = sign(avg_log2FC) * -log10(p_val)) %>%
+  dplyr::select(gene, rank)
 
 # -------------------------------------------------------------------------
 # Preview the table
-head(isc_d21_v_d7_gsea_p2)
-
+head(isc_d21_v_d7_gsea_2)
 ```
 
 
-```{r isc_gsea_2}
+```{r isc_gsea2}
 # -------------------------------------------------------------------------
 # Run GSEA
-isc_d21_v_d7_gsea_result_2 = WebGestaltR(
+isc_d21_v_d7_gsea_result2 = WebGestaltR(
     enrichMethod = 'GSEA',
     nThreads = 8,
     organism = 'mmusculus',
     enrichDatabase = c('pathway_KEGG'),
-    interestGene = isc_d21_v_d7_gsea_p2,
+    interestGene = isc_d21_v_d7_gsea_2,
     interestGeneType = 'genesymbol',
     fdrThr = 0.1,
     outputDirectory = './results',
-    projectName = 'D21_v_D7_GSEA_KEGG_alt', 
+    projectName = 'D21_v_D7_GSEA_KEGG-alt', 
     cache = NULL)
 
 # clean up session
 gc()
 
-# look at results
-isc_d21_v_d7_gsea_result_2
+isc_d21_v_d7_gsea_result2
 ```
---->
 
+If we incorporate p-values in the rankings, get generally similar results when it comes to the negative enrichments but lose the positive enrichment of ECM (which seems biologically relevant)
+
+-->
+
+# Results of GSEA
+
+As with the ORA results, the GSEA method outputs similar results tables, gene identifier mappings, and HTML reports. 
 
 ```{r isc_check_results}
 # -------------------------------------------------------------------------
@@ -220,9 +221,7 @@ The columns of the GSEA results are quite similar to the ORA results, with the f
 
 <!-- TODO: Here is where we'll actually talk more about the biological relevance of the results. -->
 
-# Results of GSEA
-
-As with the ORA results, the GSEA method outputs similar results tables, gene identifier mappings, and HTML reports. Additionally, for each pathway with `FDR < fdrThr`, a GSEA enrichment plot is automatically generated. The following is an example:
+Additionally, for each pathway with `FDR < fdrThr`, a GSEA enrichment plot is automatically generated. The following is an example:
 
 TODO: Include example GSEA plot.
 
