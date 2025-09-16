@@ -62,5 +62,5 @@ Alternative tools and tutorials:
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](07-advanced-visualizations.html) | [Top of this lesson](#top) | [Next lesson](workshop-wrap-up.html) |
+| [Previous lesson](07B-advanced-visualizations.html) | [Top of this lesson](#top) | [Next lesson](workshop-wrap-up.html) |
 | :--- | :----: | ---: |

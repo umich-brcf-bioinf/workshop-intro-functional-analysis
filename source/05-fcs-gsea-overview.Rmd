@@ -99,5 +99,5 @@ An example sc RNA-Seq experiment.
 1. 
 2.
 
-| [Previous lesson](04-gene-set-references.html) | [Top of this lesson](#top) | [Next lesson](06-WebGestaltRGSEA.html) |
+| [Previous lesson](07A-advanced-visualizations.html) | [Top of this lesson](#top) | [Next lesson](06-WebGestaltRGSEA.html) |
 | :--- | :----: | ---: |
