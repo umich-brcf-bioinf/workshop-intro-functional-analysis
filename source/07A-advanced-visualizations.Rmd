@@ -52,15 +52,19 @@ In this section, we'll generate additional visualizations - beyond what was gene
 First, we'll load a library called `ComplexHeatmap` that we will be using for some of our visualizations in addition to the plotting that is available to use from `ggplot2` after previously loading the `tidyverse`.    
 
 <!-- # library(VennDiagram) # missing library -->
-```{r getwd, eval = FALSE}
+```{r libraries}
 # =========================================================================
 # Advanced Visualizations I
 # =========================================================================
 
 # -------------------------------------------------------------------------
 # Load additional libraries
+library(tidyverse)
 library(ComplexHeatmap)
 
+```
+
+```{r getwd, eval = FALSE}
 # -------------------------------------------------------------------------
 # Check current working directory
 getwd()

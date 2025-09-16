@@ -10,7 +10,7 @@ navbar:
     - text: "Day 1"
       menu:
         - text: "Functional analysis and ORA"
-          href: 01-functional-analysis-overview.html
+          href: ifun-overview.pdf
         - text: "ORA with WebGestalt"
           href: 02-IntroToWebGestaltandORA.html
         - text: "ORA with R"
@@ -20,7 +20,7 @@ navbar:
     - text: "Day 2"
       menu:
         - text: "Functional Analysis and GSEA"
-          href: 05-fcs-gsea-overview.html
+          href: ifun-gsea-overview.pdf
         - text: "GSEA with R"
           href: 06-WebGestaltRGSEA.html
         - text: "GO, KEGG, and friends"
