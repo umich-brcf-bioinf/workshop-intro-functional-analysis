@@ -53,6 +53,10 @@ First, we'll load a library called `ComplexHeatmap` that we will be using for so
 
 <!-- # library(VennDiagram) # missing library -->
 ```{r getwd, eval = FALSE}
+# =========================================================================
+# Advanced Visualizations I
+# =========================================================================
+
 # -------------------------------------------------------------------------
 # Load additional libraries
 library(ComplexHeatmap)
