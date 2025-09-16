@@ -137,7 +137,7 @@ head(isc_d21_v_d7_gsea)
 
 We will run GSEA on our single-cell results using the [KEGG pathway knowledge base](https://www.genome.jp/kegg/pathway.html), which is per the website "a collection of manually drawn pathway maps representing our knowledge of the molecular interaction, reaction and relation networks" instead of gene ontology. This option allows us to 
 
-```{r isc_gsea_d21}
+```{r isc_gsea_d21, warning = FALSE, message = FALSE}
 # -------------------------------------------------------------------------
 # Run GSEA
 isc_d21_v_d7_gsea_result = WebGestaltR(
