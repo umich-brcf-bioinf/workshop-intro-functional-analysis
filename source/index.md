@@ -51,7 +51,7 @@ body, td {
 |  9:10 | [Functional Analysis and GSEA](ifun-gsea-overview.pdf) |
 |       | [GSEA with R](06-WebGestaltRGSEA.html) |
 | 11:00 | **Break** |
-|       | [GO, KEGG, and friends](04-gene-set-references.html) |
+|       | [GO, KEGG, and friends](gene-set-references.pdf) |
 |       | [Advanced visualizations II](07B-advanced-visualizations.html) | 
 |       | [Analysis summary](08-analysis-summary.html) | 
 | 12:45 | [Wrap up](workshop-wrap-up.html) |
