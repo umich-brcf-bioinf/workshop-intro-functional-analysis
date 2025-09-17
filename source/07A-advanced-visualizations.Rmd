@@ -276,7 +276,7 @@ setwd("~/IFUN_R/")
 
 # Summary
 
-- Set comparisons can be useful for understanding our enrichment results
+- Set comparisons at the gene level can be useful for understanding our enrichment results
 - UpSet plots are an easy way to compare and visualize the common and unique values for a large number of sets.
 - We can use more familiar visualization approaches like barplots to see if there are any interest patterns in our expression data for genes associated with functional terms of interest
 

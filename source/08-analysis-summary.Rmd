@@ -45,7 +45,7 @@ knitr_fig_path("02-")
 - 2
 - 3
 
-...
+<br>
 
 # Resources
 
@@ -55,6 +55,7 @@ Alternative tools and tutorials:
 - ESCAPE for single-cell enrichments: https://www.borch.dev/uploads/screpertoire/articles/running_escape
 - Single Cell Best Practices book chapter on Funtional Enrichments: https://www.sc-best-practices.org/conditions/gsea_pathway.html#
 - Broad GSEA: https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html
+- Enrichment visualization with `enrichplot`: https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html
 
 <br>
 
