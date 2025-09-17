@@ -366,7 +366,7 @@ div.tocify {
       <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
     </li>
     <li>
-      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+      <a href="gene-set-references.pdf">GO, KEGG, and friends</a>
     </li>
     <li>
       <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
@@ -418,20 +418,289 @@ alt="workshop wayfinder" /></p>
 <div id="objectives" class="section level1">
 <h1>Objectives</h1>
 <ul>
-<li>1 Meta-analysis Venn</li>
-<li>2 Meta-analysis Upset</li>
-<li>3 Barplot</li>
-<li>4 Heatmap</li>
-<li>5 KEGG highlighting?</li>
+<li>Compare significant pathways between multiple enrichment
+results</li>
+<li>Highlight some interesting pathways from the meta-analysis</li>
 </ul>
-<p>…</p>
+</div>
+<div id="getting-started" class="section level1">
+<h1>Getting started</h1>
+<!-- # library(VennDiagram) # missing library -->
+<pre class="r"><code># =========================================================================
+# Advanced Visualizations II
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load additional libraries
+library(ComplexHeatmap)</code></pre>
+<pre><code>Loading required package: grid</code></pre>
+<pre><code>========================================
+ComplexHeatmap version 2.25.1
+Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
+Github page: https://github.com/jokergoo/ComplexHeatmap
+Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
+
+If you use it in published research, please cite either one:
+- Gu, Z. Complex Heatmap Visualization. iMeta 2022.
+- Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
+    genomic data. Bioinformatics 2016.
+
+
+The new InteractiveComplexHeatmap package can directly export static 
+complex heatmaps into an interactive Shiny app with zero effort. Have a try!
+
+This message can be suppressed by:
+  suppressPackageStartupMessages(library(ComplexHeatmap))
+========================================</code></pre>
+<pre class="r"><code>library(ggVennDiagram)</code></pre>
+<pre><code>
+Attaching package: &#39;ggVennDiagram&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:tidyr&#39;:
+
+    unite</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Check current working directory
+getwd()</code></pre>
+<pre><code>[1] &quot;/home/workshop/damki/workshop-intro-functional-analysis/source&quot;</code></pre>
+<p>We should have the GSEA results in our session but we can read in the
+results from the table output to file by <code>WebGestaltR</code> for
+the results from the Day21 vs Day7 and Day7 vs Day 0 pericyte
+single-cell RNA-seq comparisons.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Read in results for the enrichment for each set of timpoint comparisons
+isc_d21_v_d7_gsea_result = read_delim(&#39;results/Project_D21_v_D7_GSEA_KEGG/enrichment_results_D21_v_D7_GSEA_KEGG.txt&#39;)</code></pre>
+<pre><code>Rows: 36 Columns: 12
+── Column specification ───────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (6): geneSet, description, link, plotPath, leadingEdgeId, userId
+dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leading...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>isc_d7_v_d0_gsea_result = read_delim(&#39;results/Project_D7_v_D0_GSEA_KEGG//enrichment_results_D7_v_D0_GSEA_KEGG.txt&#39;)</code></pre>
+<pre><code>Rows: 14 Columns: 12
+── Column specification ───────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (6): geneSet, description, link, plotPath, leadingEdgeId, userId
+dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leading...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>head(isc_d21_v_d7_gsea_result); head(isc_d7_v_d0_gsea_result)</code></pre>
+<pre><code># A tibble: 6 × 12
+  geneSet  description  link  enrichmentScore normalizedEnrichment…¹ pValue     FDR
+  &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+1 mmu04512 ECM-recepto… http…           0.772                   2.07      0 0      
+2 mmu03050 Proteasome   http…          -0.816                  -1.91      0 0      
+3 mmu03030 DNA replica… http…          -0.853                  -1.92      0 0      
+4 mmu03040 Spliceosome  http…          -0.726                  -1.97      0 0      
+5 mmu04657 IL-17 signa… http…          -0.690                  -1.78      0 4.87e-4
+6 mmu04974 Protein dig… http…           0.716                   1.93      0 5.23e-4
+# ℹ abbreviated name: ¹​normalizedEnrichmentScore
+# ℹ 5 more variables: size &lt;dbl&gt;, plotPath &lt;chr&gt;, leadingEdgeNum &lt;dbl&gt;,
+#   leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+<pre><code># A tibble: 6 × 12
+  geneSet  description link  enrichmentScore normalizedEnrichment…¹  pValue     FDR
+  &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1 mmu03010 Ribosome    http…           0.791                   2.41 0       0      
+2 mmu03030 DNA replic… http…           0.766                   1.88 0       0.00421
+3 mmu05134 Legionello… http…           0.676                   1.81 0       0.00722
+4 mmu05143 African tr… http…           0.732                   1.81 0       0.00922
+5 mmu04657 IL-17 sign… http…           0.602                   1.77 0       0.0125 
+6 mmu03050 Proteasome  http…           0.661                   1.72 0.00462 0.0212 
+# ℹ abbreviated name: ¹​normalizedEnrichmentScore
+# ℹ 5 more variables: size &lt;dbl&gt;, plotPath &lt;chr&gt;, leadingEdgeNum &lt;dbl&gt;,
+#   leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+<p><br></p>
+<p>Instead of comparing gene sets between enriched terms from a single
+set of results, we can instead compare enrichments between two different
+comparisons. Since the KEGG ids and descriptions are organized into
+columns of the results tables we don’t need to do as much processing to
+compare between the enriched pathways.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Create list of enriched KEGG pathways 
+KEGG_results &lt;- c()
+KEGG_results[[&quot;d7_v_d0&quot;]] = isc_d7_v_d0_gsea_result$description
+KEGG_results[[&quot;d21_v_d7&quot;]] = isc_d21_v_d7_gsea_result$description</code></pre>
+<p>Once we’ve created the lists of enriched pathways, we can use
+operations like <code>union</code> and <code>intersect</code> to compare
+between the sets.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Identify total number of unique pathways enriched across both timepoints
+union(KEGG_results[[&quot;d7_v_d0&quot;]], KEGG_results[[&quot;d21_v_d7&quot;]]) %&gt;% length()</code></pre>
+<pre><code>[1] 37</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Identify number of pathways shared between timepoints
+intersect(KEGG_results[[&quot;d7_v_d0&quot;]], KEGG_results[[&quot;d21_v_d7&quot;]]) %&gt;% length()</code></pre>
+<pre><code>[1] 13</code></pre>
+<p>Since the number of sets in one of our comparisons exceeds the limit
+allowed for <code>ComplexHeatmap</code>’s version of an upSet plot
+(which is <code>31</code>), we’ll create a venn diagram comparing the
+number of shared/unique pathways for each timepoint using the
+<code>ggVennDiagram</code> option, which is <a
+href="https://www.datanovia.com/en/blog/beautiful-ggplot-venn-diagram-with-r">one
+of many options available to create this kind of plot</a>, instead.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Make simple plot to compare KEGG pathways enriched for each timepoint
+KEGG_venn &lt;- ggVennDiagram(KEGG_results, label_alpha = 0, 
+                           label_size = 6, set_size = 6,
+                           ) +
+  ggplot2::scale_fill_gradient(low=&quot;royalblue&quot;,high = &quot;yellow&quot;) +
+  coord_flip()</code></pre>
+<pre><code>Coordinate system already present. Adding new coordinate system, which will
+replace the existing one.</code></pre>
+<pre class="r"><code>KEGG_venn</code></pre>
+<p><img src="fig/02-path_Venn-1.png" width="816" style="display: block; margin: auto;" />
+<br></p>
+<p>Then we can output the plot to file:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Output UpSet plot to file
+png(file = &quot;./results/figures/Pericytes_KEGG_vennDiagram.png&quot;, width = 600, height = 400)
+  KEGG_venn # draw the plot
+dev.off() # Close the graphics device</code></pre>
+<pre><code>png 
+  2 </code></pre>
+</div>
+<div id="detailed-comparison-of-kegg-enrichments"
+class="section level1">
+<h1>Detailed comparison of KEGG enrichments</h1>
+<p>From the Venn diagram, we have a summary of the number of KEGG
+pathways that are shared or uniquely enriched for the two sets of
+comparisons from the pericyte population but that doesn’t tell us the
+magnitudes of those enrichments or if they were in the same direction or
+opposite direction between the earlier timepoint comparison and later
+timepoint comparison.</p>
+<!-- ideally add EnrichR and/or ClusterProfiler packages since have improved visualizations compared to  -->
+<pre class="r"><code># -------------------------------------------------------------------------
+# Create &#39;tidy&#39; version  of Day 7 vs Day 0 GSEA results
+isc_d7_v_d0_gsea_simplified &lt;- isc_d7_v_d0_gsea_result %&gt;% 
+  select(geneSet, description, normalizedEnrichmentScore, size, FDR) %&gt;% 
+  pivot_longer(cols = !c(geneSet, description, FDR, size)) %&gt;% 
+  mutate(timepoint = &quot;D7_v_D0&quot;, .before = 1)
+
+# -------------------------------------------------------------------------
+# Create &#39;tidy&#39; version  of Day 21 vs Day 7 GSEA results
+isc_d21_v_d7_gsea_simplified &lt;- isc_d21_v_d7_gsea_result %&gt;% 
+  select(geneSet, description, normalizedEnrichmentScore, size, FDR) %&gt;% 
+  pivot_longer(cols = !c(geneSet, description, FDR, size)) %&gt;% 
+  mutate(timepoint = &quot;D21_v_D7&quot;, .before = 1)
+
+# -------------------------------------------------------------------------
+# Combine &#39;tidy&#39; results into single table
+KEGG_results_combined &lt;- rbind(isc_d7_v_d0_gsea_simplified, isc_d21_v_d7_gsea_simplified) 
+KEGG_results_combined &lt;- KEGG_results_combined %&gt;% 
+  mutate(timepoint = factor(timepoint, levels=c(&quot;D7_v_D0&quot;, &quot;D21_v_D7&quot;)),
+         direction = factor(ifelse(value &lt; 0, &quot;negative NES&quot;, &quot;positive NES&quot;)),
+         &quot;positive NES&quot;, &quot;negative NES&quot;) # fix levels &amp; add column for direction
+
+# -------------------------------------------------------------------------
+# Check table
+str(KEGG_results_combined)</code></pre>
+<pre><code>tibble [50 × 10] (S3: tbl_df/tbl/data.frame)
+ $ timepoint     : Factor w/ 2 levels &quot;D7_v_D0&quot;,&quot;D21_v_D7&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+ $ geneSet       : chr [1:50] &quot;mmu03010&quot; &quot;mmu03030&quot; &quot;mmu05134&quot; &quot;mmu05143&quot; ...
+ $ description   : chr [1:50] &quot;Ribosome&quot; &quot;DNA replication&quot; &quot;Legionellosis&quot; &quot;African trypanosomiasis&quot; ...
+ $ size          : num [1:50] 129 35 56 33 86 46 125 111 115 94 ...
+ $ FDR           : num [1:50] 0 0.00421 0.00722 0.00922 0.01251 ...
+ $ name          : chr [1:50] &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; ...
+ $ value         : num [1:50] 2.41 1.88 1.81 1.81 1.77 ...
+ $ direction     : Factor w/ 2 levels &quot;negative NES&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
+ $ &quot;positive NES&quot;: chr [1:50] &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; ...
+ $ &quot;negative NES&quot;: chr [1:50] &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; ...</code></pre>
+<p>Now that we have a nice “tidy” version of the enrichment results, we
+can use it to create a barplot that summarizes the enrichment scores for
+each timepoint.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Graph simple KEGG pathway enrichments for both timepoints
+KEGG_comparison &lt;- ggplot(KEGG_results_combined, 
+                          aes(y=value, x=reorder(description, value))) + 
+  geom_bar(position=&quot;dodge&quot;, stat=&quot;identity&quot;) +
+  facet_wrap(~timepoint) +
+  xlab(&quot;&quot;) + coord_flip()
+KEGG_comparison</code></pre>
+<p><img src="fig/02-plot_KEGG_simple-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p><br></p>
+<p>While this barplot has some interesting patterns, it’s a bit hard to
+read and isn’t very pretty.</p>
+<p>Let’s create a modified version that filters our enrichment results
+and adds attributes to the plot to show some key metrics, including the
+direction and magnitude of the normalized enrichment score, the
+significance, and the number of genes in the pathway (size).</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Subset to results that pass more stringent results
+KEGG_results_strict &lt;- KEGG_results_combined %&gt;% filter(FDR &lt; 0.025 &amp; size &gt; 60)
+
+# -------------------------------------------------------------------------
+# Graph simple KEGG pathway enrichments for both timepoints
+KEGG_comparison &lt;- ggplot(KEGG_results_strict, aes(y=value, x=reorder(description, value))) + 
+  geom_segment(aes(y = 0, x = description, yend = value, xend = description),
+               color = ifelse(KEGG_results_strict$direction %in% c(&quot;positive NES&quot;), &quot;red&quot;, &quot;blue&quot;),
+               linewidth = 1) +
+  geom_point(aes(color=FDR, size = size), stat=&quot;identity&quot;) +
+  scale_color_continuous(low = &quot;black&quot;, high = &quot;grey&quot;) +
+  facet_wrap(~timepoint) +
+  geom_hline(yintercept=0, linetype=&quot;dashed&quot;, color = &quot;lightgrey&quot;) +
+  labs(title=&quot;KEGG enrichments in pericytes&quot;) +
+  xlab(&quot;&quot;) + theme_bw() +
+  coord_flip()
+KEGG_comparison</code></pre>
+<p><img src="fig/02-plot_KEGG_complex-1.png" width="816" style="display: block; margin: auto;" />
+<br></p>
+<p>What we created here is called a “lollipop” plot, which we’ll save to
+file.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Output UpSet plot to file
+png(file = &quot;./results/figures/Pericytes_KEGG_lollipopComparison.png&quot;, width = 700, height = 600, res = 100)
+  KEGG_comparison # draw the plot
+dev.off() # Close the graphics device</code></pre>
+<pre><code>png 
+  2 </code></pre>
+<p><br></p>
+<p>From the comparison of enriched KEGG pathways between the timepoints,
+one of the results that jumps out is the the positive enrichment score
+for “IL-17 signaling pathway” at the early time points comparison and
+the negative enrichment score at the later time points comparison. IL-17
+signalling has a <a
+href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11129447/">role in wound
+repair</a> so it’s activation at the early time point and suppression at
+the later time point fits with our general expectations but might be
+interesting depending on what’s known about IL-17 signaling in
+pericytes.</p>
+<p>Another result that jumps out is the enrichment only at the later
+timepoint of “ECM-receptor interaction”, which has a <a
+href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9326521/">role in wound
+healing</a> but also <a
+href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7264100/">bone
+formation</a>.</p>
+<p><br></p>
+<!-- How did we decide to make this kind of plot and what did we do to create it? Add steps of search/iteration?
+Links:
+- https://r-graph-gallery.com/48-grouped-barplot-with-ggplot2.html
+- https://r-charts.com/part-whole/diverging-bar-chart-ggplot2/
+- https://www.tutorialspoint.com/ggplot2/ggplot2_diverging_charts.html
+- https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html
+- https://stackoverflow.com/questions/15116081/controlling-order-of-facet-grid-facet-wrap-in-ggplot2
+- https://r-graph-gallery.com/304-highlight-a-group-in-lollipop.html
+- https://ggplot2-book.org/scales-colour.html#sec-binned-colour
+- https://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually
+- https://stackoverflow.com/questions/15116081/controlling-order-of-facet-grid-facet-wrap-in-ggplot2
+- 
+-->
+<!--# Expression for KEGG pathway of interest
+
+
+TO ADD - barplot or similar summary of fold-change values for each enrichment 
+
+-->
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
 <ul>
-<li>1</li>
-<li>2</li>
-<li>3</li>
+<li>Set comparisons at the pathway level can be useful for understanding
+our enrichment results</li>
+<li>Venn diagrams are an easy way to compare between two sets</li>
+<li>We can create sophisticated and customized plots with enough
+persistance (and help from the internet)</li>
 </ul>
 <br/> <br/>
 <hr/>
@@ -443,7 +712,7 @@ alt="workshop wayfinder" /></p>
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left"><a href="04-gene-set-references.html">Previous
+<th align="left"><a href="06-WebGestaltRGSEA.html">Previous
 lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
 <th align="right"><a href="08-analysis-summary.html">Next

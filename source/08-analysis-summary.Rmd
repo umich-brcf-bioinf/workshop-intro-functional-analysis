@@ -39,19 +39,34 @@ knitr_fig_path("02-")
 
 ![workshop wayfinder](images/wayfinder/wayfinder-08.png)
 
-# Objectives
-
-- 1
-- 2
-- 3
-
-...
-
 # Summary
 
-- 1
-- 2
-- 3
+Functional analysis can be a powerful tool for summarizing differential expression results from a variety of experiments, including both bulk and single-cell RNA-seq. 
+
+What we've accomplished:
+
+- Built a stronger understanding of functional enrichment approaches and available knowledge bases.   
+- Used a web-browser tool to perform ORA analysis of bulk RNA-seq data.    
+- Used R/RStudio and `WebGestaltR` to run ORA for bulk RNA-seq data in a more reproducible manner.   
+- Used `WebGestaltR` to run GSEA for single-cell RNA-seq data     
+- Created customized visualizations at the gene and term level     
+
+<br>
+
+---
+
+# Resources
+
+Alternative tools and tutorials:
+
+- GSEA with ClusterProfiler: https://learn.gencore.bio.nyu.edu/rna-seq-analysis/gene-set-enrichment-analysis/
+- ESCAPE for single-cell enrichments: https://www.borch.dev/uploads/screpertoire/articles/running_escape
+- Single Cell Best Practices book chapter on Funtional Enrichments: https://www.sc-best-practices.org/conditions/gsea_pathway.html#
+- Broad GSEA: https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html
+- Enrichment visualization with `enrichplot`: https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html
+
+<br>
+
 
 <br/>
 <br/>
