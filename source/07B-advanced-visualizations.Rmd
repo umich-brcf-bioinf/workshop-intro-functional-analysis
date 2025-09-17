@@ -248,5 +248,5 @@ TO ADD - barplot or similar summary of fold-change values for each enrichment
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](04-gene-set-references.html) | [Top of this lesson](#top) | [Next lesson](08-analysis-summary.html) |
+| [Previous lesson](06-WebGestaltRGSEA.html) | [Top of this lesson](#top) | [Next lesson](08-analysis-summary.html) |
 | :--- | :----: | ---: |

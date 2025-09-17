@@ -270,5 +270,5 @@ We'll use some of the advanced visualizations from yesterday to answer some of t
 # Questions
 
 
-| [Previous lesson](05-fcs-gsea-overview.html) | [Top of this lesson](#top) | [Next lesson](04-gene-set-references.html) |
+| [Previous lesson](05-fcs-gsea-overview.html) | [Top of this lesson](#top) | [Next lesson](07B-advanced-visualizations.html) |
 | :--- | :----: | ---: |
