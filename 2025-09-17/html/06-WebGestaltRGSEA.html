@@ -339,7 +339,7 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
+      <a href="ifun-overview.pdf">Functional analysis and ORA</a>
     </li>
     <li>
       <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
@@ -348,7 +348,7 @@ div.tocify {
       <a href="03-WebGestaltRORA.html">ORA with R</a>
     </li>
     <li>
-      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+      <a href="07A-advanced-visualizations.html">Advanced visualizations I</a>
     </li>
   </ul>
 </li>
@@ -360,21 +360,21 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+      <a href="ifun-gsea-overview.pdf">Functional Analysis and GSEA</a>
     </li>
     <li>
       <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
     </li>
     <li>
-      <a href="07-advanced-visualizations.html">Advanced visualizations</a>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+    </li>
+    <li>
+      <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
     </li>
     <li>
       <a href="08-analysis-summary.html">Analysis summary and next steps</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="exercises.html">Exercises</a>
 </li>
 <li>
   <a href="workshop-wrap-up.html">Wrap up</a>
@@ -419,7 +419,7 @@ alt="workshop wayfinder" /></p>
 <h1>Objectives</h1>
 <ul>
 <li>Form the inputs for Gene Set Enrichment Analysis (GSEA) in
-WebGestaltR from a differential expression analysis.</li>
+WebGestaltR from single-cell results.</li>
 <li>Use WebGestaltR to do a GSEA analysis.</li>
 <li>Understand how to interpret the results of GSEA analysis.</li>
 <li>Compare and contrast the results of two GSEA results.</li>
@@ -434,17 +434,28 @@ differences:</p>
 <li>We need to pass gene identifiers <strong>and</strong> the log
 fold-change for the gene from the differential expression test.</li>
 </ol>
-<p>Again, we will take a look at the documentation for the
-<code>WebGestaltR()</code> function, and note the difference in input
-between ORA and GSEA.</p>
+<p>This gives the advantage of being able to use the differential
+expression results more fully, instead of limiting to DE genes.</p>
+</div>
+<div id="running-gsea-using-webgestalt" class="section level1">
+<h1>Running GSEA using WebGestalt</h1>
+<p>First, we’ll re-load the libraries to ensure they are available.</p>
 <pre class="r"><code># =========================================================================
 # ORA with WebGestlatR
 # =========================================================================
 
 # -------------------------------------------------------------------------
 # Load the libraries
-library(WebGestaltR)
-library(tidyverse)</code></pre>
+library(WebGestaltR)</code></pre>
+<pre><code>******************************************</code></pre>
+<pre><code>*                                        *</code></pre>
+<pre><code>*          Welcome to WebGestaltR !      *</code></pre>
+<pre><code>*                                        *</code></pre>
+<pre><code>******************************************</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<p>We’ll then will take a second look at the documentation for the
+<code>WebGestaltR()</code> function, and note the difference in input
+between ORA and GSEA.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # Look at the manual for the main function
 ?WebGestaltR</code></pre>
@@ -458,13 +469,14 @@ make use of the <code>referenceGene</code> argument.</p>
 single-cell RNA-seq experiment we explored in the Introduction to
 Single-cell Analysis <a
 href="https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/00A-OrientingOnScRNASeq.html#Consider_a_specific_scRNA-Seq_experiment">(link)</a>.
-In particular, we perform GSEA on the differential expression results in
-the pericyte cluster, comparing day 21 to day 7.</p>
+In particular, we’ll perform GSEA on the differential expression results
+in the pericyte cluster, starting with the results from the day 21 to
+day 7 comparison.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # Load pseudo-bulk analysis for D21 vs D7 in pericyte cluster
 isc_d21_v_d7 = read_csv(&#39;inputs/single_cell_de_results/de_pseudo_pericyte_D21_vs_D7.csv&#39;)</code></pre>
 <pre><code>Rows: 23608 Columns: 6
-── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (1): gene
 dbl (5): p_val, avg_log2FC, pct.1, pct.2, p_val_adj
@@ -483,39 +495,32 @@ head(isc_d21_v_d7)</code></pre>
 4 2.60e- 87       1.64     1     1 6.88e- 83 Prss23 
 5 3.02e- 87      -1.59     1     1 8.00e- 83 Nav3   
 6 7.46e- 82       2.25     1     1 1.98e- 77 Gm42418</code></pre>
+<p>Before preparing our data for GSEA, let’s also check how many genes
+were DE in the pseudobulk D21 vs D7 comparison using the same thresholds
+from the workshop.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Load pseudo-bulk analysis for D21 vs D7 in pericyte cluster
+table(isc_d21_v_d7$p_val_adj &lt; 0.05 &amp; abs(isc_d21_v_d7$avg_log2FC) &gt; 1.5)</code></pre>
+<pre><code>
+FALSE  TRUE 
+23553    55 </code></pre>
+<!-- NOTE - mistake in ISC results - miss log2 transformation of threshold in table step (https://umich-brcf-bioinf.github.io/workshop-intro-single-cell/main/html/08-DifferentialExpression.html#Pseudobulk_comparisons) so the number of DE genes artificially  deflated and actually # of DE genes for scRNA is ~400 so is likely a better candidate for the ORA over the bulk results -->
 </div>
 <div id="extracting-data-for-gsea" class="section level2">
 <h2>Extracting data for GSEA</h2>
-<p>The key columns to extract, as per the documentation, are the
-<code>gene</code> and <code>avg_log2FC</code> columns. As before, we’ll
-want to see how many gene symbols are NA and remove them.</p>
+<p>The key columns to extract from our Day 21 vs Day 7 pericyte results
+table, as per the documentation, are the <code>gene</code> and a column
+of values to use to rank the genes. Before proceeding, it’s prudent to
+check if there are missing values in the column we’ll use as our gene
+identifier:</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # How many symbols are NA?
 table(is.na(isc_d21_v_d7$gene))</code></pre>
 <pre><code>
 FALSE 
 23608 </code></pre>
-<pre class="r"><code># -------------------------------------------------------------------------
-# Filter out the NAs
-isc_d21_v_d7 = isc_d21_v_d7 %&gt;% dplyr::filter(!is.na(gene))
-
-# Verify we have fewer by noting dimension of resulting table
-isc_d21_v_d7</code></pre>
-<pre><code># A tibble: 23,608 × 6
-       p_val avg_log2FC pct.1 pct.2 p_val_adj gene   
-       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
- 1 3.86e-232      2.91      1     1 1.02e-227 Cilp2  
- 2 5.63e-118      1.71      1     1 1.49e-113 Ltbp4  
- 3 1.85e- 95      1.29      1     1 4.91e- 91 Cd55   
- 4 2.60e- 87      1.64      1     1 6.88e- 83 Prss23 
- 5 3.02e- 87     -1.59      1     1 8.00e- 83 Nav3   
- 6 7.46e- 82      2.25      1     1 1.98e- 77 Gm42418
- 7 3.19e- 81      1.16      1     1 8.44e- 77 Osbpl3 
- 8 3.70e- 78      1.06      1     1 9.79e- 74 Lamb2  
- 9 3.09e- 76      2.00      1     1 8.19e- 72 Wfdc1  
-10 1.80e- 73      0.859     1     1 4.76e- 69 Abtb2  
-# ℹ 23,598 more rows</code></pre>
-<p>And now we can create a table with just the <code>gene</code> and
+<p>For ranking, we can use the values from the <code>avg_log2FC</code>
+column and create a table with just the <code>gene</code> and
 <code>avg_log2FC</code> columns with the <code>select()</code> function
 from <code>dplyr</code>:</p>
 <pre class="r"><code># -------------------------------------------------------------------------
@@ -539,23 +544,224 @@ head(isc_d21_v_d7_gsea)</code></pre>
 </div>
 <div id="running-gsea" class="section level1">
 <h1>Running GSEA</h1>
-<p>As with the ORA, we will perform GSEA on the KEGG pathways and a
-non-redundant version of the Gene Ontology Biological Process
-genesets.</p>
-<pre class="r"><code>isc_d21_v_d7_gsea_result = WebGestaltR(
+<p>We will run GSEA on our single-cell results using the <a
+href="https://www.genome.jp/kegg/pathway.html">KEGG pathway knowledge
+base</a>, which is per the website “a collection of manually drawn
+pathway maps representing our knowledge of the molecular interaction,
+reaction and relation networks” instead of gene ontology. This option
+allows us to</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Run GSEA
+isc_d21_v_d7_gsea_result = WebGestaltR(
     enrichMethod = &#39;GSEA&#39;,
     nThreads = 8,
     organism = &#39;mmusculus&#39;,
-    enrichDatabase = c(&#39;pathway_KEGG&#39;, &#39;geneontology_Biological_Process_noRedundant&#39;),
+    enrichDatabase = c(&#39;pathway_KEGG&#39;),
     interestGene = isc_d21_v_d7_gsea,
     interestGeneType = &#39;genesymbol&#39;,
     fdrThr = 0.1,
     outputDirectory = &#39;./results&#39;,
-    projectName = &#39;D21_v_D7_GSEA&#39;)</code></pre>
+    projectName = &#39;D21_v_D7_GSEA_KEGG&#39;, 
+    cache = NULL)</code></pre>
 <pre><code>Loading the functional categories...
-Loading the ID list...</code></pre>
-<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_D21_v_D7_GSEA&#39; already exists</code></pre>
-<pre><code>Summarizing the uploaded ID list by GO Slim data...</code></pre>
+Loading the ID list...
+Summarizing the uploaded ID list by GO Slim data...</code></pre>
+<pre><code>Performing the enrichment analysis...</code></pre>
+<pre><code>1000 permutations of score complete...</code></pre>
+<pre><code>Begin affinity propagation...
+End affinity propagation...
+Begin weighted set cover...
+End weighted set cover...
+Generate the final report...
+Results can be found in the ./results/Project_D21_v_D7_GSEA_KEGG!</code></pre>
+<pre class="r"><code># clean up session
+gc()</code></pre>
+<pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
+Ncells 4961275 265.0    8347981 445.9         NA   8303381  443.5
+Vcells 9625774  73.5  109166410 832.9      36864 136458012 1041.1</code></pre>
+<p><br></p>
+<p>One downside of GSEA is that it is more computationally demanding
+than ORA. As the enrichment runs, we’ll see the reporting messages
+<code>1000 permutations of score complete</code> this permutation was
+introduced in the overview and is what generates a null distribution to
+be able to determine “how surprising” the ranked overlaps are.</p>
+<p>But what about our input? Why did we include the fold-change
+column?</p>
+<p>As mentioned, a ranking metric is needed to order the genes before
+they are compared to the functional gene sets to generate the enrichment
+score.</p>
+<p>By using log fold-changes, we’re using the effect size of difference
+between the experimental groups, the equivalent of
+<code>log2_Ratio_of_Classes</code> in <a
+href="https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html">Broad’s
+GSEA user guide</a> describes the several ranking metrics available for
+that tool. The advantage of using this as our ranking metric is that we
+are using the biologically relevant difference while ignoring
+significance level, which can be impacted by within group variation and
+limited samples which reduce the power to detect true positives.</p>
+<p>However, you may also see a local ranking statistic that combines
+both the direction of the effect size and the significance
+(e.g. <code>-log10({p value}) * sign({Fold Change})</code>). The
+advantage of this approach is that it incorporates the significance
+level to protect against false positives - unlike fold-change alone -
+while still using the direction of the effect size. The disadvantage of
+using this combined metric is that the magnitude of the effect size is
+no longer part of the ranking.</p>
+<p><img
+src="images/content/06-WebGestalt_GSEA/PathwayCommons_figure_gsea_global.png" /></p>
+<!-- what else to add here?-->
+<p>For more context, this <a
+href="https://www.pathwaycommons.org/guide/primers/data_analysis/gsea/">Pathways
+Common guide</a> delves into the history and describes the GSEA
+algorithm in more detail.</p>
+<p>The original version of GSEA is described in <a
+href="https://pubmed.ncbi.nlm.nih.gov/12808457/">Mootha 2003</a> the
+values were chosen specifically such that the sum over all genes would
+be zero. An updated procedure using a ‘weighted’ version of such that
+the increments to the running sum are proportional to the rank metric
+for that gene is described in <a
+href="https://www.pnas.org/doi/10.1073/pnas.0506580102">Subramanian et
+al 2005</a> and is the GSEA method used by <a
+href="https://cran.r-project.org/web/packages/WebGestaltR/WebGestaltR.pdf">WebGestaltR
+based on the package’s reference manual</a>.</p>
+</div>
+<div id="results-of-gsea" class="section level1">
+<h1>Results of GSEA</h1>
+<p>Once the tool is done running, we can review the results. As with the
+ORA results, the GSEA method outputs similar results tables, gene
+identifier mappings, and HTML reports to file but includes a table of
+the results in session.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# View the first few results
+head(isc_d21_v_d7_gsea_result)</code></pre>
+<pre><code>   geneSet                      description
+1 mmu04512         ECM-receptor interaction
+2 mmu03030                  DNA replication
+3 mmu03050                       Proteasome
+4 mmu03040                      Spliceosome
+5 mmu04974 Protein digestion and absorption
+6 mmu04657          IL-17 signaling pathway
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  link
+1                                                                                                                                                                                                                                                                                                                                    http://www.kegg.jp/kegg-bin/show_pathway?mmu04512+12824+12845+12643+12841+21825+12840+21828+12839+12827+16779+20971+226519+12826+213119+12843+13138+16773+15530+12842+21827+15891+12834+16404+12833+11603+21826+319480+16398+12835+16776+81877+16419+14268+109700
+2                                                                                                                                                                                                                                                                                                                                                                    http://www.kegg.jp/kegg-bin/show_pathway?mmu03030+19076+18968+18974+106344+68275+18972+19075+69724+68209+19687+18971+59001+72151+69263+17217+381760+67153+17220+17215+14156+19718+17218+68240+19891+17216+17219+18538+16881+66979
+3                                                                                                                                                                                                                                                                                                                     http://www.kegg.jp/kegg-bin/show_pathway?mmu03050+19192+56436+16912+26440+66997+70247+19177+22123+20422+23996+19166+19179+19167+19184+19173+17463+19186+69077+26443+66413+23997+21762+19172+66537+103554+19171+26442+19181+19170+19188+19185+26445+26441+26446+26444+19175+16913
+4 http://www.kegg.jp/kegg-bin/show_pathway?mmu03040+57905+20637+54633+66492+68879+20639+331401+72654+53317+320632+212880+66810+67039+68183+56031+72047+66354+56194+20624+60365+20222+22185+76522+81898+101943+66441+20643+230596+68092+13204+67465+66055+76938+68479+229279+20826+20638+68988+17149+56009+68011+27756+20630+75062+69878+107701+101214+56215+319322+66585+20382+19655+23983+73666+231889+107686+67959+67996+27366+51810+108014+20641+78651+66094+15381+108121+28000+68981+67332+15387+66101+53607+53817+76936+19656+20462+67678+68816+66125+66373+110809+50783+20383+15382+225027+21681
+5                                                                                                                                                                                                                                                                                                                                                                                             http://www.kegg.jp/kegg-bin/show_pathway?mmu04974+12824+12841+12815+12840+12839+12819+12827+12814+12826+12843+12842+13717+12834+11931+20514+12833+11933+73626+12822+12835+20540+11936+12816+69700+245026
+6                                                                                                                                                                                                                                                                                                                                                              http://www.kegg.jp/kegg-bin/show_pathway?mmu04657+14283+171095+17392+12370+71609+15519+15945+22033+14282+21929+16819+19225+22032+15568+18033+22027+16476+12367+110809+18035+12608+17395+20296+16176+20306+14825+20202+20201+20310+20311
+  enrichmentScore normalizedEnrichmentScore pValue         FDR size                                       plotPath
+1       0.7715357                  2.063379      0 0.000000000   82 ./Project_D21_v_D7_GSEA_KEGG_GSEA/mmu04512.png
+2      -0.8525372                 -1.896760      0 0.000000000   35 ./Project_D21_v_D7_GSEA_KEGG_GSEA/mmu03030.png
+3      -0.8164866                 -1.924012      0 0.000000000   46 ./Project_D21_v_D7_GSEA_KEGG_GSEA/mmu03050.png
+4      -0.7258237                 -1.979099      0 0.000000000  128 ./Project_D21_v_D7_GSEA_KEGG_GSEA/mmu03040.png
+5       0.7163359                  1.897791      0 0.001045525   82 ./Project_D21_v_D7_GSEA_KEGG_GSEA/mmu04974.png
+6      -0.6895711                 -1.777678      0 0.001217421   86 ./Project_D21_v_D7_GSEA_KEGG_GSEA/mmu04657.png
+  leadingEdgeNum
+1             34
+2             29
+3             37
+4             86
+5             25
+6             30
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       leadingEdgeId
+1                                                                                                                                                                                                                                                                                                                                    12824;12845;12643;12841;21825;12840;21828;12839;12827;16779;20971;226519;12826;213119;12843;13138;16773;15530;12842;21827;15891;12834;16404;12833;11603;21826;319480;16398;12835;16776;81877;16419;14268;109700
+2                                                                                                                                                                                                                                                                                                                                                                    19076;18968;18974;106344;68275;18972;19075;69724;68209;19687;18971;59001;72151;69263;17217;381760;67153;17220;17215;14156;19718;17218;68240;19891;17216;17219;18538;16881;66979
+3                                                                                                                                                                                                                                                                                                                     19192;56436;16912;26440;66997;70247;19177;22123;20422;23996;19166;19179;19167;19184;19173;17463;19186;69077;26443;66413;23997;21762;19172;66537;103554;19171;26442;19181;19170;19188;19185;26445;26441;26446;26444;19175;16913
+4 57905;20637;54633;66492;68879;20639;331401;72654;53317;320632;212880;66810;67039;68183;56031;72047;66354;56194;20624;60365;20222;22185;76522;81898;101943;66441;20643;230596;68092;13204;67465;66055;76938;68479;229279;20826;20638;68988;17149;56009;68011;27756;20630;75062;69878;107701;101214;56215;319322;66585;20382;19655;23983;73666;231889;107686;67959;67996;27366;51810;108014;20641;78651;66094;15381;108121;28000;68981;67332;15387;66101;53607;53817;76936;19656;20462;67678;68816;66125;66373;110809;50783;20383;15382;225027;21681
+5                                                                                                                                                                                                                                                                                                                                                                                             12824;12841;12815;12840;12839;12819;12827;12814;12826;12843;12842;13717;12834;11931;20514;12833;11933;73626;12822;12835;20540;11936;12816;69700;245026
+6                                                                                                                                                                                                                                                                                                                                                              14283;171095;17392;12370;71609;15519;15945;22033;14282;21929;16819;19225;22032;15568;18033;22027;16476;12367;110809;18035;12608;17395;20296;16176;20306;14825;20202;20201;20310;20311
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      userId
+1                                                                                                                                                                                                                                                                                                                                            Agrn;Chad;Col1a1;Col1a2;Col2a1;Col4a1;Col4a2;Col6a1;Col6a2;Col6a3;Col9a1;Col9a2;Col9a3;Comp;Dag1;Fn1;Hspg2;Ibsp;Itga1;Itga10;Itga11;Itga2;Itga7;Itgb5;Lama2;Lama5;Lamb2;Lamc1;Sdc4;Thbs1;Thbs2;Thbs3;Thbs4;Tnxb
+2                                                                                                                                                                                                                                                                                                                                                                                      Fen1;Lig1;Mcm2;Mcm3;Mcm4;Mcm5;Mcm6;Mcm7;Pcna;Pola1;Pold1;Pold2;Pole2;Pole3;Pole4;Prim1;Prim2;Rfc1;Rfc2;Rfc3;Rfc4;Rfc5;Rnaseh2a;Rnaseh2b;Rnaseh2c;Rpa1;Rpa2;Rpa3;Ssbp1
+3                                                                                                                                                                                                                                                                                                                            Adrm1;Pomp;Psma1;Psma2;Psma3;Psma4;Psma5;Psma6;Psma7;Psmb1;Psmb10;Psmb2;Psmb3;Psmb4;Psmb5;Psmb6;Psmb7;Psmb8;Psmb9;Psmc1;Psmc2;Psmc4;Psmc5;Psmd1;Psmd11;Psmd12;Psmd13;Psmd2;Psmd3;Psmd4;Psmd6;Psmd7;Psme1;Psme2;Psme3;Psme4;Sem1
+4 Acin1;Alyref;Alyref2;Bcas2;Bud31;Ccdc12;Ddx39b;Ddx42;Ddx46;Dhx15;Eftud2;Hnrnpa1;Hnrnpa3;Hnrnpc;Hnrnpk;Hnrnpm;Hnrnpu;Isy1;Lsm2;Lsm3;Lsm4;Lsm5;Lsm6;Lsm7;Lsm8;Magoh;Magohb;Ncbp2;Pcbp1;Phf5a;Plrg1;Ppie;Ppih;Ppil1;Pqbp1;Prpf19;Prpf31;Prpf38a;Prpf40a;Prpf6;Puf60;Rbm17;Rbm22;Rbm25;Rbm8a;Rbmx;Rbmxl1;Sf3a1;Sf3a2;Sf3a3;Sf3b1;Sf3b2;Sf3b3;Sf3b4;Sf3b5;Sf3b6;Snrnp200;Snrnp40;Snrnp70;Snrpa;Snrpa1;Snrpb;Snrpb2;Snrpc;Snrpd1;Snrpd2;Snrpd3;Snrpe;Snrpf;Snrpg;Snu13;Snw1;Srsf1;Srsf2;Srsf3;Srsf6;Srsf7;Srsf9;Thoc2;Thoc3;Tra2a;Tra2b;Txnl4a;U2af1;U2af2;Zmat2
+5                                                                                                                                                                                                                                                                                                                                                                    1810009J06Rik;Atp1b1;Atp1b3;Col11a1;Col11a2;Col12a1;Col15a1;Col18a1;Col1a1;Col1a2;Col22a1;Col2a1;Col4a1;Col4a2;Col6a1;Col6a2;Col6a3;Col6a6;Col9a1;Col9a2;Col9a3;Eln;Fxyd2;Slc1a5;Slc7a7
+6                                                                                                                                                                                                                                                                                                                                                                    Casp3;Casp8;Ccl2;Ccl7;Cebpb;Cxcl1;Cxcl10;Cxcl2;Cxcl5;Elavl1;Fosb;Fosl1;Hsp90aa1;Hsp90b1;Il17rc;Il1b;Jun;Lcn2;Mmp3;Mmp9;Nfkb1;Nfkbia;Ptgs2;S100a8;S100a9;Srsf1;Tnfaip3;Tradd;Traf4;Traf5</code></pre>
+<p>The columns of the GSEA results are quite similar to the ORA results,
+with the following exceptions:</p>
+<ul>
+<li><code>enrichmentScore</code>: reflects the degree to which a
+gene-set is over-represented at the extremes of a ranked list of
+genes.</li>
+<li><code>normalizedEnrichmentScore</code>: corrects for differences in
+ES between gene-sets due to differences in gene-set sizes to make the
+scores of the tested gene-sets comparable with each other by dividing
+the enrichment score (ES) by the mean of all ESs from all random
+permutations</li>
+<li><code>leadingEdgeNum</code>: is the subset of members that
+contribute most to the ES; e.g. number of genes preceding the peak score
+for positive enrichments.</li>
+</ul>
+<!-- TODO: Here is where we'll actually talk more about the biological relevance of the results. -->
+<p>Additionally, for each pathway with <code>FDR &lt; fdrThr</code>, a
+GSEA enrichment plot is automatically generated. The following is an
+example for the ECM enrichment:</p>
+<p><img
+src="images/content/06-WebGestalt_GSEA/Day21_mmu04512_ECM.png" /></p>
+<p>At the bottom, we can see the fold-change rankings of the query genes
+from our comparison. In the middle are the marks indicating which genes
+in the ranking are annotated for that pathway. At the top is the
+enrichment score progression, with a dotted line at the max score
+position.</p>
+<div id="gsea-for-day-7-vs-day-0" class="section level2">
+<h2>GSEA for Day 7 vs Day 0</h2>
+<p>We’ll repeat the process for our Day 7 vs Day 0 comparison in
+pericytes.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Load pseudo-bulk analysis for D7 vs D7 in pericyte cluster
+isc_d7_v_d0 = read_csv(&#39;inputs/single_cell_de_results/de_pseudo_pericyte_D7_vs_D0.csv&#39;)</code></pre>
+<pre><code>Rows: 22974 Columns: 6
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (1): gene
+dbl (5): p_val, avg_log2FC, pct.1, pct.2, p_val_adj
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Preview the result
+head(isc_d7_v_d0)</code></pre>
+<pre><code># A tibble: 6 × 6
+      p_val avg_log2FC pct.1 pct.2 p_val_adj gene   
+      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
+1 3.98e-227      -5.49     1     1 1.05e-222 Cilp2  
+2 6.29e-121      -3.78     1     1 1.67e-116 Tsc22d3
+3 7.24e-121      -2.71     1     1 1.92e-116 Thbs4  
+4 2.26e-119      -2.30     1     1 5.97e-115 Insc   
+5 2.66e-118      -3.38     1     1 7.06e-114 Cst3   
+6 3.92e-110      -3.72     1     1 1.04e-105 Ckb    </code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Select gene and avg_log2FC columns
+isc_d7_v_d0_gsea = isc_d7_v_d0 %&gt;%
+    dplyr::select(gene, avg_log2FC)
+
+# -------------------------------------------------------------------------
+# Preview the table
+head(isc_d7_v_d0_gsea)</code></pre>
+<pre><code># A tibble: 6 × 2
+  gene    avg_log2FC
+  &lt;chr&gt;        &lt;dbl&gt;
+1 Cilp2        -5.49
+2 Tsc22d3      -3.78
+3 Thbs4        -2.71
+4 Insc         -2.30
+5 Cst3         -3.38
+6 Ckb          -3.72</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Run GSEA
+isc_d7_v_d0_gsea_result = WebGestaltR(
+    enrichMethod = &#39;GSEA&#39;,
+    nThreads = 8,
+    organism = &#39;mmusculus&#39;,
+    enrichDatabase = c(&#39;pathway_KEGG&#39;),
+    interestGene = isc_d7_v_d0_gsea,
+    interestGeneType = &#39;genesymbol&#39;,
+    fdrThr = 0.1,
+    outputDirectory = &#39;./results&#39;,
+    projectName = &#39;D7_v_D0_GSEA_KEGG&#39;, 
+    cache = NULL)</code></pre>
+<pre><code>Loading the functional categories...
+Loading the ID list...
+Summarizing the uploaded ID list by GO Slim data...</code></pre>
 <pre><code>Performing the enrichment analysis...</code></pre>
 <pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for mmu00072</code></pre>
 <pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for mmu00130</code></pre>
@@ -574,106 +780,85 @@ Loading the ID list...</code></pre>
 <pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score does not contain minimum number of items in set for mmu04122</code></pre>
 <pre><code>Warning in swGsea(inputDf, thresh_type = &quot;val&quot;, perms = perNum, min_set_size = minNum, : score has more than 500 items in set mmu01100</code></pre>
 <pre><code>1000 permutations of score complete...</code></pre>
-<pre><code>Begin affinity propagation...</code></pre>
-<pre><code>Warning in .local(s, x = x, ...): algorithm did not converge; turn on details
-and call plot() to monitor net similarity. Consider
-increasing &#39;maxits&#39; and &#39;convits&#39;, and, if oscillations occur
-also increasing damping factor &#39;lam&#39;.</code></pre>
-<pre><code>End affinity propagation...
+<pre><code>Begin affinity propagation...
+End affinity propagation...
 Begin weighted set cover...
 End weighted set cover...
 Generate the final report...
-Results can be found in the ./results/Project_D21_v_D7_GSEA!</code></pre>
+Results can be found in the ./results/Project_D7_v_D0_GSEA_KEGG!</code></pre>
+<pre class="r"><code># clean up session
+gc()</code></pre>
+<pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
+Ncells 4962146 265.1    8347981 445.9         NA   8347981  445.9
+Vcells 9771141  74.6  104863754 800.1      36864 136458012 1041.1</code></pre>
 <pre class="r"><code># -------------------------------------------------------------------------
-# View the first few results
-head(isc_d21_v_d7_gsea_result)</code></pre>
-<pre><code>     geneSet              description
-1   mmu04512 ECM-receptor interaction
-2   mmu03030          DNA replication
-3   mmu03050               Proteasome
-4   mmu03040              Spliceosome
-5 GO:0006397          mRNA processing
-6 GO:0008380             RNA splicing
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  link
-1                                                                                                                                                                                                                                                                                                                                    http://www.kegg.jp/kegg-bin/show_pathway?mmu04512+12824+12845+12643+12841+21825+12840+21828+12839+12827+16779+20971+226519+12826+213119+12843+13138+16773+15530+12842+21827+15891+12834+16404+12833+11603+21826+319480+16398+12835+16776+81877+16419+14268+109700
-2                                                                                                                                                                                                                                                                                                                                                                    http://www.kegg.jp/kegg-bin/show_pathway?mmu03030+19076+18968+18974+106344+68275+18972+19075+69724+68209+19687+18971+59001+72151+69263+17217+381760+67153+17220+17215+14156+19718+17218+68240+19891+17216+17219+18538+16881+66979
-3                                                                                                                                                                                                                                                                                                                     http://www.kegg.jp/kegg-bin/show_pathway?mmu03050+19192+56436+16912+26440+66997+70247+19177+22123+20422+23996+19166+19179+19167+19184+19173+17463+19186+69077+26443+66413+23997+21762+19172+66537+103554+19171+26442+19181+19170+19188+19185+26445+26441+26446+26444+19175+16913
-4 http://www.kegg.jp/kegg-bin/show_pathway?mmu03040+57905+20637+54633+66492+68879+20639+331401+72654+53317+320632+212880+66810+67039+68183+56031+72047+66354+56194+20624+60365+20222+22185+76522+81898+101943+66441+20643+230596+68092+13204+67465+66055+76938+68479+229279+20826+20638+68988+17149+56009+68011+27756+20630+75062+69878+107701+101214+56215+319322+66585+20382+19655+23983+73666+231889+107686+67959+67996+27366+51810+108014+20641+78651+66094+15381+108121+28000+68981+67332+15387+66101+53607+53817+76936+19656+20462+67678+68816+66125+66373+110809+50783+20383+15382+225027+21681
-5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  http://amigo.geneontology.org/amigo/term/GO:0006397
-6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  http://amigo.geneontology.org/amigo/term/GO:0008380
-  enrichmentScore normalizedEnrichmentScore pValue          FDR size                                    plotPath
-1       0.7715357                  2.068518      0 0.0000000000   82   ./Project_D21_v_D7_GSEA_GSEA/mmu04512.png
-2      -0.8525372                 -1.915617      0 0.0000000000   35   ./Project_D21_v_D7_GSEA_GSEA/mmu03030.png
-3      -0.8164866                 -1.927714      0 0.0000000000   46   ./Project_D21_v_D7_GSEA_GSEA/mmu03050.png
-4      -0.7258237                 -1.973381      0 0.0000000000  128   ./Project_D21_v_D7_GSEA_GSEA/mmu03040.png
-5      -0.6127408                 -1.850711      0 0.0002261063  407 ./Project_D21_v_D7_GSEA_GSEA/GO_0006397.png
-6      -0.6204177                 -1.835272      0 0.0005168144  329 ./Project_D21_v_D7_GSEA_GSEA/GO_0008380.png
+# View the results for the other timepoint
+head(isc_d7_v_d0_gsea_result)</code></pre>
+<pre><code>   geneSet             description
+1 mmu03010                Ribosome
+2 mmu05134           Legionellosis
+3 mmu03030         DNA replication
+4 mmu05143 African trypanosomiasis
+5 mmu05012       Parkinson disease
+6 mmu03050              Proteasome
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       link
+1 http://www.kegg.jp/kegg-bin/show_pathway?mmu03010+68028+19951+11837+20084+19896+27367+16785+20085+27050+66242+67945+16898+66480+19942+27207+67427+19944+20103+76808+68193+67115+270106+107734+94065+267019+76846+20104+20115+20068+67891+27397+22121+20116+19899+20091+19943+269261+26451+20044+66489+27370+20042+67941+56040+20055+19921+19988+78294+67025+68172+114641+20088+66483+68463+66475+68436+56282+68052+19981+54217+22186+68735+68611+64657+67248+54127+19934+19989+20102+100503670+67097+100043813+94063+26961+19941+14109+27398+67671+319195+107732+216767+66845+65019+19933+66407+67281+67186+19982+20005+118451+268449+20054+27176+67707+68537+66419+69527
+2                                                                                                                                                                                                                                                                                                                                                                                                                                  http://www.kegg.jp/kegg-bin/show_pathway?mmu05134+14825+20310+18035+193740+67160+15511+16176+12367+12176+20224+16173+11783+94044+17874+66397+18033+16193+56422+76308+12475+13627+12369+11840+330122+269523+66824+12371+12362+13063+15510
+3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    http://www.kegg.jp/kegg-bin/show_pathway?mmu03030+66979+17215+68240+59001+19718+17219+67153+17216+69263+19891+18538+19076+14156+72151+16881+17218+17217+19687+18973+106344+18972+19075
+4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              http://www.kegg.jp/kegg-bin/show_pathway?mmu05143+15122+100503605+110257+18795+101488143+22329+18752+16176+16775+16173+18797
+5                                                                                                                                                                     http://www.kegg.jp/kegg-bin/show_pathway?mmu05012+28080+12861+11740+11951+67942+12859+12367+22272+22195+66142+66916+22273+110323+66046+11739+67264+66925+66694+17992+12858+68197+66594+12867+67126+22333+68375+11946+11783+12864+64704+12857+67273+66218+70316+66416+11949+67680+66043+66377+66091+66576+66052+66414+140499+56791+66495+66108+57320+17991+407785+12868+14678+595136+22201+18749+11950+228033+104130+226646+67128+225887+105675+14679+66152+12371+13063+11947+66445+71679+20463+333182
+6                                                                                                                                                                                                                                                                                                                                                                                                                                                                        http://www.kegg.jp/kegg-bin/show_pathway?mmu03050+16913+26444+26445+19170+20422+57296+26446+66413+19172+56436+19171+19175+26442+103554+19192+59029+21762+19182+22123+19173+26441+19185+19186+19167
+  enrichmentScore normalizedEnrichmentScore      pValue         FDR size                                      plotPath
+1       0.7912312                  2.428762 0.000000000 0.000000000  129 ./Project_D7_v_D0_GSEA_KEGG_GSEA/mmu03010.png
+2       0.6762411                  1.853842 0.000000000 0.002823719   56 ./Project_D7_v_D0_GSEA_KEGG_GSEA/mmu05134.png
+3       0.7655349                  1.872575 0.000000000 0.003025413   35 ./Project_D7_v_D0_GSEA_KEGG_GSEA/mmu03030.png
+4       0.7320667                  1.784756 0.002298851 0.011194030   33 ./Project_D7_v_D0_GSEA_KEGG_GSEA/mmu05143.png
+5       0.5633096                  1.717362 0.000000000 0.019060105  125 ./Project_D7_v_D0_GSEA_KEGG_GSEA/mmu05012.png
+6       0.6611633                  1.718705 0.000000000 0.020918573   46 ./Project_D7_v_D0_GSEA_KEGG_GSEA/mmu03050.png
   leadingEdgeNum
-1             34
-2             29
-3             37
-4             86
-5            203
-6            176
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     leadingEdgeId
-1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  12824;12845;12643;12841;21825;12840;21828;12839;12827;16779;20971;226519;12826;213119;12843;13138;16773;15530;12842;21827;15891;12834;16404;12833;11603;21826;319480;16398;12835;16776;81877;16419;14268;109700
-2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  19076;18968;18974;106344;68275;18972;19075;69724;68209;19687;18971;59001;72151;69263;17217;381760;67153;17220;17215;14156;19718;17218;68240;19891;17216;17219;18538;16881;66979
-3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   19192;56436;16912;26440;66997;70247;19177;22123;20422;23996;19166;19179;19167;19184;19173;17463;19186;69077;26443;66413;23997;21762;19172;66537;103554;19171;26442;19181;19170;19188;19185;26445;26441;26446;26444;19175;16913
-4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               57905;20637;54633;66492;68879;20639;331401;72654;53317;320632;212880;66810;67039;68183;56031;72047;66354;56194;20624;60365;20222;22185;76522;81898;101943;66441;20643;230596;68092;13204;67465;66055;76938;68479;229279;20826;20638;68988;17149;56009;68011;27756;20630;75062;69878;107701;101214;56215;319322;66585;20382;19655;23983;73666;231889;107686;67959;67996;27366;51810;108014;20641;78651;66094;15381;108121;28000;68981;67332;15387;66101;53607;53817;76936;19656;20462;67678;68816;66125;66373;110809;50783;20383;15382;225027;21681
-5 234723;22380;72198;66070;171170;28035;20227;56403;66185;14300;20924;13211;51786;54723;233900;229709;70225;238831;19826;57905;20637;54633;209003;67010;66492;74111;68879;69131;20639;69562;69241;331401;65105;53317;218543;320632;100715;212880;68927;54188;381802;53890;268859;72692;224432;66810;72290;83410;18747;67039;66660;67242;237221;214572;101471;67178;20901;68183;230753;56031;66880;107951;231386;107817;66354;67755;20817;78372;56194;22687;53861;27632;20624;60365;12192;100336;68035;224903;60532;66177;74213;18789;22185;66603;219158;20595;76522;51796;67487;101739;22083;386612;232314;16549;101943;12455;66441;66637;20643;74737;69305;19712;230596;83701;104721;24128;68092;59092;20815;13204;54196;67465;116748;229700;66055;76938;19663;68479;229279;18458;20638;68988;12457;17149;27374;21841;56009;69269;68011;27756;20630;66077;75062;14007;69878;72935;230908;67684;107701;56215;319322;66585;20382;19655;20220;23983;19383;73666;432508;66078;231889;68991;107686;75956;53610;67959;67996;27366;51810;108014;20641;20218;78651;66094;15381;269966;70248;108121;59013;28000;71514;68981;67332;15387;71973;18148;68219;66101;268697;53607;228410;268420;53817;76936;19656;20462;67678;68816;98758;66125;66373;110809;19652;50783;20383;53379;15382;22608;225027;11758;21681;66704;20492
-6                                                                                                                                                                          234723;22380;72198;66070;171170;28035;20227;56403;66185;14300;66381;13211;54723;70225;238831;101985;19826;57905;20637;54633;209003;67010;66492;74111;68879;69131;20639;69562;331401;65105;53317;218543;320632;212880;381802;53890;268859;72692;66810;67039;67242;237221;214572;67178;20901;68183;230753;56031;66880;231386;107817;66354;67755;20817;78372;117198;56194;22687;53861;20624;60365;102414;100336;68035;60532;66177;22185;66603;219158;20595;76522;51796;69207;67487;101739;386612;232314;16549;101943;66441;66637;20643;69305;19712;230596;104721;20020;68092;59092;20815;13204;67465;116748;229700;66055;76938;19663;68479;229279;18458;20638;68988;18708;17149;27374;21841;56009;69269;68011;27756;20630;75062;14007;68045;69878;72935;230908;67684;107701;56215;319322;66585;20382;19655;20220;19383;73666;66078;231889;107686;75956;53610;67959;67996;27366;51810;108014;20641;20218;78651;66094;15381;269966;70248;108121;59013;28000;71514;68981;67332;15387;71973;18148;110213;66101;53607;53817;76936;19656;20462;67678;68816;98758;66125;66373;110809;19652;50783;20383;53379;15382;22608;225027;11758;21681;66704
-                                     database
-1                                pathway_KEGG
-2                                pathway_KEGG
-3                                pathway_KEGG
-4                                pathway_KEGG
-5 geneontology_Biological_Process_noRedundant
-6 geneontology_Biological_Process_noRedundant
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         userId
-1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Agrn;Chad;Col1a1;Col1a2;Col2a1;Col4a1;Col4a2;Col6a1;Col6a2;Col6a3;Col9a1;Col9a2;Col9a3;Comp;Dag1;Fn1;Hspg2;Ibsp;Itga1;Itga10;Itga11;Itga2;Itga7;Itgb5;Lama2;Lama5;Lamb2;Lamc1;Sdc4;Thbs1;Thbs2;Thbs3;Thbs4;Tnxb
-2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Fen1;Lig1;Mcm2;Mcm3;Mcm4;Mcm5;Mcm6;Mcm7;Pcna;Pola1;Pold1;Pold2;Pole2;Pole3;Pole4;Prim1;Prim2;Rfc1;Rfc2;Rfc3;Rfc4;Rfc5;Rnaseh2a;Rnaseh2b;Rnaseh2c;Rpa1;Rpa2;Rpa3;Ssbp1
-3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Adrm1;Pomp;Psma1;Psma2;Psma3;Psma4;Psma5;Psma6;Psma7;Psmb1;Psmb10;Psmb2;Psmb3;Psmb4;Psmb5;Psmb6;Psmb7;Psmb8;Psmb9;Psmc1;Psmc2;Psmc4;Psmc5;Psmd1;Psmd11;Psmd12;Psmd13;Psmd2;Psmd3;Psmd4;Psmd6;Psmd7;Psme1;Psme2;Psme3;Psme4;Sem1
-4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Acin1;Alyref;Alyref2;Bcas2;Bud31;Ccdc12;Ddx39b;Ddx42;Ddx46;Dhx15;Eftud2;Hnrnpa1;Hnrnpa3;Hnrnpc;Hnrnpk;Hnrnpm;Hnrnpu;Isy1;Lsm2;Lsm3;Lsm4;Lsm5;Lsm6;Lsm7;Lsm8;Magoh;Magohb;Ncbp2;Pcbp1;Phf5a;Plrg1;Ppie;Ppih;Ppil1;Pqbp1;Prpf19;Prpf31;Prpf38a;Prpf40a;Prpf6;Puf60;Rbm17;Rbm22;Rbm25;Rbm8a;Rbmx;Rbmxl1;Sf3a1;Sf3a2;Sf3a3;Sf3b1;Sf3b2;Sf3b3;Sf3b4;Sf3b5;Sf3b6;Snrnp200;Snrnp40;Snrnp70;Snrpa;Snrpa1;Snrpb;Snrpb2;Snrpc;Snrpd1;Snrpd2;Snrpd3;Snrpe;Snrpf;Snrpg;Snu13;Snw1;Srsf1;Srsf2;Srsf3;Srsf6;Srsf7;Srsf9;Thoc2;Thoc3;Tra2a;Tra2b;Txnl4a;U2af1;U2af2;Zmat2
-5 Acin1;Ahcyl1;Alkbh5;Alyref;Alyref2;Arl6ip4;Aurkaip1;Bcas2;Bud31;Ccar2;Ccnb1;Ccnt1;Cdk12;Cdk13;Cdk9;Celf2;Cpsf2;Cpsf4;Cpsf6;Cstf2t;Cstf3;Ctr9;Cwc15;Dazap1;Dcps;Ddx1;Ddx39b;Ddx41;Ddx46;Ddx47;Dhx15;Dhx40;Dhx9;Eftud2;Frg1;Gemin2;Gemin6;Gemin8;Hnrnpa1;Hnrnpa2b1;Hnrnpa3;Hnrnpc;Hnrnpf;Hnrnph1;Hnrnpk;Hnrnpll;Hnrnpm;Hnrnpu;Isy1;Jmjd6;Khdrbs1;Khsrp;Lsm10;Lsm11;Lsm2;Lsm3;Lsm4;Lsm5;Lsm6;Lsm7;Lsm8;Luc7l3;Magoh;Magohb;Mbnl3;Mtrex;Ncbp2;Nelfe;Noct;Nono;Npm1;Nudt21;Nup98;Pabpc1;Pabpn1;Papola;Pcbp1;Pcbp4;Pcf11;Phf5a;Phrf1;Plrg1;Polr2d;Ppie;Ppih;Ppil1;Ppil3;Ppp1r8;Ppp4r2;Ppwd1;Pqbp1;Prdx6;Prkaca;Prmt5;Prmt7;Prpf19;Prpf31;Prpf38a;Prpf40a;Prpf6;Psip1;Ptcd2;Puf60;Raly;Rbfox1;Rbm15;Rbm17;Rbm19;Rbm22;Rbm25;Rbm26;Rbm3;Rbm42;Rbm4b;Rbm7;Rbm8a;Rbmx;Rbmx2;Rbmxl1;Rbpms;Rbpms2;Rest;Rnf40;Rnps1;Rsrc1;Safb;Sap18;Sart1;Sart3;Scaf4;Scnm1;Sf3a1;Sf3a3;Sf3b2;Sf3b3;Sf3b4;Sf3b5;Sf3b6;Sfpq;Slbp;Sltm;Smn1;Snrnp200;Snrnp25;Snrnp40;Snrnp70;Snrpa;Snrpa1;Snrpb;Snrpb2;Snrpc;Snrpd1;Snrpd2;Snrpd3;Snrpe;Snrpf;Snrpg;Snw1;Srek1;Srpk1;Srpk2;Srrm1;Srrm2;Srrt;Srsf1;Srsf2;Srsf3;Srsf6;Srsf7;Srsf9;Ssu72;Strap;Supt5;Syncrip;Tardbp;Tent2;Tfip11;Thoc2;Thoc3;Thoc6;Thrap3;Tia1;Tra2b;Tsen15;Tsen2;Tsen34;Txnl4a;Txnl4b;U2af1;U2af2;Ubl5;Usp39;Virma;Wbp4;Wtap;Xrn2;Ybx1;Ythdc1;Zfp36l1;Zmat2;Zmat5;Zpr1;Zranb2
-6                                                                                                                                                                Acin1;Alyref;Alyref2;Arl6ip4;Bcas2;Bud31;Ccar2;Cdk12;Cdk13;Celf2;Clk3;Cwc15;Dazap1;Dcps;Ddx1;Ddx39b;Ddx41;Ddx46;Ddx47;Dhx15;Dhx40;Dhx9;Eftud2;Frg1;Gemin2;Gemin6;Gemin8;Hnrnpa1;Hnrnpa2b1;Hnrnpa3;Hnrnpc;Hnrnpf;Hnrnph1;Hnrnpk;Hnrnpll;Hnrnpm;Hnrnpu;Isy1;Ivns1abp;Jmjd6;Khdrbs1;Khsrp;Lsm10;Lsm2;Lsm3;Lsm4;Lsm5;Lsm6;Lsm7;Lsm8;Luc7l3;Magoh;Magohb;Mbnl3;Mtrex;Ncbp2;Nono;Npm1;Nup98;Pabpc1;Pcbp4;Phf5a;Pik3r1;Plrg1;Polr2a;Ppie;Ppih;Ppil1;Ppil3;Ppp1r8;Ppp4r2;Ppwd1;Pqbp1;Prdx6;Prmt5;Prmt7;Prpf19;Prpf31;Prpf38a;Prpf40a;Prpf6;Psip1;Puf60;Raly;Rbfox1;Rbm15;Rbm17;Rbm19;Rbm22;Rbm25;Rbm3;Rbm42;Rbm4b;Rbm7;Rbm8a;Rbmx;Rbmx2;Rbmxl1;Rbpms;Rbpms2;Rest;Rnf113a2;Rnps1;Rsrc1;Rtraf;Sap18;Sart1;Sart3;Scnm1;Sf3a1;Sf3a3;Sf3b2;Sf3b3;Sf3b4;Sf3b5;Sf3b6;Sfpq;Smn1;Snrnp200;Snrnp25;Snrnp40;Snrnp70;Snrpa;Snrpa1;Snrpb;Snrpb2;Snrpc;Snrpd1;Snrpd2;Snrpd3;Snrpe;Snrpf;Snrpg;Snw1;Srek1;Srpk1;Srpk2;Srrm1;Srrm2;Srsf1;Srsf11;Srsf2;Srsf3;Srsf6;Srsf7;Srsf9;Strap;Syncrip;Tardbp;Tfip11;Thoc2;Thoc3;Thoc6;Thrap3;Tia1;Tmbim6;Tra2b;Tsen15;Tsen2;Tsen34;Txnl4a;Txnl4b;U2af1;U2af2;Ubl5;Usb1;Usp39;Virma;Wbp4;Wtap;Ybx1;Ythdc1;Zmat2;Zmat5;Zpr1;Zranb2</code></pre>
-<p>The columns of the GSEA results are quite similar to the ORA results,
-with the following exceptions:</p>
-<ul>
-<li><code>enrichmentScore</code>:</li>
-<li><code>normalizedEnrichmentScore</code>:</li>
-<li><code>leadingEdgeNum</code>:</li>
-</ul>
-<p>TODO: Here is where we’ll actually talk more about the biological
-relevance of the results.</p>
+1             97
+2             30
+3             22
+4             11
+5             71
+6             24
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            leadingEdgeId
+1 68028;19951;11837;20084;19896;27367;16785;20085;27050;66242;67945;16898;66480;19942;27207;67427;19944;20103;76808;68193;67115;270106;107734;94065;267019;76846;20104;20115;20068;67891;27397;22121;20116;19899;20091;19943;269261;26451;20044;66489;27370;20042;67941;56040;20055;19921;19988;78294;67025;68172;114641;20088;66483;68463;66475;68436;56282;68052;19981;54217;22186;68735;68611;64657;67248;54127;19934;19989;20102;100503670;67097;100043813;94063;26961;19941;14109;27398;67671;319195;107732;216767;66845;65019;19933;66407;67281;67186;19982;20005;118451;268449;20054;27176;67707;68537;66419;69527
+2                                                                                                                                                                                                                                                                                                                                                                                                                                  14825;20310;18035;193740;67160;15511;16176;12367;12176;20224;16173;11783;94044;17874;66397;18033;16193;56422;76308;12475;13627;12369;11840;330122;269523;66824;12371;12362;13063;15510
+3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    66979;17215;68240;59001;19718;17219;67153;17216;69263;19891;18538;19076;14156;72151;16881;17218;17217;19687;18973;106344;18972;19075
+4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              15122;100503605;110257;18795;101488143;22329;18752;16176;16775;16173;18797
+5                                                                                                                                                                     28080;12861;11740;11951;67942;12859;12367;22272;22195;66142;66916;22273;110323;66046;11739;67264;66925;66694;17992;12858;68197;66594;12867;67126;22333;68375;11946;11783;12864;64704;12857;67273;66218;70316;66416;11949;67680;66043;66377;66091;66576;66052;66414;140499;56791;66495;66108;57320;17991;407785;12868;14678;595136;22201;18749;11950;228033;104130;226646;67128;225887;105675;14679;66152;12371;13063;11947;66445;71679;20463;333182
+6                                                                                                                                                                                                                                                                                                                                                                                                                                                                        16913;26444;26445;19170;20422;57296;26446;66413;19172;56436;19171;19175;26442;103554;19192;59029;21762;19182;22123;19173;26441;19185;19186;19167
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    userId
+1 Fau;Mrpl10;Mrpl11;Mrpl12;Mrpl13;Mrpl14;Mrpl16;Mrpl17;Mrpl2;Mrpl22;Mrpl24;Mrpl28;Mrpl30;Mrpl33;Mrpl34;Mrps10;Mrps15;Mrps16;Mrps18c;Mrps2;Mrps9;Rpl10a;Rpl11;Rpl12;Rpl13;Rpl13a;Rpl14;Rpl15;Rpl17;Rpl18;Rpl18a;Rpl19;Rpl21;Rpl22;Rpl22l1;Rpl23;Rpl23a;Rpl24;Rpl26;Rpl27;Rpl27a;Rpl28;Rpl29;Rpl3;Rpl31;Rpl32;Rpl34;Rpl35;Rpl36;Rpl36a;Rpl36al;Rpl37;Rpl37a;Rpl38;Rpl39;Rpl39l;Rpl4;Rpl41;Rpl5;Rpl6;Rpl7;Rpl7a;Rpl8;Rpl9;Rplp0;Rplp1;Rplp2;Rps10;Rps11;Rps12;Rps13;Rps14;Rps15;Rps15a;Rps16;Rps17;Rps18;Rps19;Rps2;Rps20;Rps23;Rps24;Rps26;Rps27a;Rps27l;Rps27rt;Rps28;Rps3;Rps3a1;Rps4x;Rps5;Rps6;Rps7;Rps8;Rps9;Rpsa;Uba52
+2                                                                                                                                                                                                                                                                                                                                                                                                                                        Apaf1;Arf1;Bcl2l13;Bnip3;Casp1;Casp3;Casp7;Casp9;Cd14;Cxcl1;Cxcl2;Cxcl3;Cycs;Eef1a1;Eef1g;Hbs1l;Hspa1a;Hspa1b;Hspd1;Il18;Il1b;Il6;Myd88;Nfkb1;Nfkbia;Pycard;Rab1b;Sar1a;Sar1b;Vcp
+3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Fen1;Lig1;Mcm2;Mcm3;Mcm4;Mcm5;Mcm6;Pcna;Pold2;Pole;Pole3;Pole4;Prim1;Prim2;Rfc1;Rfc2;Rfc3;Rfc4;Rfc5;Rnaseh2b;Rpa2;Rpa3
+4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Hba-a1;Hba-a2;Hbb-bs;Hbb-bt;Il18;Il1b;Lama4;Plcb1;Plcb3;Prkcg;Vcam1
+5                                                                                                                                    Apaf1;Atp5a1;Atp5b;Atp5c1;Atp5d;Atp5e;Atp5f1;Atp5g1;Atp5g2;Atp5g3;Atp5h;Atp5o;Casp3;Casp9;Cox4i1;Cox5a;Cox5b;Cox6a1;Cox6b1;Cox6b2;Cox6c;Cox7a2l;Cox7b;Cox7c;Cox8a;Cyc1;Cycs;Gnai2;Gnai3;Htra2;Ndufa10;Ndufa12;Ndufa2;Ndufa3;Ndufa4;Ndufa7;Ndufa8;Ndufa9;Ndufab1;Ndufb11;Ndufb3;Ndufb5;Ndufb7;Ndufb8;Ndufb9;Ndufc1;Ndufc2;Ndufs2;Ndufs5;Ndufs6;Ndufs8;Park7;Ppif;Prkacb;Sdhb;Sdhc;Sdhd;Slc25a4;Slc25a5;Uba1;Ube2g1;Ube2j2;Ube2l3;Ube2l6;Uqcr10;Uqcr11;Uqcrc1;Uqcrfs1;Uqcrh;Uqcrq;Vdac1
+6                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Adrm1;Psma3;Psma4;Psma5;Psma7;Psmb1;Psmb10;Psmb2;Psmb3;Psmb4;Psmb5;Psmb6;Psmb8;Psmc3;Psmd14;Psmd2;Psmd3;Psmd4;Psmd6;Psmd8;Psme1;Psme3;Psme4;Sem1</code></pre>
+<p>Here we see positive enrichment scores</p>
 </div>
-<div id="results-of-gsea" class="section level1">
-<h1>Results of GSEA</h1>
-<p>As with the ORA results, the GSEA method outputs similar results
-tables, gene identifier mappings, and HTML reports. Additionally, for
-each pathway with <code>FDR &lt; fdrThr</code>, a GSEA enrichment plot
-is automatically generated. The following is an example:</p>
-<p>TODO: Include example GSEA plot.</p>
-<p><img src="images/wayfinder/wayfinder-06B.png"
-alt="workshop wayfinder" /></p>
-</div>
-<div id="exercise" class="section level1">
-<h1>Exercise</h1>
 </div>
 <div id="comparing-enrichment-results" class="section level1">
 <h1>Comparing enrichment results</h1>
 <p>Now that we have two GSEA results from related differential
 expression results, we may want to know:</p>
 <ul>
-<li>What genesets are in common?</li>
-<li>What genesets are unique?</li>
-<li>Are there any insights in the pathways at one time point versus
-another?</li>
+<li>What pathways are shared versus unique between the timepoints?</li>
+<li>Are there any insights we can glean by comparing pathways at one
+time point versus another?</li>
 </ul>
-<p>A first approach to these questions might be to take the GSEA results
-from both comparisons and join them on the geneset identifier.</p>
+<p>We’ll use some of the advanced visualizations from yesterday to
+answer some of these questions.</p>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
+<ul>
+<li>GSEA is a functional enrichment choice that does not require using
+thresholds to define genes of interest</li>
+<li>KEGG pathways offers an alternative knowledge base that can be
+useful for interpretation</li>
+</ul>
 </div>
 <div id="questions" class="section level1">
 <h1>Questions</h1>
@@ -688,7 +873,7 @@ from both comparisons and join them on the geneset identifier.</p>
 <th align="left"><a href="05-fcs-gsea-overview.html">Previous
 lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a href="07-advanced-visualizations.html">Next
+<th align="right"><a href="04-gene-set-references.html">Next
 lesson</a></th>
 </tr>
 </thead>
