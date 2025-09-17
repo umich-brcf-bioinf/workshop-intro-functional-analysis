@@ -41,11 +41,19 @@ knitr_fig_path("02-")
 
 # Summary
 
-- 1
-- 2
-- 3
+Functional analysis can be a powerful tool for summarizing differential expression results from a variety of experiments, including both bulk and single-cell RNA-seq. 
+
+What we've accomplished:
+
+- Built a stronger understanding of functional enrichment approaches and available knowledge bases.   
+- Used a web-browser tool to perform ORA analysis of bulk RNA-seq data.    
+- Used R/RStudio and `WebGestaltR` to run ORA for bulk RNA-seq data in a more reproducible manner.   
+- Used `WebGestaltR` to run GSEA for single-cell RNA-seq data     
+- Created customized visualizations at the gene and term level     
 
 <br>
+
+---
 
 # Resources
 
