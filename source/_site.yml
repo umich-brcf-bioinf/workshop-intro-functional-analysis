@@ -10,24 +10,24 @@ navbar:
     - text: "Day 1"
       menu:
         - text: "Functional analysis and ORA"
-          href: 01-functional-analysis-overview.html
+          href: ifun-overview.pdf
         - text: "ORA with WebGestalt"
           href: 02-IntroToWebGestaltandORA.html
         - text: "ORA with R"
           href: 03-WebGestaltRORA.html
-        - text: "GO, KEGG, and friends"
-          href: 04-gene-set-references.html
+        - text: "Advanced visualizations I"
+          href: 07A-advanced-visualizations.html
     - text: "Day 2"
       menu:
         - text: "Functional Analysis and GSEA"
-          href: 05-fcs-gsea-overview.html
+          href: ifun-gsea-overview.pdf
         - text: "GSEA with R"
           href: 06-WebGestaltRGSEA.html
-        - text: "Advanced visualizations"
-          href: 07-advanced-visualizations.html
+        - text: "GO, KEGG, and friends"
+          href: gene-set-references.pdf
+        - text: "Advanced visualizations II"
+          href: 07B-advanced-visualizations.html
         - text: "Analysis summary and next steps"
           href: 08-analysis-summary.html
-    - text: "Exercises"
-      href: exercises.html
     - text: "Wrap up"
       href: workshop-wrap-up.html

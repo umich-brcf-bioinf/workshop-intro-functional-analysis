@@ -352,7 +352,7 @@ Next, let's go back to the main results and look at the Directed Acyclic Graph (
 ![WebGestalt DAG map](images/content/02-WebGestalt_browser/WGResults_j_DAG-overview.png) 
 <br>
 
-When we look at the DAG map, we can see that some of the significant terms are related, like `intrinsic apoptotic signaling pathway` and `neuron apoptotic process`. 
+When we look at the directed acyclic graph (DAG) of the GO terms, we can see that some of the significant terms have connections, like `intrinsic apoptotic signaling pathway` and `neuron apoptotic process` indicating they are closer in the heirarchy of GO terms. 
 
 This can be useful for interpreting why a GO term that's unlikely to be applicable to the experiment (e.g. neuronal process from non-brain tissue) might be coming up as enriched and further supports how functional enrichment results may need to be curated prior to reporting them, particularly in the body of a paper. 
 <br>
@@ -419,5 +419,5 @@ Programming! We can use R/RStudio to use functional enrichment tools and access 
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](workshop-intro.html) | [Top of this lesson](#top) | [Next lesson](more-stuff.html) |
+| [Previous lesson](01-functional-analysis-overview.html) | [Top of this lesson](#top) | [Next lesson](03-WebGestaltRORA.html) |
 | :--- | :----: | ---: |

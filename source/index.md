@@ -35,11 +35,11 @@ body, td {
 | Time  | Topic |
 | :---- | :----------------------- |
 |  9:00 | [Intro](workshop-intro.html) |
-|  9:30 | [Functional analysis and ORA](01-functional-analysis-overview.html) |
+|  9:30 | [Functional analysis and ORA](ifun-overview.pdf) |
 |       | [ORA with WebGestalt](02-IntroToWebGestaltandORA.html) |  
 | 11:00 | **Break** |
 |       | [ORA with R](03-WebGestaltRORA.html) |
-|       | [GO, KEGG, and friends](04-gene-set-references.html) |
+|       | [Advanced visualizations I](07A-advanced-visualizations.html) | 
 |  1:00 | Day 1 concludes |
 
 ---
@@ -48,10 +48,11 @@ body, td {
 | Time  | Topic |
 | :---- | :----------------------- |
 |  9:00 | Review & questions |
-|  9:10 | [Functional Analysis and GSEA](05-fcs-gsea-overview.html) |
+|  9:10 | [Functional Analysis and GSEA](ifun-gsea-overview.pdf) |
 |       | [GSEA with R](06-WebGestaltRGSEA.html) |
 | 11:00 | **Break** |
-|       | [Advanced visualizations](07-advanced-visualizations.html) | 
+|       | [GO, KEGG, and friends](gene-set-references.pdf) |
+|       | [Advanced visualizations II](07B-advanced-visualizations.html) | 
 |       | [Analysis summary](08-analysis-summary.html) | 
 | 12:45 | [Wrap up](workshop-wrap-up.html) |
 |  1:00 | **Workshop concludes** |

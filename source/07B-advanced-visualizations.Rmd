@@ -1,5 +1,5 @@
 ---
-title: "Advanced Visualizations"
+title: "Advanced Visualizations II"
 output:
         html_document:
             includes:
@@ -37,7 +37,7 @@ source("../bin/chunk-options.R")
 knitr_fig_path("02-")
 ```
 
-![workshop wayfinder](images/wayfinder/wayfinder-07.png)
+![workshop wayfinder](images/wayfinder/wayfinder-07B.png)
 
 # Objectives
 

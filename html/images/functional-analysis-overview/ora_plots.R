@@ -17,13 +17,11 @@ n_bio_gs = 20
 n_interesting_genes = 25
 
 # initial volcano plot
-diffex_results_file = 'data/de_deficient_vs_control_annotated.csv'
+diffex_results_file = 'data/sample_data/IFUN_R/inputs/bulk_de_results/de_deficient_vs_control_annotated.csv'
 diffex_fc = 1.5
 diffex_fdr = 0.05
 diffex_call_colors = c('NS'='darkgray', 'Down'='#1465AC', 'Up'='#B31B21')
 diffex_interesting_colors = c('yes'='sienna1', 'no'='darkgray')
-
-# Add plot labels and change the theme - save the plot as object `p`
 
 df = read_csv(here(diffex_results_file)) %>%
   select(id, symbol, log2FoldChange, padj, call) %>% 
@@ -321,4 +319,267 @@ ggsave(file = here(base_path,'08-quandrant_ambiguous.png'),
 build_stats(x_df)
 
 
+# GSEA ranking ------------------------------------------------------------
+diffex_call_colors = c('NS'='lightgray', 'Down'='#1465AC', 'Up'='#B31B21')
+
+
+df = read_csv(here(diffex_results_file)) %>%
+  select(id, symbol, log2FoldChange, padj, call)
+
+set.seed(123)
+df = bind_rows(
+  filter(df, call=='NS') %>% slice_sample(n = 800),
+  filter(df, call=='Up') %>% slice_sample(n = 100),
+  filter(df, call=='Down') %>% slice_sample(n = 100)
+)
+
+plt = ggplot(df, 
+             aes(x = log2FoldChange, y = -log10(padj), color=call)) +
+  geom_vline(
+    xintercept = c(0, -log2(diffex_fc), log2(diffex_fc)),
+    linetype = c(1, 2, 2)) +
+  geom_hline(
+    yintercept = -log10(diffex_fdr),
+    linetype = 2) +
+  geom_point(alpha=0.6, size=5) +
+  scale_color_manual(name = '', values=diffex_call_colors) +
+  theme_bw() +
+  labs(
+    title = 'Differential Expression',
+    subtitle = 'control vs deficient',
+    x = 'log2 fold-change',
+    y = '-log10 FDR'
+  ) 
+plt
+ggsave(file = here(base_path,'00-gsea_volcano_reduced.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+
+plt = ggplot(df, 
+             aes(x = log2FoldChange, y = -log10(padj), color=call)) +
+  geom_vline(
+    xintercept = c(0, -log2(diffex_fc), log2(diffex_fc)),
+    linetype = c(1, 2, 2)) +
+  geom_hline(
+    yintercept = -log10(diffex_fdr),
+    linetype = 2) +
+  geom_point(alpha=0.6, size=5) +
+  scale_color_manual(name = '', values=diffex_call_colors) +
+  theme_void() +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'01-gsea_volcano_void.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+
+# foldchange --------------------------------------------------------------
+
+plt_df = df %>% 
+  arrange(log2FoldChange) %>% 
+  mutate(row=dplyr::row_number(), y=log2FoldChange)
+x_midline = min(plt_df %>% filter(log2FoldChange == min(abs(plt_df$log2FoldChange))) %>% select(row))
+y_q1 = (max(plt_df$log2FoldChange) - min(plt_df$log2FoldChange)) / 20
+y_q1
+x_midline
+
+plt = ggplot(plt_df, aes(row, y, color=call)) +
+  geom_point(alpha=0.6, size=5) +
+  geom_hline(yintercept = 0, linetype = 1) +
+  geom_segment(aes(x = x_midline, 
+                   y = -1 * y_q1, 
+                   xend = x_midline,
+                   yend = y_q1),
+               linetype = 1, 
+               color='black') +
+  scale_color_manual(name = '', values=diffex_call_colors) +
+  theme_void() +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'02-gsea_foldChnage.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+
+# significance ------------------------------------------------------------
+
+df$padj_na = ifelse(is.na(df$padj), 1, df$padj)
+
+plt_df = df %>% 
+  mutate(sig = -1* log10(padj_na)) %>% 
+  arrange(sig) %>% 
+  mutate(row=dplyr::row_number())
+
+x_sig = min(plt_df %>% filter(call != 'NS') %>% select(row))
+
+plt = ggplot(plt_df, aes(x=row, y=sig, color=call)) +
+  geom_point(alpha=0.6, size=5) +
+  geom_hline(yintercept = 0, linetype = 1) +
+  geom_segment(aes(x = x_sig, 
+                   y = 0, 
+                   xend = x_sig,
+                   yend=max(sig)/5),
+               linetype = 2, 
+               color='black') +
+  scale_color_manual(name = '', values=diffex_call_colors) +
+  theme_void() +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'02-gsea_significance.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+
+# gene rank ---------------------------------------------------------------
+
+plt_df = df %>% 
+  mutate(sig = -1* log10(padj_na),
+         rank = sig * sign(log2FoldChange)) %>% 
+  arrange(rank) %>% 
+  mutate(row=dplyr::row_number())
+
+diffex_fdr_log = -1 * log10(diffex_fdr)
+x_midline = median(plt_df$row)
+y_q1 = (max(plt_df$rank) - min(plt_df$rank)) / 10
+y_q1
+plt = ggplot(plt_df, aes(x=row, y=rank, color=call)) +
+  geom_point(alpha=0.6, size=5) +
+  geom_hline(yintercept = c(0, -1 * diffex_fdr_log, diffex_fdr_log), linetype = c(1,2,2)) +
+  geom_segment(aes(x = x_midline,
+                   y = -1 * y_q1, 
+                   xend = x_midline, 
+                   yend = y_q1),
+               linetype = 1, 
+               color='black') +
+  scale_color_manual(name = '', values=diffex_call_colors) +
+  theme_void() +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'02-gsea_rank.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+
+# gene rank high to low -----------------------------------------------------
+
+plt_df = df %>% 
+  mutate(sig = -1* log10(padj_na),
+         rank = sig * sign(log2FoldChange)) %>% 
+  arrange(rank) %>% 
+  mutate(row=dplyr::row_number() * -1)
+
+diffex_fdr_log = -1 * log10(diffex_fdr)
+x_midline = median(plt_df$row)
+y_q1 = (max(plt_df$rank) - min(plt_df$rank)) / 10
+y_q1
+plt = ggplot(plt_df, aes(x=row, y=rank, color=call)) +
+  geom_point(alpha=0.6, size=5) +
+  geom_hline(yintercept = c(0), linetype = c(1)) +
+  geom_segment(aes(x = x_midline,
+                   y = -1 * y_q1, 
+                   xend = x_midline, 
+                   yend = y_q1),
+               linetype = 1, 
+               color='black') +
+  scale_color_manual(name = '', values=diffex_call_colors) +
+  theme_void() +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'03-gsea_rank_highToLow.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+
+
+# ranked all in  -------------------------------------------------------
+
+plt_df = plt_df %>% 
+  mutate(gene_f = factor(id))
+
+plt = ggplot(plt_df, aes(x=row, y=rank)) +
+  geom_col(alpha=0.6, size=1, color='lightgreen') +
+  geom_hline(yintercept = c(0), linetype = c(1), color='black') +
+  theme_void() +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'03-gsea_all_in.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+
+# toy_barplot -------------------------------------------------------------
+
+set.seed(123) # reproducibility
+n_genes <- 50
+
+# Simulate log2 fold changes & sig values
+#log2FC <- c(
+#  rpoisnonzero(n_genes, lambda=1),    # overexpressed
+#  runif(n_genes, -5, -1)   # underexpressed
+#)
+rank <- c(
+  abs(rnorm(n_genes/2, mean = 0, sd = 0.5) * 10),
+  -1 * abs(rnorm(n_genes/2, mean = 0, sd = 0.5) * 10))
+
+gs1 = c(30, 50, 25, 16, 24, 11, 20, 40,  3, 29)
+gs2 = c(36, 44, 22, 42, 5, 10, 8, 21, 7, 13)
+gs3 = c(3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+df <- data.frame(rank) %>%
+  arrange(desc(rank)) %>% 
+  mutate(gene = dplyr::row_number(),
+         gene_f = factor(gene),
+         in_gs1 = gene %in% gs1,
+         in_gs2 = gene %in% gs2,
+         in_gs3 = gene %in% gs3)
+
+in_gs_color = c(`TRUE`='darkgreen', `FALSE`='lightgreen')
+plt = df %>% 
+  ggplot(aes(x = gene, y = rank, fill = FALSE)) +
+  geom_bar(stat = "identity", color='lightgray') +
+  scale_fill_manual(values = in_gs_color) +
+  theme_void() +
+  theme(legend.position = "none") +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'04-gsea_all_genes.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+plt = df %>% 
+  ggplot(aes(x = gene, y = rank, fill = in_gs1)) +
+  geom_bar(stat = "identity", color='lightgray') +
+  scale_fill_manual(values = in_gs_color) +
+  theme_void() +
+  theme(legend.position = "none") +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'04-gsea_gs1.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+plt = df %>% 
+  ggplot(aes(x = gene, y = rank, fill = in_gs2)) +
+  geom_bar(stat = "identity", color='lightgray') +
+  scale_fill_manual(values = in_gs_color) +
+  theme_void() +
+  theme(legend.position = "none") +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'04-gsea_gs2.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
+
+plt = df %>% 
+  ggplot(aes(x = gene, y = rank, fill = in_gs3)) +
+  geom_bar(stat = "identity", color='lightgray') +
+  scale_fill_manual(values = in_gs_color) +
+  theme_void() +
+  theme(legend.position = "none") +
+  guides(color = "none")
+plt
+ggsave(file = here(base_path,'04-gsea_gs3.png'), 
+       plot = plt,
+       height = 5, width = 5, units = 'in')
 

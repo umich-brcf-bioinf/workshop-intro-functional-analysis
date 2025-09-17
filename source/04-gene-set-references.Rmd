@@ -54,5 +54,5 @@ knitr_fig_path("02-")
 <br/>
 <br/>
 <hr/>
-| [Previous lesson](03-WebGestaltRORA.html) | [Top of this lesson](#top) | [Next lesson](05-fcs-gsea-overview.html) |
+| [Previous lesson](06-WebGestaltRGSEA.html) | [Top of this lesson](#top) | [Next lesson](07B-advanced-visualizations.html) |
 | :--- | :----: | ---: |

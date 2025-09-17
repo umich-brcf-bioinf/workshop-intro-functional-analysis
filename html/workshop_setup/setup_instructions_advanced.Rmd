@@ -219,6 +219,8 @@ required_packages = c(
   "org.Mm.eg.db",
   "fgsea",
   "pheatmap",
+  "VennDiagram",
+  "ggVennDiagram",
   "UpSetR",
   "ComplexUpset")
 

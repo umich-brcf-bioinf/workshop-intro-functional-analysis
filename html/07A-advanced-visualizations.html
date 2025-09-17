@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Advanced Visualizations I</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from built via
+https://favicon.io/emoji-favicons/computer/
+-->
+<meta name="google-site-verification" content="t-Wgs-RXt8xi94RSoFamxoD2P2h-Hh7M_t_iOuxFZUo" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Intro Functional Analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="workshop-intro.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ifun-overview.pdf">Functional analysis and ORA</a>
+    </li>
+    <li>
+      <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
+    </li>
+    <li>
+      <a href="03-WebGestaltRORA.html">ORA with R</a>
+    </li>
+    <li>
+      <a href="07A-advanced-visualizations.html">Advanced visualizations I</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Day 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ifun-gsea-overview.pdf">Functional Analysis and GSEA</a>
+    </li>
+    <li>
+      <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
+    </li>
+    <li>
+      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+    </li>
+    <li>
+      <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
+    </li>
+    <li>
+      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="workshop-wrap-up.html">Wrap up</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Advanced Visualizations I</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 16px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+
+</style>
+<script>
+  addClassKlippyTo("pre.r, pre.markdown, pre.bash");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<p><img src="images/wayfinder/wayfinder-07A.png"
+alt="workshop wayfinder" /></p>
+<div id="objectives" class="section level1">
+<h1>Objectives</h1>
+<ul>
+<li>Compare between sets of genes from ORA results</li>
+<li>Summarize expression differences for genes associated with a GO term
+of interest</li>
+<li></li>
+</ul>
+</div>
+<div id="getting-started" class="section level1">
+<h1>Getting started</h1>
+<p>In this section, we’ll generate additional visualizations - beyond
+what was generated by <code>WebGestaltR</code> - for our bulk RNA-seq
+ORA results.</p>
+<p>First, we’ll load a library called <code>ComplexHeatmap</code> that
+we will be using for some of our visualizations in addition to the
+plotting that is available to use from <code>ggplot2</code> after
+previously loading the <code>tidyverse</code>.</p>
+<!-- # library(VennDiagram) # missing library -->
+<pre class="r"><code># =========================================================================
+# Advanced Visualizations I
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load additional libraries
+library(tidyverse)</code></pre>
+<pre><code>── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ───────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(ComplexHeatmap)</code></pre>
+<pre><code>Loading required package: grid
+========================================
+ComplexHeatmap version 2.24.1
+Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
+Github page: https://github.com/jokergoo/ComplexHeatmap
+Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
+
+If you use it in published research, please cite either one:
+- Gu, Z. Complex Heatmap Visualization. iMeta 2022.
+- Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
+    genomic data. Bioinformatics 2016.
+
+
+The new InteractiveComplexHeatmap package can directly export static 
+complex heatmaps into an interactive Shiny app with zero effort. Have a try!
+
+This message can be suppressed by:
+  suppressPackageStartupMessages(library(ComplexHeatmap))
+========================================</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Check current working directory
+getwd()</code></pre>
+</div>
+<div id="generate-visualizations-for-ora-results"
+class="section level1">
+<h1>Generate visualizations for ORA results</h1>
+<p>To create visualizations for the ORA enrichments, we’ll start by
+reading in the table that <code>WebGestaltR</code> output to file.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Read in results
+enriched_ora = read_delim(&#39;results/Project_deficient_vs_control_ORA_GO_BP/enrichment_results_deficient_vs_control_ORA_GO_BP.txt&#39;)</code></pre>
+<pre><code>Rows: 6 Columns: 11
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (5): geneSet, description, link, overlapId, userId
+dbl (6): size, overlap, expect, enrichmentRatio, pValue, FDR
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>head(enriched_ora)</code></pre>
+<pre><code># A tibble: 6 × 11
+  geneSet    description                             link   size overlap expect enrichmentRatio  pValue    FDR overlapId userId
+  &lt;chr&gt;      &lt;chr&gt;                                   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; 
+1 GO:0070997 neuron death                            http…   263      14  3.73             3.76 1.98e-5 0.0157 11816;12… Apoe;…
+2 GO:0098754 detoxification                          http…    77       7  1.09             6.41 1.03e-4 0.0314 11816;14… Apoe;…
+3 GO:0062012 regulation of small molecule metabolic… http…   235      12  3.33             3.60 1.19e-4 0.0314 11816;12… Apoe;…
+4 GO:0006575 cellular modified amino acid metabolic… http…   120       8  1.70             4.70 2.91e-4 0.0575 14381;14… Mthfd…
+5 GO:0097193 intrinsic apoptotic signaling pathway   http…   227      11  3.22             3.42 3.64e-4 0.0575 12048;12… Bcl2l…
+6 GO:0043620 regulation of DNA-templated transcript… http…    50       5  0.709            7.05 6.72e-4 0.0886 12608;13… Vegfa…</code></pre>
+<p>In addition to the enrichment statistics, the table also includes a
+column called <code>userId</code> that includes the names of the genes
+that were both annotated for that GO term and part of the list of DE
+genes of interest that we provided for the enrichment. Let’s pull out
+those values and transform them into a structure that is more R
+friendly.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# create empty list
+go_geneSets &lt;- list()
+
+# -------------------------------------------------------------------------
+# create lists of overlapping DE genes for each GO term
+for(i in 1:length(enriched_ora$description)){
+  go_name &lt;- enriched_ora$description[i] # descriptive GO term names
+  go_genes &lt;- str_split_1(enriched_ora$userId[i], &quot;;&quot;) # list of gene symbols from table entry
+  go_geneSets[[go_name]] &lt;- c(go_genes)
+}
+
+# -------------------------------------------------------------------------
+# check the named lists
+head(go_geneSets)</code></pre>
+<pre><code>$`neuron death`
+ [1] &quot;Apoe&quot;    &quot;Bcl2l1&quot;  &quot;Vegfa&quot;   &quot;Ddit3&quot;   &quot;Slc7a11&quot; &quot;Trim2&quot;   &quot;Coro1a&quot;  &quot;G6pdx&quot;   &quot;Mt1&quot;     &quot;Egln1&quot;   &quot;Jun&quot;     &quot;Cebpb&quot;  
+[13] &quot;Hipk2&quot;   &quot;Bnip3&quot;  
+
+$detoxification
+[1] &quot;Apoe&quot;   &quot;Sesn2&quot;  &quot;Gsr&quot;    &quot;Mt2&quot;    &quot;Mt1&quot;    &quot;Srxn1&quot;  &quot;Hbb-bs&quot;
+
+$`regulation of small molecule metabolic process`
+ [1] &quot;Apoe&quot;     &quot;Bcl2l1&quot;   &quot;Grb10&quot;    &quot;Clcn2&quot;    &quot;Acmsd&quot;    &quot;Slc7a11&quot;  &quot;Sesn2&quot;    &quot;Trib3&quot;    &quot;Midn&quot;     &quot;Epm2aip1&quot; &quot;Cltc&quot;    
+[12] &quot;Erfe&quot;    
+
+$`cellular modified amino acid metabolic process`
+[1] &quot;Mthfd2&quot;  &quot;P4ha1&quot;   &quot;Chac1&quot;   &quot;Slc7a11&quot; &quot;Cth&quot;     &quot;G6pdx&quot;   &quot;Gsr&quot;     &quot;Egln1&quot;  
+
+$`intrinsic apoptotic signaling pathway`
+ [1] &quot;Bcl2l1&quot; &quot;E2f2&quot;   &quot;Cdkn1a&quot; &quot;Ddit3&quot;  &quot;Stk25&quot;  &quot;Chac1&quot;  &quot;Nupr1&quot;  &quot;Trib3&quot;  &quot;Cebpb&quot;  &quot;Hipk2&quot;  &quot;Bnip3&quot; 
+
+$`regulation of DNA-templated transcription in response to stress`
+[1] &quot;Vegfa&quot; &quot;Ddit3&quot; &quot;Sesn2&quot; &quot;Jun&quot;   &quot;Cebpb&quot;</code></pre>
+<p>Now we have a list of the names of each GO term and then nested lists
+of the DE genes for each term.</p>
+<div id="investigate-gene-overlaps" class="section level2">
+<h2>Investigate gene overlaps</h2>
+<p>Earlier, we saw that based on the DAG of GO terms in our initial
+enrichment using the web-browser version of <code>WebGestalt</code> that
+the “neuron death” and “intrinsic apoptotic signaling pathway” terms.
+Let’s check what DE genes are shared between those two terms:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# check what genes are shared between the two terms
+intersect(go_geneSets$`neuron death`, go_geneSets$`intrinsic apoptotic signaling pathway`)</code></pre>
+<pre><code>[1] &quot;Bcl2l1&quot; &quot;Ddit3&quot;  &quot;Cebpb&quot;  &quot;Hipk2&quot;  &quot;Bnip3&quot; </code></pre>
+<p>We see that five genes are shared between the two terms out of the
+total set that are both annotated for each GO term and provided as DE
+genes of interest for the enrichment.</p>
+<!--If package installed, add plotting for Venn -->
+<p>While comparing genes between two sets of genes is fairly
+straightforward, if we wanted to understand how many genes are shared
+versus unique across all the significant terms in our ORA enrichmemt
+results using <code>WebGestaltR</code> this approach would be quite
+tedious.</p>
+<p>Instead we can opt for visualizations that use a broader type of set
+analysis. One option is something called an <a
+href="https://upset.app/">UpSet plot</a>. Unlike that doesn’t limit the
+number of sets that can be compared, unlike more traditional approaches
+like Venn diagrams. With the <a
+href="https://jokergoo.github.io/ComplexHeatmap-reference/book/upset-plot.html">Complex
+Heatmap package</a>, we can use the named list as our starting point.
+<!-- add details about input matrix --></p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# First make the combination matrix from our list of genes for each GO term
+m = make_comb_mat(go_geneSets)
+m</code></pre>
+<pre><code>A combination matrix with 6 sets and 17 combinations.
+  ranges of combination set size: c(1, 7).
+  mode for the combination size: distinct.
+  sets are on rows.
+
+Top 8 combination sets are:
+  neuron death detoxification regulation of small molecule metabolic process cellular modified amino acid metabolic process intrinsic apoptotic signaling pathway regulation of DNA-templated transcription in response to stress   code size
+                                                                           x                                                                                                                                                      001000    7
+                                                                                                                                                                x                                                                 000010    4
+                            x                                                                                                                                                                                                     010000    3
+                                                                                                                          x                                                                                                       000100    3
+             x                                                                                                                                                  x                                                               x 100011    2
+             x                                                                                                            x                                                                                                       100100    2
+             x                                                                                                                                                  x                                                                 100010    2
+             x                                                                                                                                                                                                                  x 100001    2
+
+Sets are:
+                                                              set size
+                                                     neuron death   14
+                                                   detoxification    7
+                   regulation of small molecule metabolic process   12
+                   cellular modified amino acid metabolic process    8
+                            intrinsic apoptotic signaling pathway   11
+  regulation of DNA-templated transcription in response to stress    5</code></pre>
+<p>In the combination matrix results, we can see the total number of
+sets being compared and a representation of the overlaps. This is useful
+not as nice as something more visual.</p>
+<p>Using the combination matrix, we can create a simple UpSet plot
+comparing the DE genes annotated for each GO term:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Make simple UpSet plot
+UpSet(m)</code></pre>
+<p><img src="fig/02-genes_upset-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p>Let’s breakdown the parts of this plot:</p>
+<ul>
+<li>On the left are the descriptive names of the GO terms, that we
+provided.<br />
+</li>
+<li>On the right are bar plots summarizing the total set size, which in
+this case is the total number of genes that were DE in our data for each
+term.<br />
+</li>
+<li>The center area shows the set comparison. The single dots on the
+right represents the values that are included in that term but not the
+other terms being compared. The dots connected by lines show the shared
+values between the indicated terms. In this case, we see sets of 2-3
+terms that have at least one shared value.<br />
+</li>
+<li>The top bar plots show the counts for each set comparison. The
+default mode is ‘distinct’ so the height of the bar corresponds to the
+number of genes that are only part of that set intersection.</li>
+</ul>
+<p>Now that we understand the parts of the plot, let’s make some
+adjustments to make the plot easier to read. You can use the same colors
+or <a href="https://sape.inf.usi.ch/quick-reference/ggplot2/colour">pick
+your own from ggplots named options</a>:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Make simple UpSet plot
+upsetGO &lt;- UpSet(m, comb_order = rev(order(comb_size(m))), lwd = 3,
+                 comb_col = c(&quot;black&quot;, &quot;blue&quot;, &quot;gold3&quot;)[comb_degree(m)],
+                 left_annotation = upset_left_annotation(m, add_numbers = TRUE))
+upsetGO</code></pre>
+<p><img src="fig/02-genes_upset_2-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p>Now we have the GO term dots connected with a thicker line to
+indicate the combination and a color designated for each degree of
+intersection (black = unique, blue = shared by two terms, gold = shared
+by three terms). We also have the intersections sorted by size and the
+set size bar moved to the left with the values added.</p>
+<blockquote>
+<p>Question: What term has the fewest unique associated genes? Which
+term has the most?</p>
+</blockquote>
+<p><em>Note</em> - This is just a fraction of all the possible
+customizations that are available <a
+href="https://jokergoo.github.io/ComplexHeatmap-reference/book/upset-plot.html#make-the-combination-matrix">via
+the ComplexHeatmap package</a> but for the sake of time, we’ll limit our
+plot adjustments to this, at least for now.</p>
+<p>Let’s output our customized UpSet plot to file:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Output UpSet plot to file
+png(file = &quot;./results/figures/deficient_vs_control_GO-BP_UpSetPlot.png&quot;, width = 1000, height = 400)
+  draw(upsetGO) # draw the plot
+dev.off() # Close the graphics device</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<!-- Note that the labels exceed the size of the margins, not sure how best to fix this -->
+<p>We only have a single comparison between deficient and control
+conditions for our bulk results, but for experiments that have more than
+one comparison we can also use these approaches to compare what GO terms
+are shared/unique between different DE comparisons instead of comparing
+what genes are unique/shared.</p>
+<p><br></p>
+</div>
+</div>
+<div id="summarize-gene-expression-for-ora-results"
+class="section level1">
+<h1>Summarize gene expression for ORA results</h1>
+<p>Since ORA does not account for the fold-change size or direction, we
+can combine our enrichment results with our DE statistics to summarize
+the gene expression for terms of interest.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# If not already loaded, read in diffex results
+rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
+<pre><code>Rows: 16249 Columns: 9
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (3): id, symbol, call
+dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Take another look at our DE table
+head(rsd_diffex)</code></pre>
+<pre><code># A tibble: 6 × 9
+  id                 symbol baseMean log2FoldChange lfcSE   stat pvalue   padj call 
+  &lt;chr&gt;              &lt;chr&gt;     &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
+1 ENSMUSG00000000001 Gnai3   1490.            0.278 0.148  1.88  0.0605  0.325 NS   
+2 ENSMUSG00000000028 Cdc45   1749.            0.222 0.129  1.72  0.0853  0.386 NS   
+3 ENSMUSG00000000031 H19     2152.            0.136 0.284  0.478 0.633   0.867 NS   
+4 ENSMUSG00000000037 Scml2     24.9           0.600 0.562  1.07  0.286  NA     NS   
+5 ENSMUSG00000000049 Apoh       7.78         -1.23  1.15  -1.07  0.285  NA     NS   
+6 ENSMUSG00000000056 Narf   19654.           -0.201 0.167 -1.20  0.229   0.596 NS   </code></pre>
+<p>To visualize the expression for genes annotated as part of
+<code>small molecule metabolism</code>, which might be interesting since
+the treatment was a difference in diet, we’ll need to subset our results
+to the DE genes of interest for that term.</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Subset RSD table to genes that match those in our list for the GO term of interest
+
+rsd_smallmolecule &lt;- rsd_diffex %&gt;% filter(symbol %in% go_geneSets$`regulation of small molecule metabolic process`)
+head(rsd_smallmolecule)</code></pre>
+<pre><code># A tibble: 6 × 9
+  id                 symbol  baseMean log2FoldChange lfcSE  stat   pvalue        padj call 
+  &lt;chr&gt;              &lt;chr&gt;      &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;
+1 ENSMUSG00000002985 Apoe        157.         -1.16  0.345 -3.35 8.14e- 4 0.0329      Down 
+2 ENSMUSG00000007659 Bcl2l1    21934.         -0.668 0.209 -3.19 1.40e- 3 0.0459      Down 
+3 ENSMUSG00000020176 Grb10      3086.          1.26  0.240  5.27 1.38e- 7 0.0000662   Up   
+4 ENSMUSG00000022843 Clcn2      1016.          1.18  0.201  5.90 3.74e- 9 0.00000374  Up   
+5 ENSMUSG00000026348 Acmsd      1203.         -0.658 0.200 -3.30 9.66e- 4 0.0362      Down 
+6 ENSMUSG00000027737 Slc7a11     119.          2.28  0.367  6.23 4.78e-10 0.000000561 Up   </code></pre>
+<p>Let’s start by using the subsetted table to create a simple barplot
+of the fold-change values for each gene:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Simple barplot of fold-changes
+ggplot(rsd_smallmolecule, aes(x = symbol, y = log2FoldChange)) +
+  geom_col()</code></pre>
+<p><img src="fig/02-genes_barplot-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p>This is helpful but could be improved with some formatting
+adjustments and labels. Let’s do that next:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Create a more sophisticated barplot of fold-changes
+
+rsd_smallmolecule_barplot &lt;- ggplot(rsd_smallmolecule, aes(x = reorder(symbol, -log2FoldChange), y = log2FoldChange, fill = log2FoldChange &gt; 0)) +
+  geom_col() +
+  labs(
+    title = &quot;Fold-Change of Categories&quot;,
+    x = &quot;Gene symbol&quot;,
+    y = &quot;log2 fold-change&quot;
+  ) +
+  scale_fill_manual(values = c(&quot;TRUE&quot; = &quot;darkred&quot;, &quot;FALSE&quot; = &quot;darkblue&quot;),
+                    labels = c(&quot;Down-regulated&quot;, &quot;Up-regulated&quot;),
+                    name = &quot;Regulation&quot;) +
+  theme_minimal() 
+
+rsd_smallmolecule_barplot</code></pre>
+<p><img src="fig/02-genes_barplot2-1.png" width="816" style="display: block; margin: auto;" />
+Now we can see we see that the genes order by their fold-change values
+from our DE results and colored by their status (Up- vs Down-
+regulated). <br></p>
+<blockquote>
+<p>Does anything jump out about these results? Are you surprised that
+some genes are upregulated but other genes in the same term are down
+regulated?</p>
+</blockquote>
+<p>Let’s also write this out to file:</p>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Output the barplot to file
+png(file = &quot;./results/figures/deficient_vs_control_fold-changes_regulation-of-small-molecule-metabolic-process.png&quot;, width = 800, height = 500, res = 100)
+  rsd_smallmolecule_barplot
+dev.off() # Remember to close the graphics device</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<!-- wait to use heatmaps until get to single-cell data -->
+</div>
+<div id="clean-up-session" class="section level1">
+<h1>Clean up session</h1>
+<p>To ensure that we don’t leave objects in our environment that will
+slow down our log-in and session load time tomorrow morning, let’s clear
+our environment and re-start our R session now.</p>
+<ol style="list-style-type: decimal">
+<li>To power down the session, click the orange power button in the
+upper right corner of the RStudio window. Note: There is no confirmation
+dialogue, the session will simply end.</li>
+<li>Click the “Start New Session” button to restart the RStudio
+session.</li>
+<li>Re-load the libraries:</li>
+</ol>
+<pre class="r"><code># -------------------------------------------------------------------------
+# Load primary libraries
+library(WebGestaltR)
+library(tidyverse)
+
+setwd(&quot;~/IFUN_R/&quot;)</code></pre>
+<p><br/> <br/> …</p>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<ul>
+<li>Set comparisons can be useful for understanding our enrichment
+results</li>
+<li>UpSet plots are an easy way to compare and visualize the common and
+unique values for a large number of sets.</li>
+<li>We can use more familiar visualization approaches like barplots to
+see if there are any interest patterns in our expression data for genes
+associated with functional terms of interest</li>
+</ul>
+<br/> <br/>
+<hr/>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><a href="03-WebGestaltRORA.html">Previous
+lesson</a></th>
+<th align="center"><a href="#top">Top of this lesson</a></th>
+<th align="right"><a href="05-fcs-gsea-overview.html">Next
+lesson</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
