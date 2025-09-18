@@ -27,7 +27,7 @@ navbar:
           href: gene-set-references.pdf
         - text: "Advanced visualizations II"
           href: 07B-advanced-visualizations.html
-        - text: "Analysis summary and next steps"
+        - text: "Analysis summary"
           href: 08-analysis-summary.html
     - text: "Wrap up"
       href: workshop-wrap-up.html

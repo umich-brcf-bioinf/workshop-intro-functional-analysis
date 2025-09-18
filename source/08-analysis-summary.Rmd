@@ -37,23 +37,118 @@ source("../bin/chunk-options.R")
 knitr_fig_path("02-")
 ```
 
-![workshop wayfinder](images/wayfinder/wayfinder-08.png)
-
-# Objectives
-
-- 1
-- 2
-- 3
-
-...
+![workshop wayfinder](images/wayfinder/wayfinder-wrap-up.png)
 
 # Summary
 
-- 1
-- 2
-- 3
+Functional analysis can be a powerful tool for summarizing differential expression results from a variety of experiments, including both bulk and single-cell RNA-seq. 
 
-<br/>
+What we've accomplished:
+
+- Discussed the concepts behind ORA, GSEA, and Pathway Topology approaches to 
+  functional enrichment approaches.
+- Used a web-browser tool to perform ORA analysis of bulk RNA-seq data.    
+- Used R/RStudio and `WebGestaltR` to run ORA for bulk RNA-seq data in a more reproducible manner.   
+- Used `WebGestaltR` to run GSEA for single-cell RNA-seq data     
+- Created customized visualizations at the gene and term level     
+- Reviewed biological knowledge bases commonly used in functional analyses.   
+
+<br>
+
+---
+
+# Resources
+
+## Methods and Approaches
+
+- Khatri P, Sirota M, Butte AJ. Ten years of pathway analysis: current 
+  approaches and outstanding challenges. PLoS Comput Biol. 2012;8(2):e1002375.
+  doi:10.1371/journal.pcbi.1002375 
+  https://pubmed.ncbi.nlm.nih.gov/22383865/
+- Subramanian A, Tamayo P, Mootha VK, et al. Gene set enrichment analysis: a 
+  knowledge-based approach for interpreting genome-wide expression profiles. 
+  Proc Natl Acad Sci U S A. 2005;102(43):15545-15550. doi:10.1073/pnas.0506580102  
+  https://pmc.ncbi.nlm.nih.gov/articles/PMC1239896/
+- Wijesooriya K, Jadaan SA, Perera KL, Kaur T, Ziemann M. Urgent need for 
+  consistent standards in functional enrichment analysis. PLoS Comput Biol. 
+  2022;18(3):e1009935. Published 2022 Mar 9. doi:10.1371/journal.pcbi.1009935  
+  https://pmc.ncbi.nlm.nih.gov/articles/PMC8936487/
+- Zyla J, Marczyk M, Weiner J, Polanska J. Ranking metrics in gene set 
+  enrichment analysis: do they matter?. BMC Bioinformatics. 2017;18(1):256. 
+  Published 2017 May 12. doi:10.1186/s12859-017-1674-0 
+  https://pubmed.ncbi.nlm.nih.gov/28499413/
+  
+- Topology Pathway Analyses
+  - Tarca AL, Draghici S, Khatri P, et al. A novel signaling pathway impact 
+    analysis. Bioinformatics. 2009;25(1):75-82. doi:10.1093/bioinformatics/btn577  
+    https://pubmed.ncbi.nlm.nih.gov/18990722/
+  - Nguyen T, Mitrea C, Draghici S. Network-Based Approaches for Pathway Level 
+    Analysis. Curr Protoc Bioinformatics. 2018;61(1):8.25.1-8.25.24.  
+    doi:10.1002/cpbi.42  
+    https://pubmed.ncbi.nlm.nih.gov/30040185/
+  - Ma J, Shojaie A, Michailidis G. A comparative study of topology-based pathway 
+    enrichment analysis methods. BMC Bioinformatics. 2019;20(1):546. Published 
+    2019 Nov 4. doi:10.1186/s12859-019-3146-1 
+    https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3146-1
+  - Ihnatova I, Popovici V, Budinska E. A critical comparison of topology-based 
+    pathway analysis methods. PLoS One. 2018;13(1):e0191154. Published 2018 Jan 
+    25. doi:10.1371/journal.pone.0191154.  
+    https://pubmed.ncbi.nlm.nih.gov/29370226/
+
+
+
+## Biological Knowledge Bases
+
+- Gene Ontology (GO)
+  - https://geneontology.org/docs/ontology-documentation/
+  - https://geneontology.org/stats.html
+  - du Plessis L, Skunca N, Dessimoz C. The what, where, how and why of gene 
+    ontology--a primer for bioinformaticians. Brief Bioinform. 
+    2011;12(6):723-735. doi:10.1093/bib/bbr002
+    https://pmc.ncbi.nlm.nih.gov/articles/PMC3220872/
+- KEGG
+  - https://www.genome.jp/kegg/kegg1a.html
+  - https://www.genome.jp/kegg/docs/statistics.html
+- Reactome
+  - https://reactome.org/
+- MSigDB
+  - https://www.gsea-msigdb.org/gsea/msigdb
+  - Liberzon A, Birger C, Thorvaldsdóttir H, Ghandi M, Mesirov JP, Tamayo P. 
+    The Molecular Signatures Database (MSigDB) hallmark gene set collection. 
+    Cell Syst. 2015;1(6):417-425. doi:10.1016/j.cels.2015.12.004  
+    https://pmc.ncbi.nlm.nih.gov/articles/PMC4707969/
+
+## Analysis tools
+
+- [WebGestalt](https://www.webgestalt.org/)
+  - Wang J, Vasaikar S, Shi Z, Greer M, Zhang B. WebGestalt 2017: a more 
+    comprehensive, powerful, flexible and interactive gene set enrichment 
+    analysis toolkit. Nucleic Acids Res. 2017;45(W1):W130-W137. doi:10.1093/nar/gkx356 
+    https://pubmed.ncbi.nlm.nih.gov/28472511/
+  - Elizarraras JM, Liao Y, Shi Z, Zhu Q, Pico AR, Zhang B. WebGestalt 2024: 
+    faster gene set analysis and new support for metabolomics and multi-omics. 
+    Nucleic Acids Res. 2024;52(W1):W415-W421. doi:10.1093/nar/gkae456 
+    https://pubmed.ncbi.nlm.nih.gov/38808672/
+- [GSEA](https://www.gsea-msigdb.org/gsea/index.jsp)
+  - [Broad GSEA User Guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html)
+- [clusterProfiler](https://www.bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
+- [fGSEA](https://bioconductor.org/packages/devel/bioc/vignettes/fgsea/inst/doc/fgsea-tutorial.html)
+- [DAVID](https://davidbioinformatics.nih.gov/)
+- [iPathwayGuide](https://advaitabio.com/bioinformatics/ipathwayguide/)
+- Nice for proteomic data:
+  - [Piano](https://varemo.github.io/piano/)
+  - [String](https://string-db.org/)
+ 
+## Tutorials
+- [Harvard Chan Bioinformatics Core on Functional Analysis](https://hbctraining.github.io/Training-modules/DGE-functional-analysis/lessons/functional_analysis_2019.html)
+- [DIY.transcriptomics Functional enrichment analysis](https://diytranscriptomics.com/project/lecture-10)
+- [GSEA with ClusterProfiler](https://learn.gencore.bio.nyu.edu/rna-seq-analysis/gene-set-enrichment-analysis/)
+- [ESCAPE for single-cell enrichments](https://www.borch.dev/uploads/screpertoire/articles/running_escape)
+- [Single Cell Best Practices book chapter on Funtional Enrichments](https://www.sc-best-practices.org/conditions/gsea_pathway.html)
+- Enrichment visualization with [enrichplot](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html)
+- [BiostatsSquid](https://biostatsquid.com/) on [Pathway Enrichment Analysis](https://www.youtube.com/watch?v=H1cUs6pql9s) and [GSEA](https://www.youtube.com/watch?v=egO7Lt92gDY)
+
+
 <br/>
 <hr/>
 | [Previous lesson](07B-advanced-visualizations.html) | [Top of this lesson](#top) | [Next lesson](workshop-wrap-up.html) |
