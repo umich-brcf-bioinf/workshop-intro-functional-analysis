@@ -366,7 +366,7 @@ div.tocify {
       <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
     </li>
     <li>
-      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+      <a href="gene-set-references.pdf">GO, KEGG, and friends</a>
     </li>
     <li>
       <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
@@ -644,13 +644,13 @@ library(WebGestaltR)</code></pre>
 <pre><code>*                                        *</code></pre>
 <pre><code>******************************************</code></pre>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+<pre><code>── Attaching core tidyverse packages ───────────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.0     ✔ stringr   1.5.1
 ✔ ggplot2   3.5.2     ✔ tibble    3.2.1
 ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
 ✔ purrr     1.0.4     </code></pre>
-<pre><code>── Conflicts ───────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
@@ -686,8 +686,9 @@ specifying that argument.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List available organisms
 listOrganism()</code></pre>
-<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;       &quot;dmelanogaster&quot;
- [8] &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
+<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;       
+ [6] &quot;sscrofa&quot;       &quot;dmelanogaster&quot; &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;    
+[11] &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
 <p><br></p>
 <p>To see what functional databases are available from the tool, we can
 see the <code>listGeneSet()</code> function to see the available
@@ -749,12 +750,18 @@ other common (and not-so-common) identifiers.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List gene identifier types for mmusculus
 listIdType(organism = &#39;mmusculus&#39;) %&gt;% tail(25)</code></pre>
-<pre><code> [1] &quot;dbSNP&quot;                       &quot;embl&quot;                        &quot;ensembl_gene_id&quot;             &quot;ensembl_peptide_id&quot;         
- [5] &quot;entrezgene&quot;                  &quot;entrezgene_protein-coding&quot;   &quot;genename&quot;                    &quot;genesymbol&quot;                 
- [9] &quot;illumina_ScriptSeq_RNASeqV2&quot; &quot;illumina_WG6_Customarray&quot;    &quot;illumina_mouseref_8&quot;         &quot;illumina_mouseref_8_v2&quot;     
-[13] &quot;illumina_mousewg_6_v1&quot;       &quot;illumina_mousewg_6_v2&quot;       &quot;interpro&quot;                    &quot;phalanx_onearray&quot;           
-[17] &quot;phosphositeEnsembl&quot;          &quot;phosphositeRefseq&quot;           &quot;phosphositeSeq&quot;              &quot;phosphositeUniprot&quot;         
-[21] &quot;protein_id&quot;                  &quot;refseq_mrna&quot;                 &quot;refseq_peptide&quot;              &quot;unigene&quot;                    
+<pre><code> [1] &quot;dbSNP&quot;                       &quot;embl&quot;                       
+ [3] &quot;ensembl_gene_id&quot;             &quot;ensembl_peptide_id&quot;         
+ [5] &quot;entrezgene&quot;                  &quot;entrezgene_protein-coding&quot;  
+ [7] &quot;genename&quot;                    &quot;genesymbol&quot;                 
+ [9] &quot;illumina_ScriptSeq_RNASeqV2&quot; &quot;illumina_WG6_Customarray&quot;   
+[11] &quot;illumina_mouseref_8&quot;         &quot;illumina_mouseref_8_v2&quot;     
+[13] &quot;illumina_mousewg_6_v1&quot;       &quot;illumina_mousewg_6_v2&quot;      
+[15] &quot;interpro&quot;                    &quot;phalanx_onearray&quot;           
+[17] &quot;phosphositeEnsembl&quot;          &quot;phosphositeRefseq&quot;          
+[19] &quot;phosphositeSeq&quot;              &quot;phosphositeUniprot&quot;         
+[21] &quot;protein_id&quot;                  &quot;refseq_mrna&quot;                
+[23] &quot;refseq_peptide&quot;              &quot;unigene&quot;                    
 [25] &quot;uniprotswissprot&quot;           </code></pre>
 <p>Continuing with the arguments for the function:</p>
 <ul>
@@ -791,7 +798,7 @@ can read in with the <code>read_csv()</code> function:</p>
 # Read diffex results
 rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
 <pre><code>Rows: 16249 Columns: 9
-── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────
+── Column specification ─────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (3): id, symbol, call
 dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
@@ -936,7 +943,8 @@ rsd_ora_result = WebGestaltR(
 <pre><code>Loading the functional categories...
 Loading the ID list...
 Loading the reference list...</code></pre>
-<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA_GO_BP&#39; already exists</code></pre>
+<pre><code>Warning in dir.create(projectDir):
+&#39;./results/Project_deficient_vs_control_ORA_GO_BP&#39; already exists</code></pre>
 <pre><code>Summarizing the input ID list by GO Slim data...</code></pre>
 <pre><code>Performing the enrichment analysis...
 Begin affinity propagation...
@@ -955,13 +963,20 @@ head(rsd_ora_result)</code></pre>
 4 GO:0006575                  cellular modified amino acid metabolic process
 5 GO:0097193                           intrinsic apoptotic signaling pathway
 6 GO:0043620 regulation of DNA-templated transcription in response to stress
-                                                 link size overlap    expect enrichmentRatio       pValue        FDR
-1 http://amigo.geneontology.org/amigo/term/GO:0070997  263      14 3.7281697        3.755194 1.979515e-05 0.01565796
-2 http://amigo.geneontology.org/amigo/term/GO:0098754   77       7 1.0915174        6.413091 1.026862e-04 0.03144459
-3 http://amigo.geneontology.org/amigo/term/GO:0062012  235      12 3.3312543        3.602247 1.192589e-04 0.03144459
-4 http://amigo.geneontology.org/amigo/term/GO:0006575  120       8 1.7010660        4.702933 2.905229e-04 0.05745090
-5 http://amigo.geneontology.org/amigo/term/GO:0097193  227      11 3.2178499        3.418432 3.635356e-04 0.05751133
-6 http://amigo.geneontology.org/amigo/term/GO:0043620   50       5 0.7087775        7.054400 6.718740e-04 0.08857539
+                                                 link size overlap    expect
+1 http://amigo.geneontology.org/amigo/term/GO:0070997  263      14 3.7281697
+2 http://amigo.geneontology.org/amigo/term/GO:0098754   77       7 1.0915174
+3 http://amigo.geneontology.org/amigo/term/GO:0062012  235      12 3.3312543
+4 http://amigo.geneontology.org/amigo/term/GO:0006575  120       8 1.7010660
+5 http://amigo.geneontology.org/amigo/term/GO:0097193  227      11 3.2178499
+6 http://amigo.geneontology.org/amigo/term/GO:0043620   50       5 0.7087775
+  enrichmentRatio       pValue        FDR
+1        3.755194 1.979515e-05 0.01565796
+2        6.413091 1.026862e-04 0.03144459
+3        3.602247 1.192589e-04 0.03144459
+4        4.702933 2.905229e-04 0.05745090
+5        3.418432 3.635356e-04 0.05751133
+6        7.054400 6.718740e-04 0.08857539
                                                                              overlapId
 1 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405
 2                                       11816;14782;17748;17750;76650;230784;100503605
@@ -1040,12 +1055,15 @@ head(rsd_ora_kegg_result)</code></pre>
 <pre><code>   geneSet                 description
 1 mmu01230 Biosynthesis of amino acids
 2 mmu04978          Mineral absorption
-                                                                                      link size overlap    expect
-1 http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60       6 0.9919513
-2                http://www.kegg.jp/kegg-bin/show_pathway?mmu04978+12724+14325+17748+17750   28       4 0.4629106
-  enrichmentRatio       pValue        FDR                              overlapId                            userId
-1        6.048684 0.0004125129 0.07260228 100678;107869;209027;27053;56421;56454 Pfkp;Aldh18a1;Pycr1;Cth;Psph;Asns
-2        8.640977 0.0010455220 0.09200593                12724;14325;17748;17750                Clcn2;Mt2;Mt1;Ftl1</code></pre>
+                                                                                      link
+1 http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454
+2                http://www.kegg.jp/kegg-bin/show_pathway?mmu04978+12724+14325+17748+17750
+  size overlap    expect enrichmentRatio       pValue        FDR
+1   60       6 0.9919513        6.048684 0.0004125129 0.07260228
+2   28       4 0.4629106        8.640977 0.0010455220 0.09200593
+                               overlapId                            userId
+1 100678;107869;209027;27053;56421;56454 Pfkp;Aldh18a1;Pycr1;Cth;Psph;Asns
+2                12724;14325;17748;17750                Clcn2;Mt2;Mt1;Ftl1</code></pre>
 <p>Although we limited the comparisons to more specific terms, we only
 find two pathways that have significant enrichment below an FDR &lt;
 0.10 threshold. This could be because the treatment doesn’t impact a
@@ -1088,8 +1106,8 @@ clear_list = c(&quot;rsd_ora_kegg_result&quot;,
 rm(list=Filter(exists, clear_list))
 gc()</code></pre>
 <pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
-Ncells 2797086 149.4    4746150 253.5         NA  4746150 253.5
-Vcells 5817789  44.4   12255594  93.6      36864 12252206  93.5</code></pre>
+Ncells 2789138 149.0    4950962 264.5         NA  4950962 264.5
+Vcells 5807211  44.4   12263262  93.6      36864 12263262  93.6</code></pre>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
