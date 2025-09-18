@@ -372,7 +372,7 @@ div.tocify {
       <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
     </li>
     <li>
-      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+      <a href="08-analysis-summary.html">Analysis summary</a>
     </li>
   </ul>
 </li>
@@ -432,36 +432,13 @@ results</li>
 
 # -------------------------------------------------------------------------
 # Load additional libraries
-library(ComplexHeatmap)</code></pre>
-<pre><code>Loading required package: grid</code></pre>
-<pre><code>========================================
-ComplexHeatmap version 2.25.1
-Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
-Github page: https://github.com/jokergoo/ComplexHeatmap
-Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
+library(ComplexHeatmap)
+library(ggVennDiagram)
 
-If you use it in published research, please cite either one:
-- Gu, Z. Complex Heatmap Visualization. iMeta 2022.
-- Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
-    genomic data. Bioinformatics 2016.
-
-
-The new InteractiveComplexHeatmap package can directly export static 
-complex heatmaps into an interactive Shiny app with zero effort. Have a try!
-
-This message can be suppressed by:
-  suppressPackageStartupMessages(library(ComplexHeatmap))
-========================================</code></pre>
-<pre class="r"><code>library(ggVennDiagram)</code></pre>
-<pre><code>
-Attaching package: &#39;ggVennDiagram&#39;</code></pre>
-<pre><code>The following object is masked from &#39;package:tidyr&#39;:
-
-    unite</code></pre>
-<pre class="r"><code># -------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Check current working directory
 getwd()</code></pre>
-<pre><code>[1] &quot;/home/workshop/damki/workshop-intro-functional-analysis/source&quot;</code></pre>
+<pre><code>[1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
 <p>We should have the GSEA results in our session but we can read in the
 results from the table output to file by <code>WebGestaltR</code> for
 the results from the Day21 vs Day7 and Day7 vs Day 0 pericyte
@@ -469,48 +446,46 @@ single-cell RNA-seq comparisons.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # Read in results for the enrichment for each set of timpoint comparisons
 isc_d21_v_d7_gsea_result = read_delim(&#39;results/Project_D21_v_D7_GSEA_KEGG/enrichment_results_D21_v_D7_GSEA_KEGG.txt&#39;)</code></pre>
-<pre><code>Rows: 36 Columns: 12
-── Column specification ───────────────────────────────────────────────────────────
+<pre><code>Rows: 37 Columns: 12
+── Column specification ──────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;\t&quot;
 chr (6): geneSet, description, link, plotPath, leadingEdgeId, userId
-dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leading...
+dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leadingEdgeNum
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>isc_d7_v_d0_gsea_result = read_delim(&#39;results/Project_D7_v_D0_GSEA_KEGG//enrichment_results_D7_v_D0_GSEA_KEGG.txt&#39;)</code></pre>
-<pre><code>Rows: 14 Columns: 12
-── Column specification ───────────────────────────────────────────────────────────
+<pre><code>Rows: 16 Columns: 12
+── Column specification ──────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;\t&quot;
 chr (6): geneSet, description, link, plotPath, leadingEdgeId, userId
-dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leading...
+dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leadingEdgeNum
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>head(isc_d21_v_d7_gsea_result); head(isc_d7_v_d0_gsea_result)</code></pre>
 <pre><code># A tibble: 6 × 12
-  geneSet  description  link  enrichmentScore normalizedEnrichment…¹ pValue     FDR
-  &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
-1 mmu04512 ECM-recepto… http…           0.772                   2.07      0 0      
-2 mmu03050 Proteasome   http…          -0.816                  -1.91      0 0      
-3 mmu03030 DNA replica… http…          -0.853                  -1.92      0 0      
-4 mmu03040 Spliceosome  http…          -0.726                  -1.97      0 0      
-5 mmu04657 IL-17 signa… http…          -0.690                  -1.78      0 4.87e-4
-6 mmu04974 Protein dig… http…           0.716                   1.93      0 5.23e-4
+  geneSet  description  link  enrichmentScore normalizedEnrichment…¹ pValue     FDR  size plotPath
+  &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   
+1 mmu04512 ECM-recepto… http…           0.772                   2.09      0 0          82 ./Proje…
+2 mmu03050 Proteasome   http…          -0.816                  -1.89      0 0          46 ./Proje…
+3 mmu03030 DNA replica… http…          -0.853                  -1.90      0 0          35 ./Proje…
+4 mmu03040 Spliceosome  http…          -0.726                  -1.96      0 0         128 ./Proje…
+5 mmu04657 IL-17 signa… http…          -0.690                  -1.78      0 0.00146    86 ./Proje…
+6 mmu05012 Parkinson d… http…          -0.651                  -1.77      0 0.00155   125 ./Proje…
 # ℹ abbreviated name: ¹​normalizedEnrichmentScore
-# ℹ 5 more variables: size &lt;dbl&gt;, plotPath &lt;chr&gt;, leadingEdgeNum &lt;dbl&gt;,
-#   leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+# ℹ 3 more variables: leadingEdgeNum &lt;dbl&gt;, leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
 <pre><code># A tibble: 6 × 12
-  geneSet  description link  enrichmentScore normalizedEnrichment…¹  pValue     FDR
-  &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-1 mmu03010 Ribosome    http…           0.791                   2.41 0       0      
-2 mmu03030 DNA replic… http…           0.766                   1.88 0       0.00421
-3 mmu05134 Legionello… http…           0.676                   1.81 0       0.00722
-4 mmu05143 African tr… http…           0.732                   1.81 0       0.00922
-5 mmu04657 IL-17 sign… http…           0.602                   1.77 0       0.0125 
-6 mmu03050 Proteasome  http…           0.661                   1.72 0.00462 0.0212 
+  geneSet  description  link  enrichmentScore normalizedEnrichment…¹ pValue     FDR  size plotPath
+  &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   
+1 mmu03010 Ribosome     http…           0.791                   2.42      0 0         129 ./Proje…
+2 mmu03030 DNA replica… http…           0.766                   1.90      0 0.00423    35 ./Proje…
+3 mmu05134 Legionellos… http…           0.676                   1.81      0 0.0137     56 ./Proje…
+4 mmu05143 African try… http…           0.732                   1.78      0 0.0154     33 ./Proje…
+5 mmu05012 Parkinson d… http…           0.563                   1.73      0 0.0204    125 ./Proje…
+6 mmu00190 Oxidative p… http…           0.572                   1.74      0 0.0216    115 ./Proje…
 # ℹ abbreviated name: ¹​normalizedEnrichmentScore
-# ℹ 5 more variables: size &lt;dbl&gt;, plotPath &lt;chr&gt;, leadingEdgeNum &lt;dbl&gt;,
-#   leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+# ℹ 3 more variables: leadingEdgeNum &lt;dbl&gt;, leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
 <p><br></p>
 <p>Instead of comparing gene sets between enriched terms from a single
 set of results, we can instead compare enrichments between two different
@@ -528,7 +503,7 @@ between the sets.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # Identify total number of unique pathways enriched across both timepoints
 union(KEGG_results[[&quot;d7_v_d0&quot;]], KEGG_results[[&quot;d21_v_d7&quot;]]) %&gt;% length()</code></pre>
-<pre><code>[1] 37</code></pre>
+<pre><code>[1] 40</code></pre>
 <pre class="r"><code># -------------------------------------------------------------------------
 # Identify number of pathways shared between timepoints
 intersect(KEGG_results[[&quot;d7_v_d0&quot;]], KEGG_results[[&quot;d21_v_d7&quot;]]) %&gt;% length()</code></pre>
@@ -547,8 +522,8 @@ KEGG_venn &lt;- ggVennDiagram(KEGG_results, label_alpha = 0,
                            ) +
   ggplot2::scale_fill_gradient(low=&quot;royalblue&quot;,high = &quot;yellow&quot;) +
   coord_flip()</code></pre>
-<pre><code>Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.</code></pre>
+<pre><code>Coordinate system already present. Adding new coordinate system, which will replace the existing
+one.</code></pre>
 <pre class="r"><code>KEGG_venn</code></pre>
 <p><img src="fig/02-path_Venn-1.png" width="816" style="display: block; margin: auto;" />
 <br></p>
@@ -558,8 +533,8 @@ replace the existing one.</code></pre>
 png(file = &quot;./results/figures/Pericytes_KEGG_vennDiagram.png&quot;, width = 600, height = 400)
   KEGG_venn # draw the plot
 dev.off() # Close the graphics device</code></pre>
-<pre><code>png 
-  2 </code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
 </div>
 <div id="detailed-comparison-of-kegg-enrichments"
 class="section level1">
@@ -596,17 +571,17 @@ KEGG_results_combined &lt;- KEGG_results_combined %&gt;%
 # -------------------------------------------------------------------------
 # Check table
 str(KEGG_results_combined)</code></pre>
-<pre><code>tibble [50 × 10] (S3: tbl_df/tbl/data.frame)
+<pre><code>tibble [53 × 10] (S3: tbl_df/tbl/data.frame)
  $ timepoint     : Factor w/ 2 levels &quot;D7_v_D0&quot;,&quot;D21_v_D7&quot;: 1 1 1 1 1 1 1 1 1 1 ...
- $ geneSet       : chr [1:50] &quot;mmu03010&quot; &quot;mmu03030&quot; &quot;mmu05134&quot; &quot;mmu05143&quot; ...
- $ description   : chr [1:50] &quot;Ribosome&quot; &quot;DNA replication&quot; &quot;Legionellosis&quot; &quot;African trypanosomiasis&quot; ...
- $ size          : num [1:50] 129 35 56 33 86 46 125 111 115 94 ...
- $ FDR           : num [1:50] 0 0.00421 0.00722 0.00922 0.01251 ...
- $ name          : chr [1:50] &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; ...
- $ value         : num [1:50] 2.41 1.88 1.81 1.81 1.77 ...
+ $ geneSet       : chr [1:53] &quot;mmu03010&quot; &quot;mmu03030&quot; &quot;mmu05134&quot; &quot;mmu05143&quot; ...
+ $ description   : chr [1:53] &quot;Ribosome&quot; &quot;DNA replication&quot; &quot;Legionellosis&quot; &quot;African trypanosomiasis&quot; ...
+ $ size          : num [1:53] 129 35 56 33 125 115 86 46 111 94 ...
+ $ FDR           : num [1:53] 0 0.00423 0.01371 0.01542 0.02039 ...
+ $ name          : chr [1:53] &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; ...
+ $ value         : num [1:53] 2.42 1.9 1.81 1.78 1.73 ...
  $ direction     : Factor w/ 2 levels &quot;negative NES&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
- $ &quot;positive NES&quot;: chr [1:50] &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; ...
- $ &quot;negative NES&quot;: chr [1:50] &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; ...</code></pre>
+ $ &quot;positive NES&quot;: chr [1:53] &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; ...
+ $ &quot;negative NES&quot;: chr [1:53] &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; ...</code></pre>
 <p>Now that we have a nice “tidy” version of the enrichment results, we
 can use it to create a barplot that summarizes the enrichment scores for
 each timepoint.</p>
@@ -653,8 +628,8 @@ file.</p>
 png(file = &quot;./results/figures/Pericytes_KEGG_lollipopComparison.png&quot;, width = 700, height = 600, res = 100)
   KEGG_comparison # draw the plot
 dev.off() # Close the graphics device</code></pre>
-<pre><code>png 
-  2 </code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
 <p><br></p>
 <p>From the comparison of enriched KEGG pathways between the timepoints,
 one of the results that jumps out is the the positive enrichment score
