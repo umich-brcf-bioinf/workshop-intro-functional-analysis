@@ -372,7 +372,7 @@ div.tocify {
       <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
     </li>
     <li>
-      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+      <a href="08-analysis-summary.html">Analysis summary</a>
     </li>
   </ul>
 </li>
@@ -441,25 +441,6 @@ previously loading the <code>tidyverse</code>.</p>
 # Load additional libraries
 library(tidyverse)
 library(ComplexHeatmap)</code></pre>
-<pre><code>Loading required package: grid</code></pre>
-<pre><code>========================================
-ComplexHeatmap version 2.24.1
-Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
-Github page: https://github.com/jokergoo/ComplexHeatmap
-Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
-
-If you use it in published research, please cite either one:
-- Gu, Z. Complex Heatmap Visualization. iMeta 2022.
-- Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
-    genomic data. Bioinformatics 2016.
-
-
-The new InteractiveComplexHeatmap package can directly export static 
-complex heatmaps into an interactive Shiny app with zero effort. Have a try!
-
-This message can be suppressed by:
-  suppressPackageStartupMessages(library(ComplexHeatmap))
-========================================</code></pre>
 <pre class="r"><code># -------------------------------------------------------------------------
 # Check current working directory
 getwd()</code></pre>
@@ -473,7 +454,7 @@ reading in the table that <code>WebGestaltR</code> output to file.</p>
 # Read in results
 enriched_ora = read_delim(&#39;results/Project_deficient_vs_control_ORA_GO_BP/enrichment_results_deficient_vs_control_ORA_GO_BP.txt&#39;)</code></pre>
 <pre><code>Rows: 6 Columns: 11
-── Column specification ─────────────────────────────────────────────────────────────
+── Column specification ──────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;\t&quot;
 chr (5): geneSet, description, link, overlapId, userId
 dbl (6): size, overlap, expect, enrichmentRatio, pValue, FDR
@@ -482,15 +463,14 @@ dbl (6): size, overlap, expect, enrichmentRatio, pValue, FDR
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>head(enriched_ora)</code></pre>
 <pre><code># A tibble: 6 × 11
-  geneSet    description    link   size overlap expect enrichmentRatio  pValue    FDR
-  &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 GO:0070997 neuron death   http…   263      14  3.73             3.76 1.98e-5 0.0157
-2 GO:0098754 detoxification http…    77       7  1.09             6.41 1.03e-4 0.0314
-3 GO:0062012 regulation of… http…   235      12  3.33             3.60 1.19e-4 0.0314
-4 GO:0006575 cellular modi… http…   120       8  1.70             4.70 2.91e-4 0.0575
-5 GO:0097193 intrinsic apo… http…   227      11  3.22             3.42 3.64e-4 0.0575
-6 GO:0043620 regulation of… http…    50       5  0.709            7.05 6.72e-4 0.0886
-# ℹ 2 more variables: overlapId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+  geneSet   description link   size overlap expect enrichmentRatio  pValue    FDR overlapId userId
+  &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; 
+1 GO:00709… neuron dea… http…   263      14  3.73             3.76 1.98e-5 0.0157 11816;12… Apoe;…
+2 GO:00987… detoxifica… http…    77       7  1.09             6.41 1.03e-4 0.0314 11816;14… Apoe;…
+3 GO:00620… regulation… http…   235      12  3.33             3.60 1.19e-4 0.0314 11816;12… Apoe;…
+4 GO:00065… cellular m… http…   120       8  1.70             4.70 2.91e-4 0.0575 14381;14… Mthfd…
+5 GO:00971… intrinsic … http…   227      11  3.22             3.42 3.64e-4 0.0575 12048;12… Bcl2l…
+6 GO:00436… regulation… http…    50       5  0.709            7.05 6.72e-4 0.0886 12608;13… Vegfa…</code></pre>
 <p>In addition to the enrichment statistics, the table also includes a
 column called <code>userId</code> that includes the names of the genes
 that were both annotated for that GO term and part of the list of DE
@@ -513,22 +493,22 @@ for(i in 1:length(enriched_ora$description)){
 # check the named lists
 head(go_geneSets)</code></pre>
 <pre><code>$`neuron death`
- [1] &quot;Apoe&quot;    &quot;Bcl2l1&quot;  &quot;Vegfa&quot;   &quot;Ddit3&quot;   &quot;Slc7a11&quot; &quot;Trim2&quot;   &quot;Coro1a&quot;  &quot;G6pdx&quot;  
- [9] &quot;Mt1&quot;     &quot;Egln1&quot;   &quot;Jun&quot;     &quot;Cebpb&quot;   &quot;Hipk2&quot;   &quot;Bnip3&quot;  
+ [1] &quot;Apoe&quot;    &quot;Bcl2l1&quot;  &quot;Vegfa&quot;   &quot;Ddit3&quot;   &quot;Slc7a11&quot; &quot;Trim2&quot;   &quot;Coro1a&quot;  &quot;G6pdx&quot;   &quot;Mt1&quot;    
+[10] &quot;Egln1&quot;   &quot;Jun&quot;     &quot;Cebpb&quot;   &quot;Hipk2&quot;   &quot;Bnip3&quot;  
 
 $detoxification
 [1] &quot;Apoe&quot;   &quot;Sesn2&quot;  &quot;Gsr&quot;    &quot;Mt2&quot;    &quot;Mt1&quot;    &quot;Srxn1&quot;  &quot;Hbb-bs&quot;
 
 $`regulation of small molecule metabolic process`
- [1] &quot;Apoe&quot;     &quot;Bcl2l1&quot;   &quot;Grb10&quot;    &quot;Clcn2&quot;    &quot;Acmsd&quot;    &quot;Slc7a11&quot;  &quot;Sesn2&quot;   
- [8] &quot;Trib3&quot;    &quot;Midn&quot;     &quot;Epm2aip1&quot; &quot;Cltc&quot;     &quot;Erfe&quot;    
+ [1] &quot;Apoe&quot;     &quot;Bcl2l1&quot;   &quot;Grb10&quot;    &quot;Clcn2&quot;    &quot;Acmsd&quot;    &quot;Slc7a11&quot;  &quot;Sesn2&quot;    &quot;Trib3&quot;   
+ [9] &quot;Midn&quot;     &quot;Epm2aip1&quot; &quot;Cltc&quot;     &quot;Erfe&quot;    
 
 $`cellular modified amino acid metabolic process`
 [1] &quot;Mthfd2&quot;  &quot;P4ha1&quot;   &quot;Chac1&quot;   &quot;Slc7a11&quot; &quot;Cth&quot;     &quot;G6pdx&quot;   &quot;Gsr&quot;     &quot;Egln1&quot;  
 
 $`intrinsic apoptotic signaling pathway`
- [1] &quot;Bcl2l1&quot; &quot;E2f2&quot;   &quot;Cdkn1a&quot; &quot;Ddit3&quot;  &quot;Stk25&quot;  &quot;Chac1&quot;  &quot;Nupr1&quot;  &quot;Trib3&quot;  &quot;Cebpb&quot; 
-[10] &quot;Hipk2&quot;  &quot;Bnip3&quot; 
+ [1] &quot;Bcl2l1&quot; &quot;E2f2&quot;   &quot;Cdkn1a&quot; &quot;Ddit3&quot;  &quot;Stk25&quot;  &quot;Chac1&quot;  &quot;Nupr1&quot;  &quot;Trib3&quot;  &quot;Cebpb&quot;  &quot;Hipk2&quot; 
+[11] &quot;Bnip3&quot; 
 
 $`regulation of DNA-templated transcription in response to stress`
 [1] &quot;Vegfa&quot; &quot;Ddit3&quot; &quot;Sesn2&quot; &quot;Jun&quot;   &quot;Cebpb&quot;</code></pre>
@@ -669,7 +649,7 @@ the gene expression for terms of interest.</p>
 # If not already loaded, read in diffex results
 rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
 <pre><code>Rows: 16249 Columns: 9
-── Column specification ─────────────────────────────────────────────────────────────
+── Column specification ──────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (3): id, symbol, call
 dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
@@ -698,14 +678,14 @@ to the DE genes of interest for that term.</p>
 rsd_smallmolecule &lt;- rsd_diffex %&gt;% filter(symbol %in% go_geneSets$`regulation of small molecule metabolic process`)
 head(rsd_smallmolecule)</code></pre>
 <pre><code># A tibble: 6 × 9
-  id                symbol baseMean log2FoldChange lfcSE  stat   pvalue    padj call 
-  &lt;chr&gt;             &lt;chr&gt;     &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;
-1 ENSMUSG000000029… Apoe       157.         -1.16  0.345 -3.35 8.14e- 4 3.29e-2 Down 
-2 ENSMUSG000000076… Bcl2l1   21934.         -0.668 0.209 -3.19 1.40e- 3 4.59e-2 Down 
-3 ENSMUSG000000201… Grb10     3086.          1.26  0.240  5.27 1.38e- 7 6.62e-5 Up   
-4 ENSMUSG000000228… Clcn2     1016.          1.18  0.201  5.90 3.74e- 9 3.74e-6 Up   
-5 ENSMUSG000000263… Acmsd     1203.         -0.658 0.200 -3.30 9.66e- 4 3.62e-2 Down 
-6 ENSMUSG000000277… Slc7a…     119.          2.28  0.367  6.23 4.78e-10 5.61e-7 Up   </code></pre>
+  id                 symbol  baseMean log2FoldChange lfcSE  stat   pvalue        padj call 
+  &lt;chr&gt;              &lt;chr&gt;      &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;
+1 ENSMUSG00000002985 Apoe        157.         -1.16  0.345 -3.35 8.14e- 4 0.0329      Down 
+2 ENSMUSG00000007659 Bcl2l1    21934.         -0.668 0.209 -3.19 1.40e- 3 0.0459      Down 
+3 ENSMUSG00000020176 Grb10      3086.          1.26  0.240  5.27 1.38e- 7 0.0000662   Up   
+4 ENSMUSG00000022843 Clcn2      1016.          1.18  0.201  5.90 3.74e- 9 0.00000374  Up   
+5 ENSMUSG00000026348 Acmsd      1203.         -0.658 0.200 -3.30 9.66e- 4 0.0362      Down 
+6 ENSMUSG00000027737 Slc7a11     119.          2.28  0.367  6.23 4.78e-10 0.000000561 Up   </code></pre>
 <p>Let’s start by using the subsetted table to create a simple barplot
 of the fold-change values for each gene:</p>
 <pre class="r"><code># -------------------------------------------------------------------------
