@@ -26,7 +26,7 @@ jobs:
           rm -rf ${GITHUB_REF##*/}/$SRC_FOLDER_PATH
           mv $SRC_FOLDER_PATH ${GITHUB_REF##*/} 
           # This makes a "release" symlink to the most recent dated branch
-          ls -d 20??-??-?? | sort -r | awk -v today="$(date +%F)" '$1 <= today {print; exit}' | xargs -I {} -t ln -sf {} release
+          ls -d 20??-??-?? | sort -r | awk -v today="$(date +%F)" '$1 <= today {print; exit}' | xargs -I {} -t ln -sfFnv {} release
           git add -A .
           git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
           git push
