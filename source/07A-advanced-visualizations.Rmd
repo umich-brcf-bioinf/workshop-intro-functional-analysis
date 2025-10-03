@@ -59,6 +59,7 @@ First, we'll load a library called `ComplexHeatmap` that we will be using for so
 
 # -------------------------------------------------------------------------
 # Load additional libraries
+library(tidyverse)
 library(ComplexHeatmap)
 ```
 
@@ -72,7 +73,7 @@ To create visualizations for the ORA enrichments, we'll start by reading in the 
 enriched_ora = read_delim('results/Project_deficient_vs_control_ORA_GO_BP/enrichment_results_deficient_vs_control_ORA_GO_BP.txt')
 head(enriched_ora)
 ```
- In addition to the enrichment statistics, the table also includes a column called `userId` that includes the names of the genes that were both annotated for that GO term and part of the list of DE genes of interest that we provided for the enrichment. Let's pull out those values and transform them into a structure that is more R friendly. 
+In addition to the enrichment statistics, the table also includes a column called `userId` that includes the names of the genes that were both annotated for that GO term and part of the list of DE genes of interest that we provided for the enrichment. Let's pull out those values and transform them into a structure that is more R friendly. 
 
 ```{r subset_genes}
 # -------------------------------------------------------------------------
@@ -269,7 +270,7 @@ setwd("~/IFUN_R/")
 
 # Summary
 
-- Set comparisons can be useful for understanding our enrichment results
+- Set comparisons at the gene level can be useful for understanding our enrichment results
 - UpSet plots are an easy way to compare and visualize the common and unique values for a large number of sets.
 - We can use more familiar visualization approaches like barplots to see if there are any interest patterns in our expression data for genes associated with functional terms of interest
 

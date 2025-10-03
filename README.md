@@ -3,6 +3,7 @@ UM Bioinformatics Core: Intro to Functional Analysis
 * Versioned web content:
   
   - [Main](https://umich-brcf-bioinf.github.io/workshop-intro-functional-analysis/main/html/)
+  - [Latest dated branch](https://umich-brcf-bioinf.github.io/workshop-intro-functional-analysis/release/html/)
   - [9/17/2025](https://umich-brcf-bioinf.github.io/workshop-intro-functional-analysis/2025-09-17/html/)
 
 * This workshop content is licensed under a 

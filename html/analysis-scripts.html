@@ -347,7 +347,7 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
+      <a href="ifun-overview.pdf">Functional analysis and ORA</a>
     </li>
     <li>
       <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
@@ -368,19 +368,19 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+      <a href="ifun-gsea-overview.pdf">Functional Analysis and GSEA</a>
     </li>
     <li>
       <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
     </li>
     <li>
-      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+      <a href="gene-set-references.pdf">GO, KEGG, and friends</a>
     </li>
     <li>
       <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
     </li>
     <li>
-      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+      <a href="08-analysis-summary.html">Analysis summary</a>
     </li>
   </ul>
 </li>
@@ -419,22 +419,390 @@ body, td {
 <h1>Workshop analysis scripts</h1>
 <div id="day-1" class="section level2">
 <h2>Day 1</h2>
-<pre class="r"><code>library(tidyverse)
+<pre class="r"><code># =========================================================================
+# Day 1 - Getting Started with Functional enrichment
+# =========================================================================
 
-# Read in the gapminder dataset
-gapminder_1997 = read_csv(&#39;data/gapminder_1997.csv&#39;)
+# -------------------------------------------------------------------------
+# Get current working directory
+getwd()
 
-...</code></pre>
+# -------------------------------------------------------------------------
+# Set current working directory
+setwd(&#39;~/IFUN_R&#39;)
+
+# -------------------------------------------------------------------------
+# Create directory structure
+dir.create(&#39;scripts&#39;, recursive = TRUE, showWarnings = FALSE)
+dir.create(&#39;results/figures&#39;, recursive = TRUE, showWarnings = FALSE)
+dir.create(&#39;results/tables&#39;, recursive = TRUE, showWarnings = FALSE)
+dir.create(&#39;results/rdata&#39;, recursive = TRUE, showWarnings = FALSE)
+
+# =========================================================================
+# ORA with WebGestlatR
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load the libraries
+library(WebGestaltR)
+library(tidyverse)
+
+# Look at the manual for the next package/function name
+?WebGestaltR
+
+# List available organisms
+listOrganism()
+
+# -------------------------------------------------------------------------
+# List available reference genesets for mmusculus
+listGeneSet(organism = &#39;mmusculus&#39;) %&gt;% head(10)
+
+# -------------------------------------------------------------------------
+# Read diffex results
+rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)
+head(rsd_diffex)
+
+# -------------------------------------------------------------------------
+# Filter out the NAs
+rsd_diffex = rsd_diffex %&gt;% dplyr::filter(!is.na(symbol))
+
+# Verify we have fewer by noting dimension of resulting table
+rsd_diffex
+
+# -------------------------------------------------------------------------
+# Pull all genes tested
+rsd_ref_ora = rsd_diffex %&gt;% pull(symbol)
+
+# -------------------------------------------------------------------------
+# Preview the vector
+head(rsd_ref_ora)
+
+# -------------------------------------------------------------------------
+# Pull diffex genes
+rsd_sig_ora = rsd_diffex %&gt;%
+  dplyr::filter(padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; log2(1.5)) %&gt;%
+  pull(symbol)
+
+# -------------------------------------------------------------------------
+# Preview the vector
+head(rsd_sig_ora)
+
+# -------------------------------------------------------------------------
+# Write out list of DE interest genes to file
+write_lines(rsd_sig_ora, file=&quot;./results/tables/deficient_DE_GeneList.txt&quot;)
+
+# -------------------------------------------------------------------------
+# Write out custom reference/background set of genes to file
+write_lines(rsd_ref_ora, file=&quot;./results/tables/deficient_reference_GeneList.txt&quot;)
+
+# -------------------------------------------------------------------------
+# ORA on bulk RNA-seq DESeq2 results with GO - Biological Process knowledge base
+rsd_ora_result = WebGestaltR(
+  enrichMethod = &#39;ORA&#39;,
+  organism = &#39;mmusculus&#39;,
+  enrichDatabase = c(&#39;geneontology_Biological_Process_noRedundant&#39;),
+  interestGene = rsd_sig_ora,
+  referenceGene = rsd_ref_ora,
+  interestGeneType = &#39;genesymbol&#39;,
+  referenceGeneType = &#39;genesymbol&#39;,
+  fdrThr = 0.1,
+  outputDirectory = &#39;./results&#39;,
+  projectName = &#39;deficient_vs_control_ORA-GO_BP&#39;)
+
+# -------------------------------------------------------------------------
+# View the first few results
+head(rsd_ora_result)
+
+
+# =========================================================================
+# Advanced Visualizations I
+# =========================================================================
+# Load addtional package
+library(ComplexHeatmap)
+
+# -------------------------------------------------------------------------
+# OPTIONAL - Read in results from file
+# rsd_ora_result = read_delim(&#39;results/Project_deficient_vs_control_ORA_GO_BP/enrichment_results_deficient_vs_control_ORA_GO_BP.txt&#39;)
+
+# look at our data
+head(rsd_ora_result)
+
+# make a copy to match expected name for ORA
+enriched_ora &lt;- rsd_ora_result
+head(enriched_ora)
+
+# -------------------------------------------------------------------------
+# create empty list
+go_geneSets &lt;- list()
+
+# -------------------------------------------------------------------------
+# create lists of overlapping DE genes for each GO term
+for(i in 1:length(enriched_ora$description)){
+  go_name &lt;- enriched_ora$description[i] # descriptive GO term names
+  go_genes &lt;- str_split_1(enriched_ora$userId[i], &quot;;&quot;) # list of gene symbols from table entry
+  go_geneSets[[go_name]] &lt;- c(go_genes)
+}
+
+# -------------------------------------------------------------------------
+# check the named lists
+head(go_geneSets)
+
+# -------------------------------------------------------------------------
+# check what genes are shared between the two terms
+intersect(go_geneSets$`neuron death`, go_geneSets$`intrinsic apoptotic signaling pathway`)
+
+# -------------------------------------------------------------------------
+# First make the combination matrix from our list of genes for each GO term
+m = make_comb_mat(go_geneSets)
+m
+
+# -------------------------------------------------------------------------
+# Make simple UpSet plot
+UpSet(m)
+
+
+# -------------------------------------------------------------------------
+# Make altnerative UpSet plot
+upsetGO &lt;- UpSet(m, comb_order = rev(order(comb_size(m))), lwd = 3,
+                 comb_col = c(&quot;black&quot;, &quot;blue&quot;, &quot;gold3&quot;)[comb_degree(m)],
+                 left_annotation = upset_left_annotation(m, add_numbers = TRUE))
+upsetGO
+
+
+# -------------------------------------------------------------------------
+# Output UpSet plot to file
+png(file = &quot;./results/figures/deficient_vs_control_GO-BP_UpSetPlot.png&quot;, width = 1000, height = 400)
+draw(upsetGO) # draw the plot
+dev.off() # Close the graphics device</code></pre>
 </div>
 <div id="day-2" class="section level2">
 <h2>Day 2</h2>
-<pre class="r"><code>library(tidyverse)
+<pre class="r"><code># =========================================================================
+# GSEA with WebGestlatR
+# =========================================================================
 
-# Read in the gapminder dataset
-gapminder_1997 = read_csv(&#39;data/gapminder_1997.csv&#39;)
+# -------------------------------------------------------------------------
+# Set our working directory
+setwd(&quot;~/IFUN_R&quot;) # can use arrow in console to quickly see working directory in file pane
+
+# -------------------------------------------------------------------------
+# Load the libraries
+library(WebGestaltR)
+library(tidyverse)
+
+# -------------------------------------------------------------------------
+# Load pseudo-bulk analysis for D21 vs D7 in pericyte cluster
+isc_d21_v_d7 = read_csv(&#39;inputs/single_cell_de_results/de_pseudo_pericyte_D21_vs_D7.csv&#39;)
+# -------------------------------------------------------------------------
+# Preview the result
+head(isc_d21_v_d7)
+
+# -------------------------------------------------------------------------
+# Check how many genes were DE based on original thresholds
+table(isc_d21_v_d7$p_val_adj &lt; 0.05 &amp; abs(isc_d21_v_d7$avg_log2FC) &gt; 1.5)
 
 
-...</code></pre>
+# -------------------------------------------------------------------------
+# How many symbols are NA?
+table(is.na(isc_d21_v_d7$gene))
+
+
+# -------------------------------------------------------------------------
+# Select gene and avg_log2FC columns
+isc_d21_v_d7_gsea = isc_d21_v_d7 %&gt;%
+  dplyr::select(gene, avg_log2FC)
+
+# -------------------------------------------------------------------------
+# Preview the table
+head(isc_d21_v_d7_gsea)
+
+# -------------------------------------------------------------------------
+# Run GSEA
+isc_d21_v_d7_gsea_result = WebGestaltR(
+  enrichMethod = &#39;GSEA&#39;,
+  nThreads = 8,
+  organism = &#39;mmusculus&#39;,
+  enrichDatabase = c(&#39;pathway_KEGG&#39;),
+  interestGene = isc_d21_v_d7_gsea,
+  interestGeneType = &#39;genesymbol&#39;,
+  fdrThr = 0.1,
+  outputDirectory = &#39;./results&#39;,
+  projectName = &#39;D21_v_D7_GSEA_KEGG&#39;, 
+  cache = NULL)
+
+# clean up session
+gc()
+
+# -------------------------------------------------------------------------
+# View the first few results
+head(isc_d21_v_d7_gsea_result)
+
+# --------------------------
+# make it easier to view
+View(isc_d21_v_d7_gsea_result)
+
+# - look at second comparison
+
+# -------------------------------------------------------------------------
+# Load pseudo-bulk analysis for D7 vs D7 in pericyte cluster
+isc_d7_v_d0 = read_csv(&#39;inputs/single_cell_de_results/de_pseudo_pericyte_D7_vs_D0.csv&#39;)
+
+# -------------------------------------------------------------------------
+# Preview the result
+head(isc_d7_v_d0)
+
+
+# -------------------------------------------------------------------------
+# Select gene and avg_log2FC columns
+isc_d7_v_d0_gsea = isc_d7_v_d0 %&gt;%
+  dplyr::select(gene, avg_log2FC)
+
+# -------------------------------------------------------------------------
+# Preview the table
+head(isc_d7_v_d0_gsea)
+
+# -------------------------------------------------------------------------
+# Select gene and avg_log2FC columns
+isc_d7_v_d0_gsea = isc_d7_v_d0 %&gt;%
+  dplyr::select(gene, avg_log2FC)
+
+# -------------------------------------------------------------------------
+# Preview the table
+head(isc_d7_v_d0_gsea)
+
+
+# -------------------------------------------------------------------------
+# Run GSEA for Day 7 vs Day 0 (EDITED to add random seed)
+set.seed(12345)  # set random seed first
+
+isc_d7_v_d0_gsea_result = WebGestaltR(
+  enrichMethod = &#39;GSEA&#39;,
+  nThreads = 8,
+  organism = &#39;mmusculus&#39;,
+  enrichDatabase = c(&#39;pathway_KEGG&#39;),
+  interestGene = isc_d7_v_d0_gsea,
+  interestGeneType = &#39;genesymbol&#39;,
+  fdrThr = 0.1,
+  outputDirectory = &#39;./results&#39;,
+  projectName = &#39;D7_v_D0_GSEA_KEGG&#39;, 
+  cache = NULL)
+
+# clean up session
+gc()
+
+# -------------------------------------------------------------------------
+# View the results for the other timepoint
+View(isc_d7_v_d0_gsea_result)
+
+# =========================================================================
+# Advanced Visualizations II
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Load additional libraries
+library(ComplexHeatmap)
+library(ggVennDiagram)
+
+# -------------------------------------------------------------------------
+# Check current working directory
+getwd()
+
+# -------------------------------------------------------------------------
+# Create list of enriched KEGG pathways 
+KEGG_results &lt;- c()
+KEGG_results[[&quot;d7_v_d0&quot;]] = isc_d7_v_d0_gsea_result$description
+KEGG_results[[&quot;d21_v_d7&quot;]] = isc_d21_v_d7_gsea_result$description
+head(KEGG_results)
+
+# -------------------------------------------------------------------------
+# Identify total number of unique pathways enriched across both timepoints
+union(KEGG_results[[&quot;d7_v_d0&quot;]], KEGG_results[[&quot;d21_v_d7&quot;]]) %&gt;% length()
+
+# -------------------------------------------------------------------------
+# Identify number of pathways shared between timepoints
+intersect(KEGG_results[[&quot;d7_v_d0&quot;]], KEGG_results[[&quot;d21_v_d7&quot;]]) %&gt;% length()
+
+# -------------------------------------------------------------------------
+# Make simple plot to compare KEGG pathways enriched for each timepoint
+KEGG_venn &lt;- ggVennDiagram(KEGG_results, label_alpha = 0, 
+                           label_size = 6, set_size = 6,
+) +
+  ggplot2::scale_fill_gradient(low=&quot;royalblue&quot;,high = &quot;yellow&quot;) +
+  coord_flip()
+KEGG_venn
+
+# -------------------------------------------------------------------------
+# Output UpSet plot to file
+png(file = &quot;./results/figures/Pericytes_KEGG_vennDiagram.png&quot;, width = 600, height = 400)
+KEGG_venn # draw the plot
+dev.off() # Close the graphics device
+
+
+
+# -------------------------------------------------------------------------
+# Create &#39;tidy&#39; version  of Day 7 vs Day 0 GSEA results
+isc_d7_v_d0_gsea_simplified &lt;- isc_d7_v_d0_gsea_result %&gt;% 
+  select(geneSet, description, normalizedEnrichmentScore, size, FDR) %&gt;% 
+  pivot_longer(cols = !c(geneSet, description, FDR, size)) %&gt;% 
+  mutate(timepoint = &quot;D7_v_D0&quot;, .before = 1)
+
+# -------------------------------------------------------------------------
+# Create &#39;tidy&#39; version  of Day 21 vs Day 7 GSEA results
+isc_d21_v_d7_gsea_simplified &lt;- isc_d21_v_d7_gsea_result %&gt;% 
+  select(geneSet, description, normalizedEnrichmentScore, size, FDR) %&gt;% 
+  pivot_longer(cols = !c(geneSet, description, FDR, size)) %&gt;% 
+  mutate(timepoint = &quot;D21_v_D7&quot;, .before = 1)
+
+View(isc_d21_v_d7_gsea_simplified)
+
+# -------------------------------------------------------------------------
+# Combine &#39;tidy&#39; results into single table
+KEGG_results_combined &lt;- rbind(isc_d7_v_d0_gsea_simplified, isc_d21_v_d7_gsea_simplified) 
+KEGG_results_combined &lt;- KEGG_results_combined %&gt;% 
+  mutate(timepoint = factor(timepoint, levels=c(&quot;D7_v_D0&quot;, &quot;D21_v_D7&quot;)),
+         direction = factor(ifelse(value &lt; 0, &quot;negative NES&quot;, &quot;positive NES&quot;)),
+         &quot;positive NES&quot;, &quot;negative NES&quot;) # fix levels &amp; add column for direction
+
+# -------------------------------------------------------------------------
+# Check table
+str(KEGG_results_combined)
+
+
+# -------------------------------------------------------------------------
+# Graph simple KEGG pathway enrichments for both timepoints
+KEGG_comparison &lt;- ggplot(KEGG_results_combined, 
+                          aes(y=value, x=reorder(description, value))) + 
+  geom_bar(position=&quot;dodge&quot;, stat=&quot;identity&quot;) +
+  facet_wrap(~timepoint) +
+  xlab(&quot;&quot;) + coord_flip()
+KEGG_comparison
+
+
+# -------------------------------------------------------------------------
+# Subset to results that pass more stringent results
+KEGG_results_strict &lt;- KEGG_results_combined %&gt;% filter(FDR &lt; 0.025 &amp; size &gt; 60)
+
+# -------------------------------------------------------------------------
+# Graph simple KEGG pathway enrichments for both timepoints
+KEGG_comparison &lt;- ggplot(KEGG_results_strict, aes(y=value, x=reorder(description, value))) + 
+  geom_segment(aes(y = 0, x = description, yend = value, xend = description),
+               color = ifelse(KEGG_results_strict$direction %in% c(&quot;positive NES&quot;), &quot;red&quot;, &quot;blue&quot;),
+               linewidth = 1) +
+  geom_point(aes(color=FDR, size = size), stat=&quot;identity&quot;) +
+  scale_color_continuous(low = &quot;black&quot;, high = &quot;grey&quot;) +
+  facet_wrap(~timepoint) +
+  geom_hline(yintercept=0, linetype=&quot;dashed&quot;, color = &quot;lightgrey&quot;) +
+  labs(title=&quot;KEGG enrichments in pericytes&quot;) +
+  xlab(&quot;&quot;) + theme_bw() +
+  coord_flip()
+KEGG_comparison
+
+
+# -------------------------------------------------------------------------
+# Output Lollipop plot to file
+png(file = &quot;./results/figures/Pericytes_KEGG_lollipopComparison.png&quot;, width = 700, height = 600, res = 100)
+KEGG_comparison # draw the plot
+dev.off() # Close the graphics device</code></pre>
 </div>
 </div>
 

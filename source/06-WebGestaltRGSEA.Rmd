@@ -163,9 +163,9 @@ But what about our input? Why did we include the fold-change column?
 
 As mentioned, a ranking metric is needed to order the genes before they are compared to the functional gene sets to generate the enrichment score.
 
-By using log fold-changes, we're using the effect size of difference between the experimental groups, the equivalent of `log2_Ratio_of_Classes` in [Broad's GSEA user guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) describes the several ranking metrics available for that tool. The advantage of using this as our ranking metric is that we are using the biologically relevant difference while ignoring significance level, which can be impacted by within group variation and limited samples which reduce the power to detect true positives. 
+By using log fold-changes, we're using the effect size of difference between the experimental groups, the equivalent of `log2_Ratio_of_Classes` in [Broad's GSEA user guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) describes the several ranking metrics available for that tool. The advantage of using this as our ranking metric is that we are using the biologically relevant difference while ignoring significance level, which is important to rule out false positive but can be impacted by within group variation and limited samples which reduce the power to detect true positives. 
 
-However, you may also see a local ranking statistic that combines both the direction of the effect size and the significance (e.g. `-log10({p value}) * sign({Fold Change})`). The advantage of this approach is that it incorporates the significance level to protect against false positives - unlike fold-change alone - while still using the direction of the effect size. The disadvantage of using this combined metric is that the magnitude of the effect size is no longer part of the ranking. 
+However, you may also see a local ranking statistic that combines both the direction of the effect size and the significance (e.g. `-log10({p value}) * sign({Fold Change})`). The advantage of this approach is that it incorporates the significance level to protect against false positives - unlike fold-change alone - while still using the direction of the effect size. The disadvantage of using this combined metric is that the *magnitude* of the effect size observed in the experiment is no longer part of the ranking. 
 
 ![](./images/content/06-WebGestalt_GSEA/PathwayCommons_figure_gsea_global.png)
 
@@ -270,5 +270,5 @@ We'll use some of the advanced visualizations from yesterday to answer some of t
 # Questions
 
 
-| [Previous lesson](05-fcs-gsea-overview.html) | [Top of this lesson](#top) | [Next lesson](04-gene-set-references.html) |
+| [Previous lesson](05-fcs-gsea-overview.html) | [Top of this lesson](#top) | [Next lesson](07B-advanced-visualizations.html) |
 | :--- | :----: | ---: |

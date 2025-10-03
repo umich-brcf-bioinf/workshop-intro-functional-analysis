@@ -339,7 +339,7 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="01-functional-analysis-overview.html">Functional analysis and ORA</a>
+      <a href="ifun-overview.pdf">Functional analysis and ORA</a>
     </li>
     <li>
       <a href="02-IntroToWebGestaltandORA.html">ORA with WebGestalt</a>
@@ -360,19 +360,19 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="05-fcs-gsea-overview.html">Functional Analysis and GSEA</a>
+      <a href="ifun-gsea-overview.pdf">Functional Analysis and GSEA</a>
     </li>
     <li>
       <a href="06-WebGestaltRGSEA.html">GSEA with R</a>
     </li>
     <li>
-      <a href="04-gene-set-references.html">GO, KEGG, and friends</a>
+      <a href="gene-set-references.pdf">GO, KEGG, and friends</a>
     </li>
     <li>
       <a href="07B-advanced-visualizations.html">Advanced visualizations II</a>
     </li>
     <li>
-      <a href="08-analysis-summary.html">Analysis summary and next steps</a>
+      <a href="08-analysis-summary.html">Analysis summary</a>
     </li>
   </ul>
 </li>
@@ -440,26 +440,8 @@ previously loading the <code>tidyverse</code>.</p>
 
 # -------------------------------------------------------------------------
 # Load additional libraries
+library(tidyverse)
 library(ComplexHeatmap)</code></pre>
-<pre><code>Loading required package: grid</code></pre>
-<pre><code>========================================
-ComplexHeatmap version 2.25.1
-Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
-Github page: https://github.com/jokergoo/ComplexHeatmap
-Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
-
-If you use it in published research, please cite either one:
-- Gu, Z. Complex Heatmap Visualization. iMeta 2022.
-- Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
-    genomic data. Bioinformatics 2016.
-
-
-The new InteractiveComplexHeatmap package can directly export static 
-complex heatmaps into an interactive Shiny app with zero effort. Have a try!
-
-This message can be suppressed by:
-  suppressPackageStartupMessages(library(ComplexHeatmap))
-========================================</code></pre>
 </div>
 <div id="generate-visualizations-for-ora-results"
 class="section level1">
@@ -767,8 +749,8 @@ setwd(&quot;~/IFUN_R/&quot;)</code></pre>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
 <ul>
-<li>Set comparisons can be useful for understanding our enrichment
-results</li>
+<li>Set comparisons at the gene level can be useful for understanding
+our enrichment results</li>
 <li>UpSet plots are an easy way to compare and visualize the common and
 unique values for a large number of sets.</li>
 <li>We can use more familiar visualization approaches like barplots to
