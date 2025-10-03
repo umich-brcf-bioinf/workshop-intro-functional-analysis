@@ -446,20 +446,40 @@ instead of by using their webserver. This allows us to run functional
 enrichments in a more reproducible manner since we can record the exact
 inputs and parameters used.</p>
 </div>
-<div id="orienting-on-rstudio" class="section level1">
-<h1>Orienting on RStudio</h1>
-<p>To get started, let’s <strong>log in to the workshop server by going
-here</strong>: <a href="https://bfx-workshop02.med.umich.edu"
-target="blank">https://bfx-workshop02.med.umich.edu</a> <br></p>
+<div id="server-login" class="section level1">
+<h1>Server login</h1>
+<p>Let’s log in to the workshop server: <a
+href="https://bfx-workshop02.med.umich.edu"
+target="blank">https://bfx-workshop02.med.umich.edu</a></p>
 <p>The login page for the server looks like:</p>
-<p><img src="images/content/03-WebGestalt_R/01_rstudio_login_screen.png" alt="rstudio login screen" style="width: 1000px;"/>
-<br></p>
+<p><img src="images/content/03-WebGestalt_R/01_rstudio_login_screen.png" alt="rstudio login screen" style="width: 1000px;"/></p>
 <p>Enter your user credentials and click <kbd>Sign In</kbd>. The RStudio
-interface should load and look something like:</p>
-<p><img src="images/content/03-WebGestalt_R/02_rstudio_session_default.png" alt="rstudio default session" style="width:1000px;"/>
-<br></p>
-<p><strong>Checkpoint</strong> - after you’ve logged in put up a green
-check; if you need help put up a red check and post in slack.</p>
+interface should load and look like:</p>
+<p><img src="images/content/03-WebGestalt_R/02_rstudio_session_default.png" alt="rstudio default session" style="width:1000px;"/></p>
+<p><strong>Checkpoint</strong></p>
+</div>
+<div id="create-a-project" class="section level1">
+<h1>Create a project</h1>
+<p>We will create an RStudio Project to easily keep track of our working
+directory. See the <a
+href="https://r4ds.hadley.nz/workflow-scripts.html#projects">Projects</a>
+section of <a href="https://r4ds.hadley.nz/">R for Data Science</a> for
+a more in-depth description of what a project is and how it’s
+helpful.</p>
+<p>To create a Project, click <kbd>File</kbd> then <kbd>New
+Project…</kbd>. In the New Project Wizard window that opens, select
+<kbd>Existing Directory</kbd>, then <kbd>Browse…</kbd>. In the Choose
+Directory window, select the <code>IFUN_R</code> folder by clicking it
+once, and then click the <kbd>Choose</kbd> button. Finally, click
+<kbd>Create Project</kbd>.</p>
+<p>Once we do this, RStudio will restart and the Files pane (lower
+right) should put us in the <code>~/IFUN_R</code> folder where there is
+an <code>inputs/</code> folder and an <code>IFUN_R.Rproj</code>
+file.</p>
+<p><strong>Checkpoint</strong></p>
+</div>
+<div id="the-rstudio-interface" class="section level1">
+<h1>The RStudio interface</h1>
 <p>RStudio is an integrated development environment where you can write,
 execute, and see the results of your code. The interface is arranged in
 different panes:</p>
@@ -478,32 +498,46 @@ the Console.</li>
 functions.</li>
 </ul></li>
 </ul>
-<div id="commands-in-the-script" class="section level2">
-<h2>Commands in the Script</h2>
-<p>When first opening RStudio, a script file is not automatically
-opened. We’ll create our script file to record our analysis and make it
-more reproducible by clicking on the icon in the upper-left of the
-interface (a blank piece of paper with a + sign), and selecting <KBD>R
-Script</KBD>.</p>
-<p><img src="images/content/03-WebGestalt_R/04_rstudio_create_script.png" alt="rstudio create script" style="width:1000px;"/>
-<br></p>
-<p>The new pane that opens is the <strong>Source pane</strong>:</p>
-<p><img src="images/content/03-WebGestalt_R/05_rstudio_script_pane.png" alt="rstudio script pane" style="width:1000px;"/>
-<br></p>
-<p>Notice that if we press <KBD>Enter</KBD> in the Source pane, we get a
-new line instead of running the code.</p>
-<p>In order to execute code, we press <KBD>Ctrl + Enter</KBD> either on
-the single line we want to run, or on a highlighted block of code. For
-example if we type in the script file:</p>
-<pre><code>3+2</code></pre>
-<p>We then see that code executed, along with its result in in the
-Console pane.</p>
-<p><img src="images/content/03-WebGestlat_R/06_rstudio_script_execution.png" alt="rstudio script execution" style="width:1000px;"/></p>
+<div id="commands-in-the-console" class="section level2">
+<h2>Commands in the Console</h2>
+<p>Working directly in the console is working directly with R. Commands
+can be entered and run with the <KBD>Enter</KBD> key:</p>
+<pre><code>&gt; 2+2
+[1] 4</code></pre>
+<p><img src="images/content/03-WebGestalt_R/03_rstudio_console_execution.png" alt="rstudio console execution" style="width:1000px;"/></p>
+<p><strong>Checkpoint</strong></p>
 </div>
-<div id="summary-console-vs-script" class="section level2">
-<h2>Summary: Console vs Script</h2>
-<p>Here are some of the key differences between the Console and Script
-panes in RStudio:</p>
+<div id="commands-in-a-script" class="section level2">
+<h2>Commands in a Script</h2>
+<p>Instead of entering commands directly into the Console, we’ll record
+them in and run them from a script. Some benefits to using a script
+rather than using the Console pane:</p>
+<ul>
+<li>Scripts record the steps taken to analyze the data.</li>
+<li>Scripts can be re-run, allowing for reproducibility.</li>
+<li>Scripts are can be shared.</li>
+</ul>
+<p>We’ll create a script file by clicking on the icon in the upper-left
+of the interface (a blank piece of paper with a + sign), and selecting
+<KBD>R Script</KBD>.</p>
+<p><img src="images/content/03-WebGestalt_R/04_rstudio_create_script.png" alt="rstudio create script" style="width:1000px;"/></p>
+<p>The new pane that opens is the <strong>Source pane</strong>, and you
+can think of it as a text editor:</p>
+<p><img src="images/content/03-WebGestalt_R/05_rstudio_script_pane.png" alt="rstudio script pane" style="width:1000px;"/></p>
+<p>Code entered in a script file <strong>must explicitly be sent to the
+Console for execution</strong> with the <KBD>Ctrl + Enter</KBD> command.
+Enter the following command into the script file and execute it with
+<KBD>Ctrl + Enter</KBD>:</p>
+<pre><code>3+2</code></pre>
+<p>Looking in the Console we see the executed line and its result. Note
+that pressing <KBD>Enter</KBD> in the script creates a new line and does
+not execute the code as in the Console.</p>
+<p><img src="images/content/03-WebGestalt_R/06_rstudio_script_execution.png" alt="rstudio script execution" style="width:1000px;"/></p>
+</div>
+<div id="console-vs-script" class="section level2">
+<h2>Console vs Script</h2>
+<p>The key differences between the Console and Script panes in
+RStudio:</p>
 <table>
 <thead>
 <tr class="header">
@@ -513,16 +547,16 @@ panes in RStudio:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Ephemeral code</td>
-<td align="left">Preserved code</td>
+<td align="left">Reset across sessions</td>
+<td align="left">Preserved acros sessions</td>
 </tr>
 <tr class="even">
 <td align="left">Run with <KBD>Enter</KBD></td>
 <td align="left">Run with <KBD>Ctrl + Enter</KBD></td>
 </tr>
 <tr class="odd">
-<td align="left">Hard to share</td>
-<td align="left">Easy to share</td>
+<td align="left">Inconvenient to share</td>
+<td align="left">Convenient to share</td>
 </tr>
 </tbody>
 </table>
@@ -537,14 +571,14 @@ colors/themes, and more are in the <KBD>Tools</KBD> menu under
 <KBD>Global Options</KBD>.</p>
 <p>We can enable soft-wrapping of code by selecting <KBD>Code</KBD> and
 then <KBD>Soft Wrap Long Lines</KBD>.</p>
-<p><img src="images/07_rstudio_soft_wrap.png" alt="rstudio code execution" style="width:1000px;"/></p>
+<p><img src="images/content/03-WebGestalt_R/07_rstudio_soft_wrap.png" alt="rstudio code execution" style="width:1000px;"/></p>
 </div>
 </div>
 <div id="workshop-flow" class="section level1">
 <h1>Workshop flow</h1>
-<p>To accomodate learning styles and to keep us moving along, we’ll
-provide code in three different ways, and you can get that code into
-RStudio in corresponding ways:</p>
+<p>To accommodate different learning styles and to keep us moving along,
+we’ll provide code in three different ways, and you can get that code
+into RStudio in corresponding ways:</p>
 <table>
 <colgroup>
 <col width="48%" />
@@ -563,11 +597,12 @@ RStudio in corresponding ways:</p>
 </tr>
 <tr class="even">
 <td align="left">Slack</td>
-<td align="left">Copy and paste code into RStudio.</td>
+<td align="left">Copy and paste into RStudio.</td>
 </tr>
 <tr class="odd">
 <td align="left">Website</td>
-<td align="left">Use code block copy button and paste into RStudio.</td>
+<td align="left">Copy with code block button and paste into
+RStudio.</td>
 </tr>
 </tbody>
 </table>
@@ -575,9 +610,9 @@ RStudio in corresponding ways:</p>
 </div>
 <div id="setting-up" class="section level1">
 <h1>Setting up</h1>
-<p>Before we begin, the folder structure of a working directory /
-project organizes all the relevant files. Typically we make directories
-for the following types of files:</p>
+<p>Before we begin, the folder structure of a project organizes all the
+relevant files. Typically we make directories for the following types of
+files:</p>
 <ul>
 <li>Raw data, called <code>data</code>, <code>input</code>, etc,</li>
 <li>Results, often <code>results</code> or <code>output</code> with
@@ -590,23 +625,6 @@ folder, but you’d otherwise want to move the starting, unaltered, data
 into this folder.</p>
 <div id="creating-directory-stucture" class="section level2">
 <h2>Creating directory stucture</h2>
-<p>Before we start creating directories, let’s make sure we’re in the
-right location. To print the current working directory:</p>
-<pre class="r"><code># =========================================================================
-# Day 1 - Getting Started with Functional enrichment
-# =========================================================================
-
-# -------------------------------------------------------------------------
-# Get current working directory
-getwd()</code></pre>
-<p>This means that any references to files loaded or files saved
-<strong>is with respect to this location</strong>. This can simplify our
-code a bit by allowing us to use relative paths rather than full paths.
-Let’s set our working directory to the ISC folder in our respective home
-directories.</p>
-<pre class="r"><code># -------------------------------------------------------------------------
-# Set current working directory
-setwd(&#39;~/IFUN_R&#39;)</code></pre>
 <p>Now that we’re sure of our working directory, let’s create some
 folders for our analysis scripts and results thereof.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
@@ -671,9 +689,7 @@ specifying that argument.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List available organisms
 listOrganism()</code></pre>
-<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;       
- [6] &quot;sscrofa&quot;       &quot;dmelanogaster&quot; &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;    
-[11] &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
+<pre><code> [1] &quot;athaliana&quot;     &quot;btaurus&quot;       &quot;celegans&quot;      &quot;cfamiliaris&quot;   &quot;drerio&quot;        &quot;sscrofa&quot;       &quot;dmelanogaster&quot; &quot;ggallus&quot;       &quot;hsapiens&quot;      &quot;mmusculus&quot;     &quot;rnorvegicus&quot;   &quot;scerevisiae&quot;  </code></pre>
 <p><br></p>
 <p>To see what functional databases are available from the tool, we can
 see the <code>listGeneSet()</code> function to see the available
@@ -735,15 +751,10 @@ other common (and not-so-common) identifiers.</p>
 <pre class="r"><code># -------------------------------------------------------------------------
 # List gene identifier types for mmusculus
 listIdType(organism = &#39;mmusculus&#39;) %&gt;% tail(25)</code></pre>
-<pre><code> [1] &quot;dbSNP&quot;                       &quot;embl&quot;                        &quot;ensembl_gene_id&quot;            
- [4] &quot;ensembl_peptide_id&quot;          &quot;entrezgene&quot;                  &quot;entrezgene_protein-coding&quot;  
- [7] &quot;genename&quot;                    &quot;genesymbol&quot;                  &quot;illumina_ScriptSeq_RNASeqV2&quot;
-[10] &quot;illumina_WG6_Customarray&quot;    &quot;illumina_mouseref_8&quot;         &quot;illumina_mouseref_8_v2&quot;     
-[13] &quot;illumina_mousewg_6_v1&quot;       &quot;illumina_mousewg_6_v2&quot;       &quot;interpro&quot;                   
-[16] &quot;phalanx_onearray&quot;            &quot;phosphositeEnsembl&quot;          &quot;phosphositeRefseq&quot;          
-[19] &quot;phosphositeSeq&quot;              &quot;phosphositeUniprot&quot;          &quot;protein_id&quot;                 
-[22] &quot;refseq_mrna&quot;                 &quot;refseq_peptide&quot;              &quot;unigene&quot;                    
-[25] &quot;uniprotswissprot&quot;           </code></pre>
+<pre><code> [1] &quot;dbSNP&quot;                       &quot;embl&quot;                        &quot;ensembl_gene_id&quot;             &quot;ensembl_peptide_id&quot;          &quot;entrezgene&quot;                  &quot;entrezgene_protein-coding&quot;   &quot;genename&quot;                   
+ [8] &quot;genesymbol&quot;                  &quot;illumina_ScriptSeq_RNASeqV2&quot; &quot;illumina_WG6_Customarray&quot;    &quot;illumina_mouseref_8&quot;         &quot;illumina_mouseref_8_v2&quot;      &quot;illumina_mousewg_6_v1&quot;       &quot;illumina_mousewg_6_v2&quot;      
+[15] &quot;interpro&quot;                    &quot;phalanx_onearray&quot;            &quot;phosphositeEnsembl&quot;          &quot;phosphositeRefseq&quot;           &quot;phosphositeSeq&quot;              &quot;phosphositeUniprot&quot;          &quot;protein_id&quot;                 
+[22] &quot;refseq_mrna&quot;                 &quot;refseq_peptide&quot;              &quot;unigene&quot;                     &quot;uniprotswissprot&quot;           </code></pre>
 <p>Continuing with the arguments for the function:</p>
 <ul>
 <li><code>referenceGene</code> is also a vector of gene identifiers, but
@@ -779,7 +790,7 @@ can read in with the <code>read_csv()</code> function:</p>
 # Read diffex results
 rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
 <pre><code>Rows: 16249 Columns: 9
-── Column specification ──────────────────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (3): id, symbol, call
 dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
@@ -924,8 +935,7 @@ rsd_ora_result = WebGestaltR(
 <pre><code>Loading the functional categories...
 Loading the ID list...
 Loading the reference list...</code></pre>
-<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA_GO_BP&#39; already
-exists</code></pre>
+<pre><code>Warning in dir.create(projectDir): &#39;./results/Project_deficient_vs_control_ORA_GO_BP&#39; already exists</code></pre>
 <pre><code>Summarizing the input ID list by GO Slim data...</code></pre>
 <pre><code>Performing the enrichment analysis...
 Begin affinity propagation...
@@ -937,41 +947,20 @@ Results can be found in the ./results/Project_deficient_vs_control_ORA_GO_BP!</c
 <pre class="r"><code># -------------------------------------------------------------------------
 # View the first few results
 head(rsd_ora_result)</code></pre>
-<pre><code>     geneSet                                                     description
-1 GO:0070997                                                    neuron death
-2 GO:0098754                                                  detoxification
-3 GO:0062012                  regulation of small molecule metabolic process
-4 GO:0006575                  cellular modified amino acid metabolic process
-5 GO:0097193                           intrinsic apoptotic signaling pathway
-6 GO:0043620 regulation of DNA-templated transcription in response to stress
-                                                 link size overlap    expect enrichmentRatio
-1 http://amigo.geneontology.org/amigo/term/GO:0070997  263      14 3.7281697        3.755194
-2 http://amigo.geneontology.org/amigo/term/GO:0098754   77       7 1.0915174        6.413091
-3 http://amigo.geneontology.org/amigo/term/GO:0062012  235      12 3.3312543        3.602247
-4 http://amigo.geneontology.org/amigo/term/GO:0006575  120       8 1.7010660        4.702933
-5 http://amigo.geneontology.org/amigo/term/GO:0097193  227      11 3.2178499        3.418432
-6 http://amigo.geneontology.org/amigo/term/GO:0043620   50       5 0.7087775        7.054400
-        pValue        FDR
-1 1.979515e-05 0.01565796
-2 1.026862e-04 0.03144459
-3 1.192589e-04 0.03144459
-4 2.905229e-04 0.05745090
-5 3.635356e-04 0.05751133
-6 6.718740e-04 0.08857539
-                                                                             overlapId
-1 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405
-2                                       11816;14782;17748;17750;76650;230784;100503605
-3          11816;12048;12724;14783;26570;59090;67300;77781;227358;228775;230784;266645
-4                                    14381;14782;17768;18451;26570;69065;107869;112405
-5                  12048;12176;12575;12608;13198;15258;56312;59041;69065;228775;242705
-6                                                       12608;13198;16476;22339;230784
-                                                                              userId
-1 Apoe;Bcl2l1;Vegfa;Ddit3;Slc7a11;Trim2;Coro1a;G6pdx;Mt1;Egln1;Jun;Cebpb;Hipk2;Bnip3
-2                                                Apoe;Sesn2;Gsr;Mt2;Mt1;Srxn1;Hbb-bs
-3          Apoe;Bcl2l1;Grb10;Clcn2;Acmsd;Slc7a11;Sesn2;Trib3;Midn;Epm2aip1;Cltc;Erfe
-4                                     Mthfd2;P4ha1;Chac1;Slc7a11;Cth;G6pdx;Gsr;Egln1
-5                 Bcl2l1;E2f2;Cdkn1a;Ddit3;Stk25;Chac1;Nupr1;Trib3;Cebpb;Hipk2;Bnip3
-6                                                        Vegfa;Ddit3;Sesn2;Jun;Cebpb</code></pre>
+<pre><code>     geneSet                                                     description                                                link size overlap    expect enrichmentRatio       pValue        FDR
+1 GO:0070997                                                    neuron death http://amigo.geneontology.org/amigo/term/GO:0070997  263      14 3.7281697        3.755194 1.979515e-05 0.01565796
+2 GO:0098754                                                  detoxification http://amigo.geneontology.org/amigo/term/GO:0098754   77       7 1.0915174        6.413091 1.026862e-04 0.03144459
+3 GO:0062012                  regulation of small molecule metabolic process http://amigo.geneontology.org/amigo/term/GO:0062012  235      12 3.3312543        3.602247 1.192589e-04 0.03144459
+4 GO:0006575                  cellular modified amino acid metabolic process http://amigo.geneontology.org/amigo/term/GO:0006575  120       8 1.7010660        4.702933 2.905229e-04 0.05745090
+5 GO:0097193                           intrinsic apoptotic signaling pathway http://amigo.geneontology.org/amigo/term/GO:0097193  227      11 3.2178499        3.418432 3.635356e-04 0.05751133
+6 GO:0043620 regulation of DNA-templated transcription in response to stress http://amigo.geneontology.org/amigo/term/GO:0043620   50       5 0.7087775        7.054400 6.718740e-04 0.08857539
+                                                                             overlapId                                                                             userId
+1 11816;12048;12176;12608;12721;13198;14381;15258;16476;17748;22339;26570;80890;112405 Apoe;Bcl2l1;Vegfa;Ddit3;Slc7a11;Trim2;Coro1a;G6pdx;Mt1;Egln1;Jun;Cebpb;Hipk2;Bnip3
+2                                       11816;14782;17748;17750;76650;230784;100503605                                                Apoe;Sesn2;Gsr;Mt2;Mt1;Srxn1;Hbb-bs
+3          11816;12048;12724;14783;26570;59090;67300;77781;227358;228775;230784;266645          Apoe;Bcl2l1;Grb10;Clcn2;Acmsd;Slc7a11;Sesn2;Trib3;Midn;Epm2aip1;Cltc;Erfe
+4                                    14381;14782;17768;18451;26570;69065;107869;112405                                     Mthfd2;P4ha1;Chac1;Slc7a11;Cth;G6pdx;Gsr;Egln1
+5                  12048;12176;12575;12608;13198;15258;56312;59041;69065;228775;242705                 Bcl2l1;E2f2;Cdkn1a;Ddit3;Stk25;Chac1;Nupr1;Trib3;Cebpb;Hipk2;Bnip3
+6                                                       12608;13198;16476;22339;230784                                                        Vegfa;Ddit3;Sesn2;Jun;Cebpb</code></pre>
 <p>The columns of the table are similar to the results displayed in the
 web-version with some additional details:</p>
 <ul>
@@ -1033,18 +1022,12 @@ Results can be found in the ./results/Project_deficient_vs_control_ORA_KEGG!</co
 <pre class="r"><code># -------------------------------------------------------------------------
 # View the first few results
 head(rsd_ora_kegg_result)</code></pre>
-<pre><code>   geneSet                 description
-1 mmu01230 Biosynthesis of amino acids
-2 mmu04978          Mineral absorption
-                                                                                      link size
-1 http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60
-2                http://www.kegg.jp/kegg-bin/show_pathway?mmu04978+12724+14325+17748+17750   28
-  overlap    expect enrichmentRatio       pValue        FDR
-1       6 0.9919513        6.048684 0.0004125129 0.07260228
-2       4 0.4629106        8.640977 0.0010455220 0.09200593
-                               overlapId                            userId
-1 100678;107869;209027;27053;56421;56454 Pfkp;Aldh18a1;Pycr1;Cth;Psph;Asns
-2                12724;14325;17748;17750                Clcn2;Mt2;Mt1;Ftl1</code></pre>
+<pre><code>   geneSet                 description                                                                                     link size overlap    expect enrichmentRatio       pValue        FDR                              overlapId
+1 mmu01230 Biosynthesis of amino acids http://www.kegg.jp/kegg-bin/show_pathway?mmu01230+100678+107869+209027+27053+56421+56454   60       6 0.9919513        6.048684 0.0004125129 0.07260228 100678;107869;209027;27053;56421;56454
+2 mmu04978          Mineral absorption                http://www.kegg.jp/kegg-bin/show_pathway?mmu04978+12724+14325+17748+17750   28       4 0.4629106        8.640977 0.0010455220 0.09200593                12724;14325;17748;17750
+                             userId
+1 Pfkp;Aldh18a1;Pycr1;Cth;Psph;Asns
+2                Clcn2;Mt2;Mt1;Ftl1</code></pre>
 <p>Although we limited the comparisons to more specific terms, we only
 find two pathways that have significant enrichment below an FDR &lt;
 0.10 threshold. This could be because the treatment doesn’t impact a
@@ -1086,9 +1069,9 @@ clear_list = c(&quot;rsd_ora_kegg_result&quot;,
 # Only remove plots that actually exist in the environment
 rm(list=Filter(exists, clear_list))
 gc()</code></pre>
-<pre><code>          used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
-Ncells 5027342 268.5    9336260 498.7         NA   9336260  498.7
-Vcells 9979317  76.2   83772740 639.2      36864 136265526 1039.7</code></pre>
+<pre><code>           used  (Mb) gc trigger  (Mb)  max used   (Mb)
+Ncells  5050634 269.8    8416924 449.6   8416924  449.6
+Vcells 10417493  79.5   52081103 397.4 137776830 1051.2</code></pre>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>

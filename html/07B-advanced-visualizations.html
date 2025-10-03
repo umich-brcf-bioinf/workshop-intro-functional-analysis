@@ -433,12 +433,16 @@ results</li>
 # -------------------------------------------------------------------------
 # Load additional libraries
 library(ComplexHeatmap)
-library(ggVennDiagram)
+library(ggVennDiagram)</code></pre>
+<pre><code>
+Attaching package: &#39;ggVennDiagram&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:tidyr&#39;:
 
-# -------------------------------------------------------------------------
+    unite</code></pre>
+<pre class="r"><code># -------------------------------------------------------------------------
 # Check current working directory
 getwd()</code></pre>
-<pre><code>[1] &quot;/Users/cgates/git/workshop-intro-functional-analysis/source&quot;</code></pre>
+<pre><code>[1] &quot;/home/workshop/rcavalca/workshop-intro-functional-analysis/source&quot;</code></pre>
 <p>We should have the GSEA results in our session but we can read in the
 results from the table output to file by <code>WebGestaltR</code> for
 the results from the Day21 vs Day7 and Day7 vs Day 0 pericyte
@@ -447,7 +451,7 @@ single-cell RNA-seq comparisons.</p>
 # Read in results for the enrichment for each set of timpoint comparisons
 isc_d21_v_d7_gsea_result = read_delim(&#39;results/Project_D21_v_D7_GSEA_KEGG/enrichment_results_D21_v_D7_GSEA_KEGG.txt&#39;)</code></pre>
 <pre><code>Rows: 37 Columns: 12
-── Column specification ──────────────────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;\t&quot;
 chr (6): geneSet, description, link, plotPath, leadingEdgeId, userId
 dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leadingEdgeNum
@@ -456,7 +460,7 @@ dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leadingE
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>isc_d7_v_d0_gsea_result = read_delim(&#39;results/Project_D7_v_D0_GSEA_KEGG//enrichment_results_D7_v_D0_GSEA_KEGG.txt&#39;)</code></pre>
 <pre><code>Rows: 16 Columns: 12
-── Column specification ──────────────────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;\t&quot;
 chr (6): geneSet, description, link, plotPath, leadingEdgeId, userId
 dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leadingEdgeNum
@@ -465,27 +469,25 @@ dbl (6): enrichmentScore, normalizedEnrichmentScore, pValue, FDR, size, leadingE
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>head(isc_d21_v_d7_gsea_result); head(isc_d7_v_d0_gsea_result)</code></pre>
 <pre><code># A tibble: 6 × 12
-  geneSet  description  link  enrichmentScore normalizedEnrichment…¹ pValue     FDR  size plotPath
-  &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   
-1 mmu04512 ECM-recepto… http…           0.772                   2.09      0 0          82 ./Proje…
-2 mmu03050 Proteasome   http…          -0.816                  -1.89      0 0          46 ./Proje…
-3 mmu03030 DNA replica… http…          -0.853                  -1.90      0 0          35 ./Proje…
-4 mmu03040 Spliceosome  http…          -0.726                  -1.96      0 0         128 ./Proje…
-5 mmu04657 IL-17 signa… http…          -0.690                  -1.78      0 0.00146    86 ./Proje…
-6 mmu05012 Parkinson d… http…          -0.651                  -1.77      0 0.00155   125 ./Proje…
-# ℹ abbreviated name: ¹​normalizedEnrichmentScore
-# ℹ 3 more variables: leadingEdgeNum &lt;dbl&gt;, leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+  geneSet  description              link                                                                                               enrichmentScore normalizedEnrichment…¹ pValue     FDR  size plotPath leadingEdgeNum leadingEdgeId userId
+  &lt;chr&gt;    &lt;chr&gt;                    &lt;chr&gt;                                                                                                        &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt; 
+1 mmu03050 Proteasome               http://www.kegg.jp/kegg-bin/show_pathway?mmu03050+19192+56436+16912+26440+66997+70247+19177+22123…          -0.816                  -1.90      0 0          46 ./Proje…             37 19192;56436;… Adrm1…
+2 mmu03030 DNA replication          http://www.kegg.jp/kegg-bin/show_pathway?mmu03030+19076+18968+18974+106344+68275+18972+19075+6972…          -0.853                  -1.91      0 0          35 ./Proje…             29 19076;18968;… Fen1;…
+3 mmu03040 Spliceosome              http://www.kegg.jp/kegg-bin/show_pathway?mmu03040+57905+20637+54633+66492+68879+20639+331401+7265…          -0.726                  -1.96      0 0         128 ./Proje…             86 57905;20637;… Acin1…
+4 mmu04512 ECM-receptor interaction http://www.kegg.jp/kegg-bin/show_pathway?mmu04512+12824+12845+12643+12841+21825+12840+21828+12839…           0.772                   2.05      0 0.00104    82 ./Proje…             34 12824;12845;… Agrn;…
+5 mmu04657 IL-17 signaling pathway  http://www.kegg.jp/kegg-bin/show_pathway?mmu04657+14283+171095+17392+12370+71609+15519+15945+2203…          -0.690                  -1.79      0 0.00146    86 ./Proje…             30 14283;171095… Casp3…
+6 mmu05012 Parkinson disease        http://www.kegg.jp/kegg-bin/show_pathway?mmu05012+66152+66043+22334+12857+67530+67003+18747+66108…          -0.651                  -1.74      0 0.00195   125 ./Proje…             73 66152;66043;… Apaf1…
+# ℹ abbreviated name: ¹​normalizedEnrichmentScore</code></pre>
 <pre><code># A tibble: 6 × 12
-  geneSet  description  link  enrichmentScore normalizedEnrichment…¹ pValue     FDR  size plotPath
-  &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   
-1 mmu03010 Ribosome     http…           0.791                   2.42      0 0         129 ./Proje…
-2 mmu03030 DNA replica… http…           0.766                   1.90      0 0.00423    35 ./Proje…
-3 mmu05134 Legionellos… http…           0.676                   1.81      0 0.0137     56 ./Proje…
-4 mmu05143 African try… http…           0.732                   1.78      0 0.0154     33 ./Proje…
-5 mmu05012 Parkinson d… http…           0.563                   1.73      0 0.0204    125 ./Proje…
-6 mmu00190 Oxidative p… http…           0.572                   1.74      0 0.0216    115 ./Proje…
-# ℹ abbreviated name: ¹​normalizedEnrichmentScore
-# ℹ 3 more variables: leadingEdgeNum &lt;dbl&gt;, leadingEdgeId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+  geneSet  description               link                                                                                              enrichmentScore normalizedEnrichment…¹ pValue     FDR  size plotPath leadingEdgeNum leadingEdgeId userId
+  &lt;chr&gt;    &lt;chr&gt;                     &lt;chr&gt;                                                                                                       &lt;dbl&gt;                  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt; 
+1 mmu03010 Ribosome                  http://www.kegg.jp/kegg-bin/show_pathway?mmu03010+68028+19951+11837+20084+19896+27367+16785+2008…           0.791                   2.41      0 0         129 ./Proje…             97 68028;19951;… Fau;M…
+2 mmu03030 DNA replication           http://www.kegg.jp/kegg-bin/show_pathway?mmu03030+66979+17215+68240+59001+19718+17219+67153+1721…           0.766                   1.88      0 0.00302    35 ./Proje…             22 66979;17215;… Fen1;…
+3 mmu05134 Legionellosis             http://www.kegg.jp/kegg-bin/show_pathway?mmu05134+14825+20310+18035+193740+67160+15511+16176+123…           0.676                   1.84      0 0.00362    56 ./Proje…             30 14825;20310;… Apaf1…
+4 mmu05143 African trypanosomiasis   http://www.kegg.jp/kegg-bin/show_pathway?mmu05143+15122+100503605+110257+18795+101488143+22329+1…           0.732                   1.82      0 0.00483    33 ./Proje…             11 15122;100503… Hba-a…
+5 mmu00190 Oxidative phosphorylation http://www.kegg.jp/kegg-bin/show_pathway?mmu00190+28080+12861+11951+67942+12859+67895+22272+6614…           0.572                   1.73      0 0.0205    115 ./Proje…             65 28080;12861;… Atp5a…
+6 mmu04657 IL-17 signaling pathway   http://www.kegg.jp/kegg-bin/show_pathway?mmu04657+20311+14825+20310+17386+17392+20201+20202+1803…           0.602                   1.75      0 0.0208     86 ./Proje…             23 20311;14825;… Casp3…
+# ℹ abbreviated name: ¹​normalizedEnrichmentScore</code></pre>
 <p><br></p>
 <p>Instead of comparing gene sets between enriched terms from a single
 set of results, we can instead compare enrichments between two different
@@ -522,8 +524,7 @@ KEGG_venn &lt;- ggVennDiagram(KEGG_results, label_alpha = 0,
                            ) +
   ggplot2::scale_fill_gradient(low=&quot;royalblue&quot;,high = &quot;yellow&quot;) +
   coord_flip()</code></pre>
-<pre><code>Coordinate system already present. Adding new coordinate system, which will replace the existing
-one.</code></pre>
+<pre><code>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</code></pre>
 <pre class="r"><code>KEGG_venn</code></pre>
 <p><img src="fig/02-path_Venn-1.png" width="816" style="display: block; margin: auto;" />
 <br></p>
@@ -533,8 +534,8 @@ one.</code></pre>
 png(file = &quot;./results/figures/Pericytes_KEGG_vennDiagram.png&quot;, width = 600, height = 400)
   KEGG_venn # draw the plot
 dev.off() # Close the graphics device</code></pre>
-<pre><code>quartz_off_screen 
-                2 </code></pre>
+<pre><code>png 
+  2 </code></pre>
 </div>
 <div id="detailed-comparison-of-kegg-enrichments"
 class="section level1">
@@ -575,10 +576,10 @@ str(KEGG_results_combined)</code></pre>
  $ timepoint     : Factor w/ 2 levels &quot;D7_v_D0&quot;,&quot;D21_v_D7&quot;: 1 1 1 1 1 1 1 1 1 1 ...
  $ geneSet       : chr [1:53] &quot;mmu03010&quot; &quot;mmu03030&quot; &quot;mmu05134&quot; &quot;mmu05143&quot; ...
  $ description   : chr [1:53] &quot;Ribosome&quot; &quot;DNA replication&quot; &quot;Legionellosis&quot; &quot;African trypanosomiasis&quot; ...
- $ size          : num [1:53] 129 35 56 33 125 115 86 46 111 94 ...
- $ FDR           : num [1:53] 0 0.00423 0.01371 0.01542 0.02039 ...
+ $ size          : num [1:53] 129 35 56 33 115 86 46 111 125 94 ...
+ $ FDR           : num [1:53] 0 0.00302 0.00362 0.00483 0.02053 ...
  $ name          : chr [1:53] &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; &quot;normalizedEnrichmentScore&quot; ...
- $ value         : num [1:53] 2.42 1.9 1.81 1.78 1.73 ...
+ $ value         : num [1:53] 2.41 1.88 1.84 1.82 1.73 ...
  $ direction     : Factor w/ 2 levels &quot;negative NES&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
  $ &quot;positive NES&quot;: chr [1:53] &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; &quot;positive NES&quot; ...
  $ &quot;negative NES&quot;: chr [1:53] &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; &quot;negative NES&quot; ...</code></pre>
@@ -628,8 +629,8 @@ file.</p>
 png(file = &quot;./results/figures/Pericytes_KEGG_lollipopComparison.png&quot;, width = 700, height = 600, res = 100)
   KEGG_comparison # draw the plot
 dev.off() # Close the graphics device</code></pre>
-<pre><code>quartz_off_screen 
-                2 </code></pre>
+<pre><code>png 
+  2 </code></pre>
 <p><br></p>
 <p>From the comparison of enriched KEGG pathways between the timepoints,
 one of the results that jumps out is the the positive enrichment score

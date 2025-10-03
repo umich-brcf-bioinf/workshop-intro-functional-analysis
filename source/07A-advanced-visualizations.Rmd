@@ -51,7 +51,8 @@ In this section, we'll generate additional visualizations - beyond what was gene
 
 First, we'll load a library called `ComplexHeatmap` that we will be using for some of our visualizations in addition to the plotting that is available to use from `ggplot2` after previously loading the `tidyverse`.    
 
-```{r libraries}
+<!-- # library(VennDiagram) # missing library -->
+```{r load_libraries}
 # =========================================================================
 # Advanced Visualizations I
 # =========================================================================
@@ -60,13 +61,6 @@ First, we'll load a library called `ComplexHeatmap` that we will be using for so
 # Load additional libraries
 library(tidyverse)
 library(ComplexHeatmap)
-
-```
-
-```{r getwd, eval = FALSE}
-# -------------------------------------------------------------------------
-# Check current working directory
-getwd()
 ```
 
 # Generate visualizations for ORA results

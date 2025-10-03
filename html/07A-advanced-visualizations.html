@@ -433,6 +433,7 @@ ORA results.</p>
 we will be using for some of our visualizations in addition to the
 plotting that is available to use from <code>ggplot2</code> after
 previously loading the <code>tidyverse</code>.</p>
+<!-- # library(VennDiagram) # missing library -->
 <pre class="r"><code># =========================================================================
 # Advanced Visualizations I
 # =========================================================================
@@ -441,9 +442,6 @@ previously loading the <code>tidyverse</code>.</p>
 # Load additional libraries
 library(tidyverse)
 library(ComplexHeatmap)</code></pre>
-<pre class="r"><code># -------------------------------------------------------------------------
-# Check current working directory
-getwd()</code></pre>
 </div>
 <div id="generate-visualizations-for-ora-results"
 class="section level1">
@@ -454,7 +452,7 @@ reading in the table that <code>WebGestaltR</code> output to file.</p>
 # Read in results
 enriched_ora = read_delim(&#39;results/Project_deficient_vs_control_ORA_GO_BP/enrichment_results_deficient_vs_control_ORA_GO_BP.txt&#39;)</code></pre>
 <pre><code>Rows: 6 Columns: 11
-── Column specification ──────────────────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;\t&quot;
 chr (5): geneSet, description, link, overlapId, userId
 dbl (6): size, overlap, expect, enrichmentRatio, pValue, FDR
@@ -463,14 +461,14 @@ dbl (6): size, overlap, expect, enrichmentRatio, pValue, FDR
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>head(enriched_ora)</code></pre>
 <pre><code># A tibble: 6 × 11
-  geneSet   description link   size overlap expect enrichmentRatio  pValue    FDR overlapId userId
-  &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; 
-1 GO:00709… neuron dea… http…   263      14  3.73             3.76 1.98e-5 0.0157 11816;12… Apoe;…
-2 GO:00987… detoxifica… http…    77       7  1.09             6.41 1.03e-4 0.0314 11816;14… Apoe;…
-3 GO:00620… regulation… http…   235      12  3.33             3.60 1.19e-4 0.0314 11816;12… Apoe;…
-4 GO:00065… cellular m… http…   120       8  1.70             4.70 2.91e-4 0.0575 14381;14… Mthfd…
-5 GO:00971… intrinsic … http…   227      11  3.22             3.42 3.64e-4 0.0575 12048;12… Bcl2l…
-6 GO:00436… regulation… http…    50       5  0.709            7.05 6.72e-4 0.0886 12608;13… Vegfa…</code></pre>
+  geneSet    description                                                     link                                                 size overlap expect enrichmentRatio    pValue    FDR overlapId                                         userId
+  &lt;chr&gt;      &lt;chr&gt;                                                           &lt;chr&gt;                                               &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                             &lt;chr&gt; 
+1 GO:0070997 neuron death                                                    http://amigo.geneontology.org/amigo/term/GO:0070997   263      14  3.73             3.76 0.0000198 0.0157 11816;12048;12176;12608;12721;13198;14381;15258;… Apoe;…
+2 GO:0098754 detoxification                                                  http://amigo.geneontology.org/amigo/term/GO:0098754    77       7  1.09             6.41 0.000103  0.0314 11816;14782;17748;17750;76650;230784;100503605    Apoe;…
+3 GO:0062012 regulation of small molecule metabolic process                  http://amigo.geneontology.org/amigo/term/GO:0062012   235      12  3.33             3.60 0.000119  0.0314 11816;12048;12724;14783;26570;59090;67300;77781;… Apoe;…
+4 GO:0006575 cellular modified amino acid metabolic process                  http://amigo.geneontology.org/amigo/term/GO:0006575   120       8  1.70             4.70 0.000291  0.0575 14381;14782;17768;18451;26570;69065;107869;112405 Mthfd…
+5 GO:0097193 intrinsic apoptotic signaling pathway                           http://amigo.geneontology.org/amigo/term/GO:0097193   227      11  3.22             3.42 0.000364  0.0575 12048;12176;12575;12608;13198;15258;56312;59041;… Bcl2l…
+6 GO:0043620 regulation of DNA-templated transcription in response to stress http://amigo.geneontology.org/amigo/term/GO:0043620    50       5  0.709            7.05 0.000672  0.0886 12608;13198;16476;22339;230784                    Vegfa…</code></pre>
 <p>In addition to the enrichment statistics, the table also includes a
 column called <code>userId</code> that includes the names of the genes
 that were both annotated for that GO term and part of the list of DE
@@ -493,22 +491,19 @@ for(i in 1:length(enriched_ora$description)){
 # check the named lists
 head(go_geneSets)</code></pre>
 <pre><code>$`neuron death`
- [1] &quot;Apoe&quot;    &quot;Bcl2l1&quot;  &quot;Vegfa&quot;   &quot;Ddit3&quot;   &quot;Slc7a11&quot; &quot;Trim2&quot;   &quot;Coro1a&quot;  &quot;G6pdx&quot;   &quot;Mt1&quot;    
-[10] &quot;Egln1&quot;   &quot;Jun&quot;     &quot;Cebpb&quot;   &quot;Hipk2&quot;   &quot;Bnip3&quot;  
+ [1] &quot;Apoe&quot;    &quot;Bcl2l1&quot;  &quot;Vegfa&quot;   &quot;Ddit3&quot;   &quot;Slc7a11&quot; &quot;Trim2&quot;   &quot;Coro1a&quot;  &quot;G6pdx&quot;   &quot;Mt1&quot;     &quot;Egln1&quot;   &quot;Jun&quot;     &quot;Cebpb&quot;   &quot;Hipk2&quot;   &quot;Bnip3&quot;  
 
 $detoxification
 [1] &quot;Apoe&quot;   &quot;Sesn2&quot;  &quot;Gsr&quot;    &quot;Mt2&quot;    &quot;Mt1&quot;    &quot;Srxn1&quot;  &quot;Hbb-bs&quot;
 
 $`regulation of small molecule metabolic process`
- [1] &quot;Apoe&quot;     &quot;Bcl2l1&quot;   &quot;Grb10&quot;    &quot;Clcn2&quot;    &quot;Acmsd&quot;    &quot;Slc7a11&quot;  &quot;Sesn2&quot;    &quot;Trib3&quot;   
- [9] &quot;Midn&quot;     &quot;Epm2aip1&quot; &quot;Cltc&quot;     &quot;Erfe&quot;    
+ [1] &quot;Apoe&quot;     &quot;Bcl2l1&quot;   &quot;Grb10&quot;    &quot;Clcn2&quot;    &quot;Acmsd&quot;    &quot;Slc7a11&quot;  &quot;Sesn2&quot;    &quot;Trib3&quot;    &quot;Midn&quot;     &quot;Epm2aip1&quot; &quot;Cltc&quot;     &quot;Erfe&quot;    
 
 $`cellular modified amino acid metabolic process`
 [1] &quot;Mthfd2&quot;  &quot;P4ha1&quot;   &quot;Chac1&quot;   &quot;Slc7a11&quot; &quot;Cth&quot;     &quot;G6pdx&quot;   &quot;Gsr&quot;     &quot;Egln1&quot;  
 
 $`intrinsic apoptotic signaling pathway`
- [1] &quot;Bcl2l1&quot; &quot;E2f2&quot;   &quot;Cdkn1a&quot; &quot;Ddit3&quot;  &quot;Stk25&quot;  &quot;Chac1&quot;  &quot;Nupr1&quot;  &quot;Trib3&quot;  &quot;Cebpb&quot;  &quot;Hipk2&quot; 
-[11] &quot;Bnip3&quot; 
+ [1] &quot;Bcl2l1&quot; &quot;E2f2&quot;   &quot;Cdkn1a&quot; &quot;Ddit3&quot;  &quot;Stk25&quot;  &quot;Chac1&quot;  &quot;Nupr1&quot;  &quot;Trib3&quot;  &quot;Cebpb&quot;  &quot;Hipk2&quot;  &quot;Bnip3&quot; 
 
 $`regulation of DNA-templated transcription in response to stress`
 [1] &quot;Vegfa&quot; &quot;Ddit3&quot; &quot;Sesn2&quot; &quot;Jun&quot;   &quot;Cebpb&quot;</code></pre>
@@ -628,8 +623,8 @@ plot adjustments to this, at least for now.</p>
 png(file = &quot;./results/figures/deficient_vs_control_GO-BP_UpSetPlot.png&quot;, width = 1000, height = 400)
   draw(upsetGO) # draw the plot
 dev.off() # Close the graphics device</code></pre>
-<pre><code>quartz_off_screen 
-                2 </code></pre>
+<pre><code>png 
+  2 </code></pre>
 <!-- Note that the labels exceed the size of the margins, not sure how best to fix this -->
 <p>We only have a single comparison between deficient and control
 conditions for our bulk results, but for experiments that have more than
@@ -649,7 +644,7 @@ the gene expression for terms of interest.</p>
 # If not already loaded, read in diffex results
 rsd_diffex = read_csv(&#39;inputs/bulk_de_results/de_deficient_vs_control_annotated.csv&#39;)</code></pre>
 <pre><code>Rows: 16249 Columns: 9
-── Column specification ──────────────────────────────────────────────────────────────────────────
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr (3): id, symbol, call
 dbl (6): baseMean, log2FoldChange, lfcSE, stat, pvalue, padj
@@ -726,8 +721,8 @@ regulated?</p>
 png(file = &quot;./results/figures/deficient_vs_control_fold-changes_regulation-of-small-molecule-metabolic-process.png&quot;, width = 800, height = 500, res = 100)
   rsd_smallmolecule_barplot
 dev.off() # Remember to close the graphics device</code></pre>
-<pre><code>quartz_off_screen 
-                2 </code></pre>
+<pre><code>png 
+  2 </code></pre>
 <!-- wait to use heatmaps until get to single-cell data -->
 </div>
 <div id="clean-up-session" class="section level1">
